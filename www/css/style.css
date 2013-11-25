@@ -1,0 +1,42 @@
+
+body{
+	background-image: url('/img/bg.jpg');
+	background-repeat:no-repeat;
+	background-size: 100%;
+
+}
+.centered {
+  top:10%;
+  left:8%;
+  margin-top: 5%;
+}
+
+.logo{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 20%;
+	height: auto;
+}
+.mainDiv{
+	/*border-radius:1em;
+	background-color: #FFFFFF;
+	display:inline-block;
+	width: 70%;*/
+	height: 40em;
+	background-color: #FFFFFF;
+	text-align: center;
+	padding:0.5em;
+	-webkit-border-radius: 3em;
+-moz-border-radius: 3em;
+border-radius: 3em;
+	border: 0.3em ridge blue;
+}
+.searchInput{
+	text-align: center;
+	padding:1em 0 0 0;
+}
+
+.bgTest{
+	background-color: #FFFFFF;
+}
