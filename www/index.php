@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html>
-  <head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/style.css" type="text/css">
-  <link rel="stylesheet" href="css/bootstrap.css" type="text/css">
-  </head>
+<?php
+    require_once('../config.php');
+$title = "Lägg till ny order";
+
+              ?>
+<?php require_once(ROOT_PATH.'/header.php');?>
   <body><img src="img/logo.png" class="logo">
 <div class="container centered mainDiv">
-	<div class="row-fluid">
-	<div class="span12">
-	  <div class="searchInput">
-	         <form>
-	         <input type="text" placeholder="" class="input-xxlarge search-query">
-			    <button type="submit" class="btn">Search</button>
-			
-		</form>
-		</div>
-	      <div class="searchResult"><table class="table table-striped">
-	 		<thead><th>Ordernummer<th>Företag/Kund<th>Mönster<th><th>Dimension</th><th>Antal</th><th></th></thead>
-	 		 <tbody>
-	            <tr>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <td></td>
-	                <td><a href="#" class="btn btn-mini btn-primary btn-Action" type="button">Mer info</button></td>
-	               
-	 			</tr>
-			</tbody>
-	 		</table>
-		</div>
-		</div>
-	    </div>
+  <div class="row-fluid">
+  <div class="span12">
+ <ul class="nav nav-tabs menu" id="myTab">
+  <li class="active"><a href="#week">Veckoöversikt</a></li>
+  <li><a href="#createOrder">Lägg till ny order</a></li>
+  <li><a href="#search">Sök</a></li>
+</ul>
+ 
+<div class="tab-content">
+  <div class="tab-pane active" id="week"><?php require_once('weekview.php');?></div>
+  <div class="tab-pane" id="createOrder">Lägg till ny order</div>
+  <div class="tab-pane" id="search"><?php require_once('search.php');?></div>
+</div>
+ 
+<script>
+  $(function () {
+    $('#myTab a:first').tab('show');
+  })
+</script>
+ 
+
+    
+
+    </div>
+    </div>
+      </div>
   </div>
 </div>
   
   </body>
-</html>
+
+
+<?php require_once(ROOT_PATH.'/footer.php');?>
