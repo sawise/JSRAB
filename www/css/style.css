@@ -19,6 +19,7 @@ body{
 	height: auto;
 }
 .mainDiv{
+	opacity:0.9;
 	height: 40em;
 	background-color: #FFFFFF;
 	text-align: center;

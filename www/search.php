@@ -2,7 +2,9 @@
                array(1112, "daiKalles Däcksy", "BDR-HG", "315/70-22,5" , 4),
                array(1113, "Däckia Kalmar", "bdy", "10.00-20" , 4),
                array(1114, "LINKÖPINGS DÄCKCENTRAL", "B104", "265/70-19,5" , 2),
-               array(1115, "Olles D/S", "BDR-W+", "295/80-22,5" , 4)); ?>
+               array(1115, "Olles D/S", "BDR-W+", "295/80-22,5" , 4)); 
+              ?>
+
   <div class="searchInput">
 	         <form>
 	         <input type="text" placeholder="" class="input-xxlarge search-query">
@@ -10,6 +12,7 @@
 			    
 		</form>
 		</div>
+
 	      <div class="searchResult"><table class="table table-striped">
 	 		<thead><th>Ordernummer<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>
 	 		 <tbody><?php foreach($orders as $order) : ?>
