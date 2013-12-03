@@ -1,7 +1,13 @@
-$('#myTab a').click(function (e) {
+/*$('#myTab a').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
 })
+
+$('#weekTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+})*/
+
 
 //$('#myTab a[href="#profile"]').tab('show'); // Select tab by name
 //$('#myTab a:first').tab('show'); // Select first tab
