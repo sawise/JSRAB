@@ -11,21 +11,14 @@
 			}
 		}
 
-		private $sql_contacts = "SELECT contacts.id, contacts.first_name, contacts.last_name, contacts.email, contacts.cell_phone, contacts.work_phone, contacts.company_id, contacts.contact_person, contacts.notes, companies.id AS companies_id, companies.title AS companies_title, companies.alt_title AS companies_alt_title, companies.url AS companies_url, companies.email AS companies_email, companies.contact_id AS companies_contact_id, companies.billed AS companies_billed, companies.total AS companies_total, companies.reference AS companies_reference, companies.visit_address AS companies_visit_address, companies.visit_zip_code AS companies_visit_zip_code, companies.visit_city AS companies_visit_city, companies.mail_address AS companies_mail_address, companies.mail_zip_code AS companies_mail_zip_code, companies.mail_city AS companies_mail_city, companies.billing_address AS companies_billing_address, companies.billing_zip_code AS companies_billing_zip_code, companies.billing_city AS companies_billing_city FROM contacts LEFT JOIN companies ON 		companies.id = contacts.company_id";
 
-		private $sql_search = "SELECT DISTINCT contacts.id, contacts.first_name, contacts.last_name, contacts.email, contacts.cell_phone, contacts.work_phone,  companies.title AS companies_title, contacts.contact_person, contacts.notes, companies.id AS companies_id, companies.title AS companies_title, companies.alt_title AS companies_alt_title, companies.url AS companies_url, companies.email AS companies_email, companies.contact_id AS companies_contact_id, companies.billed AS companies_billed, companies.total AS companies_total, companies.reference AS companies_reference, companies.visit_address AS companies_visit_address, companies.visit_zip_code AS companies_visit_zip_code, companies.visit_city AS companies_visit_city, companies.mail_address AS companies_mail_address, companies.mail_zip_code AS companies_mail_zip_code, companies.mail_city AS companies_mail_city, companies.billing_address AS companies_billing_address, companies.billing_zip_code AS companies_billing_zip_code, companies.billing_city AS companies_billing_city FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id";
-
-		private $sql_count_search = "SELECT DISTINCT COUNT(id) contacts.id FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id";
-
-	
-		private $sql_activities = "SELECT activities.id, activities.title, activities.date, activities.branch_id, branches.id AS branches_id, branches.title AS branches_title FROM activities LEFT JOIN branches ON branches.id = activities.branch_id";
+		//private $sql_search = "SELECT DISTINCT contacts.id, contacts.first_name, contacts.last_name, contacts.email, contacts.cell_phone, contacts.work_phone,  companies.title AS companies_title, contacts.contact_person, contacts.notes, companies.id AS companies_id, companies.title AS companies_title, companies.alt_title AS companies_alt_title, companies.url AS companies_url, companies.email AS companies_email, companies.contact_id AS companies_contact_id, companies.billed AS companies_billed, companies.total AS companies_total, companies.reference AS companies_reference, companies.visit_address AS companies_visit_address, companies.visit_zip_code AS companies_visit_zip_code, companies.visit_city AS companies_visit_city, companies.mail_address AS companies_mail_address, companies.mail_zip_code AS companies_mail_zip_code, companies.mail_city AS companies_mail_city, companies.billing_address AS companies_billing_address, companies.billing_zip_code AS companies_billing_zip_code, companies.billing_city AS companies_billing_city FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id";
 
 		//Many to many-kladd
-		private $sql_contacts_branches_contacttypes = "SELECT contacts_branches_contact_types.contact_type_id, contacts_branches_contact_types.branch_id, contacts_branches_contact_types.date, contacts.id, contacts.first_name, contacts.last_name, contact_types.title AS contact_types_title, branches.title AS branches_title, branches.id AS branches_id FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN contact_types ON contacts_branches_contact_types.contact_type_id = contact_types.id LEFT JOIN branches ON contacts_branches_contact_types.branch_id = branches.id";
+		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.id LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
 
-		private $sql_totalitems = "SELECT COUNT(*) as num FROM contacts";
 		private $sql_tiretreads = "select * from tiretreads";
-		private $sql_tiresize = "select * from tireSize";
+		private $sql_tiresize = "select * from tiresizes";
 
 		public function getTiretreads() {
 			$sth = $this->dbh->query($this->sql_tiretreads);
@@ -140,15 +133,10 @@
 			}
 		}
 
-		public function search($text, $sort, $ascdesc, $startform, $limit, $contacttypes_id = null) {
+		public function search($text) {
 			$advsearch_contacttypes = "";
-			if($contacttypes_id != null) {
-					foreach($contacttypes_id AS $contacttype_id) {
-						$advsearch_contacttypes .= " AND contacts_branches_contact_types.contact_type_id = ".$contacttype_id." ";
-					}
-			}
-			$sth = $this->dbh->query($this->sql_search." WHERE contacts.first_name LIKE '%".$text."%' OR contacts.last_name LIKE '%".$text."%' OR contacts.email LIKE '%".$text."%' OR companies.title  LIKE '%".$text."%' OR contacts.cell_phone LIKE '%".$text."%' AND contacts_branches_contact_types.contact_type_id = 1 ORDER BY ".$sort." ".$ascdesc." LIMIT ".$startform.", ".$limit);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Contacts');
+			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'");
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
 
 			$objects = array();
 

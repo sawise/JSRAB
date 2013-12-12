@@ -6,26 +6,26 @@
               ?>
 
   <div class="searchInput">
-	         <form>
-	         <input type="text" placeholder="" class="input-xxlarge search-query">
+	         <form method="get" action="searchcaller.php">
+	         <input id="search" name="search" type="text" placeholder="" class="input-xxlarge search-query">
 			    <button type="submit" class="btn">Search</button>	
-			    
 		</form>
 		</div>
-
+<?php if(isset($_SESSION['search'])) : ?>   
+			<?php $searchresults = $_SESSION['search']; ?>
 	      <div class="searchResult"><table class="table table-striped">
-	 		<thead><th>Ordernummer<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>
-	 		 <tbody><?php foreach($orders as $order) : ?>
+	 		<thead><th>Leveransdatum<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>
+	 		 <tbody><?php foreach($searchresults as $searchresult) : ?>
 	            <tr>
-	                <td><?php echo $order[0] ?></td>
-	                <td><?php echo $order[1] ?></td>
-	                <td><?php echo $order[2] ?></td>
-	                <td><?php echo $order[3] ?></td>
-	                <td><?php echo $order[4] ?></td>
+	                <td><?php echo $searchresult->deliverydate ?></td>
+	                <td><?php echo $searchresult->customer_name ?></td>
+	                <td><?php echo $searchresult->tiretread_name ?></td>
+	                <td><?php echo $searchresult->tiresize_name ?></td>
+	                <td><?php echo $searchresult->total ?></td>
 	                <td><a href="#" class="btn btn-mini btn-primary btn-Action" type="button">Mer info</button></td>
 	 			</tr>
 	 		<?php endforeach ?>
 			</tbody>
 	 		</table>
-
+ <?php endif ?>
 		</div>

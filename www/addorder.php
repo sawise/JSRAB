@@ -1,6 +1,6 @@
  <div class="alignleft">	
  <?php 
-
+require_once('../config.php');
    $tireTreads = $db->getTiretreads();
    $tireSize = $db->getTiresize();
    $toggleThrArray = array('tirethreadText-', 'tirethread'); 

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <?php
 
-    require_once('../config.php');
-$title = "Lägg till ny order";
-$db = new Db();
-              ?>
+        require_once('../config.php');
+    $title = "Lägg till ny order";
+    $db = new Db();
+
+?>
+
 <?php require_once(ROOT_PATH.'/header.php');?>
 <body>
   <img src="img/logo.png" class="logo">
@@ -32,6 +34,11 @@ $db = new Db();
   </div>
 
 </body>
-
+<script>
+    <?php
+      if(isset($_SESSION['search'])){
+        echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name
+      } ?> 
+  </script>
 
 <?php require_once(ROOT_PATH.'/footer.php');?>
