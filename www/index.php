@@ -17,7 +17,7 @@ $title = "Lägg till ny order";
         </ul>
         <div class="tab-content">
           <div class="tab-pane active fade in" id="week"><?php require_once('weekview.php');?></div>
-          <div class="tab-pane fade" id="createOrder">Lägg till ny order</div>
+          <div class="tab-pane fade" id="createOrder"><?php require_once('addorder.php');?></div>
           <div class="tab-pane fade" id="search"><?php require_once('search.php');?></div>
         </div>
 
