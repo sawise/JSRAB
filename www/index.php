@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <?php
+
     require_once('../config.php');
 $title = "Lägg till ny order";
-
+$db = new Db();
               ?>
 <?php require_once(ROOT_PATH.'/header.php');?>
 <body>

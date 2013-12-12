@@ -13,9 +13,10 @@ function menu($currentPage){
   return $menu;
 }
 
-function form_select($name, $title, $items, $selected_id = null) {
-  $html = form_control_wrapper();
+function form_select($name, $title, $items, $selected_id = null, $dbcolumn, $toggle, $togglearray) {
+  $html = form_control_wrapper($name);
     $html .= form_label($name, $title);
+    $html .= '<div class="controls">';
     $html .= '<select name="'.$name.'">';
     $html .= '<option>-- Välj --</option>';
 
@@ -24,16 +25,17 @@ function form_select($name, $title, $items, $selected_id = null) {
       /*if ($selected_id && $selected_id == $item->id) {
         $selected = ' selected="selected"';
       }*/
-      $html .= '<option'.$selected.' value="'.$item.'">'.$item.'</option>';
+      $html .= '<option'.$selected.' value="'.$item->$dbcolumn.'">'.$item->$dbcolumn.'</option>';
     }
 
     $html .= '</select>';
-    $html .= '</div>';
+    $html .= toggle($toggle,$togglearray);
+    $html .= '</div></div>';
     return $html;
   }
 
-  function form_control_wrapper() {
-    return '<div class="control-group">';
+  function form_control_wrapper($id) {
+    return '<div class="control-group" id="'.$id.'">';
   }
 
   function form_label($for, $text = null){
@@ -53,11 +55,12 @@ function form_select($name, $title, $items, $selected_id = null) {
 
     $html = form_control_wrapper();
     $html .= form_label($name, $label_text);
+    $html .= '<div class="controls">';
     $html .= '<textarea id="'.$name.'" name="'.$name.'"';
     $html .= $placeholder_text.' onKeyDown="LimitText(this.form.notes,this.form.countdown,1000);"
 onKeyUp="LimitText(this.form.notes,this.form.countdown,1000);" rows="8" maxlength="1000">';
     $html .= $valuetext;
-    $html .= "</textarea></div>";
+    $html .= "</textarea></div></div>";
 
     return $html;
   }
@@ -67,22 +70,34 @@ onKeyUp="LimitText(this.form.notes,this.form.countdown,1000);" rows="8" maxlengt
     return $html;
   }
 
-  function form_input($type, $name, $label_text, $placeholder_text = null, $valuetext = null) {
+  function form_input($type, $name, $label_text, $placeholder_text = null, $valuetext = null, $toggle = null, $togglearray = null) {
     if ($placeholder_text != null) {
       $placeholder_text = ' placeholder="'.$placeholder_text.'"';
     } if ($valuetext != null) {
       $valuetext = ' value="'.$valuetext.'"';
     }
 
-    $html  = form_control_wrapper();
+    $html  = form_control_wrapper($name."-");
     $html .= form_label($name, $label_text);
     $html .= '<div class="controls">';
     $html .= '<input type="'.$type.'" id="'.$name.'" name="'.$name.'"  '.$placeholder_text.''.$valuetext.'>';
+    $html .= toggle($toggle, $togglearray);
     $html .= '</div>';
     $html .= '</div>';
 
     return $html;
   }
+function toggle($toggle = null, $togglearray = null){
+  $html = '';
+  if($toggle != null){
+    if($toggle == 'toggle'){
+      $html .= '<a href="#" data-toggle="tooltip" title="Lägg dit en ny" onclick="showHideDiv(\''.$togglearray[0].'\', \''.$togglearray[1].'\');"><i class="icon-arrow-right"></i></a>';
+    } else if($toggle == 'untoggle') {
+      $html .= '<a href="#" data-toggle="tooltip" title="Välj från listan" onclick="showHideDiv(\''.$togglearray[0].'\', \''.$togglearray[1].'\');"><i class="icon-arrow-left"></i></a>';
+    }
+  }
+  return $html;
+}
 /*<div class="tab-pane active fade in" id="w1">
           <table class="table table-striped">
       <thead><th>Ordernummer<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>
@@ -100,7 +115,7 @@ onKeyUp="LimitText(this.form.notes,this.form.countdown,1000);" rows="8" maxlengt
       </table>
         </div>*/
 
-  function yearView($tabs){
+  function yearView($orders){
     $thisyear = 2013;
     $html = '<div class="tabbable tabs-below">';
       $html .= '<div class="tab-content">';
@@ -120,22 +135,22 @@ onKeyUp="LimitText(this.form.notes,this.form.countdown,1000);" rows="8" maxlengt
           } else {
             $html .= '<div class="tab-pane fade" id="'.$i.'">';
           }
-           $html .=  $tabs;
+           $html .=  weekView($orders, $i);
            $html .= '  '.$i.'</div>';
       }
     $html .= '</div></div>';
     return $html;
   }
 
-function weekView($orders){
+function weekView($orders, $year){
    $totalweeks = 52;
    $html = '<div class="tabbable tabs-below">';
     $html .= '<div class="tab-content">';
      for($i = 1; $i <= $totalweeks; $i++){
       if($i == 1){
-        $html .= '<div class="tab-pane active fade in" id="w'.$i.'">';
+        $html .= '<div class="tab-pane active fade in" id="y'.$year.'_w'.$i.'">';
       } else {
-        $html .= '<div class="tab-pane fade" id="w'.$i.'">';
+        $html .= '<div class="tab-pane fade" id="y'.$year.'_w'.$i.'">';
       }
       
       $html .= '<table class="table table-striped">';
@@ -157,9 +172,9 @@ function weekView($orders){
     $html .= '<ul class="nav nav-tabs" id="weekTab">';
     for($i = 1; $i <= $totalweeks; $i++){
       if($i == 1){
-        $html .= '<li class ="active"><a href="#w'.$i.'" data-toggle="tab">'.$i.'</a></li>';
+        $html .= '<li class ="active"><a href="#y'.$year.'_w'.$i.'" data-toggle="tab">'.$i.'</a></li>';
       } else{
-        $html .= '<li><a href="#w'.$i.'" data-toggle="tab">'.$i.'</a></li>';
+        $html .= '<li><a href="#y'.$year.'_w'.$i.'"" data-toggle="tab">'.$i.'</a></li>';
       }
     }
     $html .= '</ul></div></div>';
