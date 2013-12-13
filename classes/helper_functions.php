@@ -53,7 +53,7 @@ function form_select($name, $title, $items, $selected_id = null, $dbcolumn, $tog
       $valuetext = $valuetext;
     }
 
-    $html = form_control_wrapper();
+    $html = form_control_wrapper($name.'-');
     $html .= form_label($name, $label_text);
     $html .= '<div class="controls">';
     $html .= '<textarea id="'.$name.'" name="'.$name.'"';
@@ -136,7 +136,7 @@ function toggle($toggle = null, $togglearray = null){
             $html .= '<div class="tab-pane fade" id="'.$i.'">';
           }
            $html .=  weekView($orders, $i);
-           $html .= '  '.$i.'</div>';
+           $html .=  '</div>';
       }
     $html .= '</div></div>';
     return $html;
@@ -158,7 +158,7 @@ function weekView($orders, $year){
         $html .= '<tbody>';
         foreach($orders as $order){
           $html .= '<tr>';
-          $html .= '<td>'.$order[0].' week '.$i.'</td>';
+          $html .= '<td>'.$order[0].'</td>';
           $html .= '<td>'.$order[1].'</td>';
           $html .= '<td>'.$order[2].'</td>';
           $html .= '<td>'.$order[3].'</td>';
@@ -209,4 +209,21 @@ function submit_button($text) {
   $week_start = new DateTime();
 $week_start->setISODate(2013,2);
 echo $week_start->format('d-M-Y');*/
+
+function set_feedback($status, $text) {
+    $_SESSION['feedback'] = array('status' => $status, 'text' => $text);
+  }
+
+  function get_feedback() {
+    $html = "";
+    if (isset($_SESSION['feedback'])) {
+      $html .= '<div class="alert alert-'.$_SESSION['feedback']['status'].'">';
+      $html .= '<button type="button" class="close" data-dismiss="alert">×</button>';
+      $html .= $_SESSION['feedback']['text'];
+      $html .= '</div>';
+      $_SESSION['feedback'] = null;
+    }
+    return $html;
+  }
+
  ?>

@@ -15,10 +15,24 @@
 		//private $sql_search = "SELECT DISTINCT contacts.id, contacts.first_name, contacts.last_name, contacts.email, contacts.cell_phone, contacts.work_phone,  companies.title AS companies_title, contacts.contact_person, contacts.notes, companies.id AS companies_id, companies.title AS companies_title, companies.alt_title AS companies_alt_title, companies.url AS companies_url, companies.email AS companies_email, companies.contact_id AS companies_contact_id, companies.billed AS companies_billed, companies.total AS companies_total, companies.reference AS companies_reference, companies.visit_address AS companies_visit_address, companies.visit_zip_code AS companies_visit_zip_code, companies.visit_city AS companies_visit_city, companies.mail_address AS companies_mail_address, companies.mail_zip_code AS companies_mail_zip_code, companies.mail_city AS companies_mail_city, companies.billing_address AS companies_billing_address, companies.billing_zip_code AS companies_billing_zip_code, companies.billing_city AS companies_billing_city FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id";
 
 		//Many to many-kladd
-		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.id LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
+		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.customerID LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
 
 		private $sql_tiretreads = "select * from tiretreads";
 		private $sql_tiresize = "select * from tiresizes";
+		private $sql_customers = "select * from customers";
+
+		public function getCustomers() {
+			$sth = $this->dbh->query($this->sql_customers);
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Customers');
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+			return $objects;
+
+		}
 
 		public function getTiretreads() {
 			$sth = $this->dbh->query($this->sql_tiretreads);
@@ -219,9 +233,45 @@
 			}
 		}
 
-		public function createContact($firstname, $lastname, $email, $mobile, $workphone, $contactperson, $notes){
-			$data = array($firstname, $lastname, $email, $mobile, $workphone, $contactperson, $notes);
-			$sth = $this->dbh->prepare("INSERT INTO contacts (first_name, last_name, email, cell_phone, work_phone, contact_person, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
+		public function createTiretread($name){
+			$data = array($name);
+			$sth = $this->dbh->prepare("INSERT INTO tiretreads (name) VALUES (?)");
+			$sth->execute($data);
+
+			if($sth->rowCount() > 0) {
+				return $this->dbh->lastInsertId();
+			} else {
+				return null;
+			}
+		}
+
+		public function createCustomer($name, $phonenumber = null){
+			$data = array($name, $phonenumber);
+			$sth = $this->dbh->prepare("INSERT INTO customers (name, phonenumber) VALUES (?,?)");
+			$sth->execute($data);
+
+			if($sth->rowCount() > 0) {
+				return $this->dbh->lastInsertId();
+			} else {
+				return null;
+			}
+		}
+
+		public function createTireSize($name){
+			$data = array($name);
+			$sth = $this->dbh->prepare("INSERT INTO tiresizes (name) VALUES (?)");
+			$sth->execute($data);
+
+			if($sth->rowCount() > 0) {
+				return $this->dbh->lastInsertId();
+			} else {
+				return null;
+			}
+		}
+
+		public function createOrder($customerID, $tiretreadID, $tiresizeID, $total, $comments, $deliverydate, $userID,$lastChange){
+			$data = array($customerID, $tiretreadID, $tiresizeID, $total, $comments, $deliverydate, $userID,$lastChange);
+			$sth = $this->dbh->prepare("INSERT INTO orders (customerID, tiretreadID, tiresizeID, total, comments, deliverydate, userID,lastChange) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 			$sth->execute($data);
 
 			if($sth->rowCount() > 0) {
@@ -245,19 +295,7 @@
 			}
 		}
 
-		public function getContracts() {
-			$sth = $this->dbh->query($this->sql_contracts);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Contracts');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
-
-
+		
 		public function getContract($id) {
       $sql = $this->sql_contracts." WHERE contracts.id = :id";
       $sth = $this->dbh->prepare($sql);
@@ -277,17 +315,7 @@
       }
     }
 
-		public function createContract($title, $branch, $date){
-			$data = array($title, $branch, $date);
-			$sth = $this->dbh->prepare("INSERT INTO contracts (title, branch, date) VALUES (?, ?, ?)");
-			$sth->execute($data);
-
-			if($sth->rowCount() > 0) {
-				return $this->dbh->lastInsertId();
-			} else {
-				return null;
-			}
-		}
+	
 
 		public function updateContract($id, $title) {
       $data = array($title, $id);
@@ -314,20 +342,7 @@
       }
     }
 
-    public function deleteMailshotsContactsBranches($mailshot_id, $contact_id, $branch_id){
-      $sql = "delete FROM contacts_mailshots_branches WHERE mailshot_id = :mailshot_id AND contact_id = :contact_id AND branch_id = :branch_id";
-      $sth = $this->dbh->prepare($sql);
-      $sth->bindParam(':mailshot_id', $mailshot_id, PDO::PARAM_INT);
-      $sth->bindParam(':contact_id', $contact_id, PDO::PARAM_INT);
-      $sth->bindParam(':branch_id', $branch_id, PDO::PARAM_INT);
-      $sth->execute();
 
-      if ($sth->rowCount() > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
 
     public function deleteContactsBranchesContacttypes($contact_id){
       $sql = "";
@@ -348,31 +363,8 @@
       }
     }
 
-    public function deleteContactsActivities($contact_id, $activity_id){
-      	$sql = "delete FROM contacts_activities WHERE contact_id = :contact_id AND activity_id = :activity_id";
-      $sth = $this->dbh->prepare($sql);
-      $sth->bindParam(':contact_id', $contact_id, PDO::PARAM_INT);
-      $sth->bindParam(':activity_id', $activity_id, PDO::PARAM_INT);
-      $sth->execute();
+  
 
-      if ($sth->rowCount() > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    public function getCompanies() {
-			$sth = $this->dbh->query("select * from companies order by id");
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Companies');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
 
 		public function getCompany($id) {
 			$sql = $this->sql_companies." where companies.id = :id";
@@ -394,54 +386,8 @@
 			}
 		}
 
-		public function createCompany($title, $alt_title, $url, $email, $billed, $total, $reference, $visit_address, $visit_zip_code, $visit_city, $mail_address, $mail_zip_code, $mail_city, $billing_address, $billing_zip_code, $billing_city, $contact_id){
-			$data = array($title, $alt_title, $url, $email, $billed, $total, $reference, $visit_address, $visit_zip_code, $visit_city, $mail_address, $mail_zip_code, $mail_city, $billing_address, $billing_zip_code, $billing_city, $contact_id);
-			$sth = $this->dbh->prepare("INSERT INTO companies (title, alt_title, url, email, billed, total, reference, visit_address, visit_zip_code, visit_city, mail_address, mail_zip_code, mail_city, billing_address, billing_zip_code, billing_city, contact_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			$sth->execute($data);
+		
 
-			if($sth->rowCount() > 0) {
-				return $this->dbh->lastInsertId();
-			} else {
-				return null;
-			}
-		}
-
-		public function updateCompany($id, $title, $alt_title, $url, $email, $billed, $total, $reference, $visit_address, $visit_zip_code, $visit_city, $mail_address, $mail_zip_code, $mail_city, $billing_address, $billing_zip_code, $billing_city, $contact_id){
-			$data = array($title, $alt_title, $url, $email, $billed, $total, $reference, $visit_address, $visit_zip_code, $visit_city, $mail_address, $mail_zip_code, $mail_city, $billing_address, $billing_zip_code, $billing_city, $contact_id, $id);
-			$sth = $this->dbh->prepare("UPDATE companies SET title = ?, alt_title = ?, url = ?, email = ?, billed = ?, total = ?, reference = ?, visit_address = ?, visit_zip_code = ?, visit_city = ?, mail_address = ?, mail_zip_code = ?, mail_city = ?, billing_address = ?, billing_zip_code = ?, billing_city = ?, contact_id = ? WHERE id = ?");
-			$sth->execute($data);
-
-			if($sth->execute($data)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		public function deleteCompany($id) {
-      $sql = "DELETE FROM companies WHERE id = :id";
-      $sth = $this->dbh->prepare($sql);
-      $sth->bindParam(':id', $id, PDO::PARAM_INT);
-      $sth->execute();
-
-      if($sth -> rowCount() > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-		public function getCompanies_contracts_branches() {
-			$sth = $this->dbh->query($this->sql_companies_contracts_branches);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'branches');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
 
 		public function showCompanies_contracts_branches($id) {
 			$sth = $this->dbh->query($this->sql_companies_contracts_branches." WHERE companies.id = ".$id);
@@ -483,17 +429,7 @@
       }
     }
 
-		public function getBranches() {
-			$sth = $this->dbh->query("SELECT * FROM branches");
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Branches');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
+	
 
 		public function getBranch($id) {
       $sql = $this->sql_branches." WHERE branches.id = :id";
@@ -514,17 +450,6 @@
       }
     }
 
-		public function createBranch($title) {
-			$data = array($title);
-			$sth = $this->dbh->prepare("INSERT INTO branches (title) VALUES (?)");
-			$sth->execute($data);
-
-			if($sth->rowCount() > 0) {
-				return $this->dbh->lastInsertId();
-			} else {
-				return null;
-			}
-		}
 
     public function updateBranch($id, $title) {
       $data = array($title, $id);
@@ -551,193 +476,10 @@
       }
     }
 
-		public function createContactActivity($contact_id, $activity_id) {
-			$data = array($contact_id, $activity_id);
-			$sth = $this->dbh->prepare("INSERT INTO contacts_activities (contact_id, activity_id) VALUES (?, ?)");
-			$sth->execute($data);
-
-			if($sth->rowCount() > 0) {
-				return $this->dbh->lastInsertId();
-			} else {
-				return null;
-			}
-		}
-
-		public function createContactsMailshotsBranches($contact_id, $mailshot_id, $branch_id) {
-				$data = array($contact_id, $mailshot_id, $branch_id);
-				$sth = $this->dbh->prepare("INSERT INTO contacts_mailshots_branches (contact_id, mailshot_id, branch_id) VALUES (?, ?, ?)");
-				$sth->execute($data);
-
-				if($sth->rowCount() > 0) {
-					return $this->dbh->lastInsertId();
-				} else {
-					return null;
-				}
-		}
-
-		public function createContactsBranchesContacttypes($contact_id, $branch_id, $contacttype_id, $date) {
-				$data = array($contact_id, $contacttype_id, $branch_id, $date); //createContactsBranchesContacttypes
-				$sth = $this->dbh->prepare("INSERT INTO contacts_branches_contact_types (contact_id, contact_type_id, branch_id, date) VALUES (?, ?, ?, ?)");
-				$sth->execute($data);
-
-				if($sth->rowCount() > 0) {
-					return $this->dbh->lastInsertId();
-				} else {
-					return null;
-				}
-		}
-
-		public function createCompaniesContractsBranches($company_id, $contract_id, $branch_id, $date, $written) {
-				$data = array($company_id, $contract_id, $branch_id, $date, $written);
-				$sth = $this->dbh->prepare("INSERT INTO companies_contracts_branches (company_id, contract_id, branch_id, start_date, written) VALUES (?, ?, ?, ?, ?)");
-				$sth->execute($data);
-
-				if($sth->rowCount() > 0) {
-					return $this->dbh->lastInsertId();
-				} else {
-					return null;
-				}
-		}
-
-//$sql_activities_contacts
-		public function showActivities_contacts($id) {
-			$sth = $this->dbh->query($this->sql_activities_contacts." WHERE contacts.id = ".$id);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Activities');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
-
-		public function testshowActivities_contacts($id) {
-			$sth = $this->dbh->query($this->sql_activities_contacts." WHERE contacts.id = ".$id);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Activities');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
-
-		public function getContactsMailshotsBranches() {
-			$sth = $this->dbh->query($this->sql_contacts_mailshots_branches);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Mailshots');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
-
-		public function editContacts_mailshots_branches($id) {
-			$sth = $this->dbh->query($this->sql_contacts_mailshots_branches." WHERE contacts_mailshots_branches.contact_id = ".$id);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Mailshots');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
 
 
-		public function getLastcompany(){
-			$sql = $this->sql_companies." ORDER BY id DESC LIMIT 1";
-			$sth = $this->dbh->prepare($sql);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Companies');
-			$sth->execute();
 
-			$objects = array();
 
-			while($obj = $sth->fetch()) {
-			$objects[] = $obj;
-			}
-			if (count($objects) > 0) {
-				return $objects[0];
-			} else {
-				return null;
-			}
-		}
-
-		public function getLastactivity(){
-			$sql = $this->sql_activities." ORDER BY id DESC LIMIT 1";
-			$sth = $this->dbh->prepare($sql);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'LastActivities');
-			$sth->execute();
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			if (count($objects) > 0) {
-				return $objects[0];
-			} else {
-				return null;
-			}
-		}
-
-		public function getLastcontact(){
-			$sql = $this->sql_contacts." ORDER BY id DESC LIMIT 1";
-			$sth = $this->dbh->prepare($sql);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Contacts');
-			$sth->execute();
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			if (count($objects) > 0) {
-				return $objects[0];
-			} else {
-				return null;
-			}
-		}
-
-		public function getLastcontract(){
-			$sql = $this->sql_contracts." ORDER BY id DESC LIMIT 1";
-			$sth = $this->dbh->prepare($sql);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Contracts');
-			$sth->execute();
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			if (count($objects) > 0) {
-				return $objects[0];
-			} else {
-				return null;
-			}
-		}
-
-				public function getLast($title){
-			$sql = "SELECT * FROM ".$title." ORDER BY id DESC LIMIT 1";
-			$sth = $this->dbh->prepare($sql);
-			$sth->setFetchMode(PDO::FETCH_CLASS, $title);
-			$sth->execute();
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			if (count($objects) > 0) {
-				return $objects[0];
-			} else {
-				return null;
-			}
-		}
 		//insertIdtoCompany($contract_id, $company_id);
 		public function insertIdtoCompany($lastcontract_id, $company_id) {
 			$data = array($lastcontract_id,  $company_id);
@@ -785,17 +527,6 @@
 			}
 		}
 
-		public function getContacttypes() {
-			$sth = $this->dbh->query("select * from contact_types order by id");
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Contacttypes');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
 
 		public function getContacttype($id) {
       $sql = $this->sql_contact_types." WHERE contact_types.id = :id";
@@ -816,42 +547,6 @@
       }
     }
 
-		public function createContacttype($title, $branch, $date) {
-			$data = array($title, $branch, $date);
-			$sth = $this->dbh->prepare("INSERT INTO contact_types (title, branch, date) VALUES (?, ?, ?)");
-			$sth->execute($data);
-
-			if($sth->rowCount() > 0) {
-				return $this->dbh->lastInsertId();
-			} else {
-				return null;
-			}
-		}
-
-    public function updateContacttype($id, $title) {
-      $data = array($title, $id);
-      $sth = $this->dbh->prepare("UPDATE contact_types SET title = ? WHERE id = ?");
-      $sth->execute($data);
-
-      if($sth->execute($data)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    public function deleteContacttype($id){
-      $sql = "DELETE FROM contact_types WHERE id = :id";
-      $sth = $this->dbh->prepare($sql);
-      $sth->bindParam(':id', $id, PDO::PARAM_INT);
-      $sth->execute();
-
-      if($sth->rowCount() > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    }
 
     public function deleteContactBranchContacttype($contact_type_id) {
       $sql = "DELETE FROM contacts_branches_contact_types WHERE contact_type_id = :contact_type_id";
@@ -866,29 +561,7 @@
       }
     }
 
-		/*public function getActivities() {
-			$sth = $this->dbh->query("select * from activities order by title");
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Activities');
 
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-				return $objects;
-		}*/
-
-		public function getActivities() {
-			$sth = $this->dbh->query($this->sql_activities);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Activities');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			return $objects;
-		}
 
 		public function getActivity($id) {
       $sql = $this->sql_activities." WHERE activities.id = :id";
