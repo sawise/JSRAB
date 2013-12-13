@@ -1,7 +1,7 @@
 
 INSERT INTO `jsrab`.`users` (`username`, `password`) VALUES ('sam', 'samsam123');
-INSERT INTO `jsrab`.`tireSize` (`tireSize`) VALUES ('B104');
-INSERT INTO `jsrab`.`tiretreads` (`tireThread`) VALUES ('295/80-22.5');
+INSERT INTO `jsrab`.`tireSize` (`name`) VALUES ('B104');
+INSERT INTO `jsrab`.`tiretreads` (`name`) VALUES ('295/80-22.5');
 INSERT INTO `jsrab`.`customers` (`name`,`phonenumber`) VALUES ('Companyname', 'phonenumber');
 INSERT INTO `jsrab`.`orders` (`customerID`, `tiretreadID`, `tiresizeID`, `total`, `comments`, `deliverydate`, `userID`,`lastChange`) VALUES ('c_id', 'tt_id', 'ts_id', 'total', 'ordernumber, follownumber mm', '2014-12-04', 'u_id', '2008-07-04');
 

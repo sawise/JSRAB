@@ -10,5 +10,7 @@
     $searchresult = $db->search($searchstring);
     $_SESSION['search'] = $searchresult;
      header("Location: index.php");
-  }
+
+  }  
+
 

@@ -1,10 +1,11 @@
 
 INSERT INTO `jsrab`.`users` (`username`, `password`) VALUES ('sam', 'samsam123');
-INSERT INTO `jsrab`.`tireSize` (`tireSize`) VALUES ('B104');
-INSERT INTO `jsrab`.`tiretreads` (`tireThread`) VALUES ('295/80-22.5');
+INSERT INTO `jsrab`.`tireSize` (`name`) VALUES ('B104');
+INSERT INTO `jsrab`.`tiretreads` (`name`) VALUES ('295/80-22.5');
 INSERT INTO `jsrab`.`customers` (`name`,`phonenumber`) VALUES ('Companyname', 'phonenumber');
 INSERT INTO `jsrab`.`orders` (`customerID`, `tiretreadID`, `tiresizeID`, `total`, `comments`, `deliverydate`, `userID`,`lastChange`) VALUES ('c_id', 'tt_id', 'ts_id', 'total', 'ordernumber, follownumber mm', '2014-12-04', 'u_id', '2008-07-04');
 
+SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID,orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.id LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID;
 
 desc customers;
 RENAME TABLE customer TO customers;
@@ -19,7 +20,7 @@ mysql> desc customers;
 +-------------+-------------+------+-----+---------+----------------+
 | Field       | Type        | Null | Key | Default | Extra          |
 +-------------+-------------+------+-----+---------+----------------+
-| idcustomer  | int(11)     | NO   | PRI | NULL    | auto_increment |
+| id	      | int(11)     | NO   | PRI | NULL    | auto_increment |
 | name        | varchar(45) | YES  |     | NULL    |                |
 | phonenumber | varchar(45) | YES  |     | NULL    |                |
 +-------------+-------------+------+-----+---------+----------------+selec
@@ -56,7 +57,7 @@ mysql> desc tiretreads;
 | Field  | Type        | Null | Key | Default | Extra          |
 +--------+-------------+------+-----+---------+----------------+
 | id     | int(11)     | NO   | PRI | NULL    | auto_increment |
-| thread | varchar(45) | YES  |     | NULL    |                |
+| name   | varchar(45) | YES  |     | NULL    |                |
 +--------+-------------+------+-----+---------+----------------+
 +----+-------------+
 | id | thread      |
@@ -74,7 +75,7 @@ mysql> desc tiresizes;
 | Field | Type        | Null | Key | Default | Extra          |
 +-------+-------------+------+-----+---------+----------------+
 | id    | int(11)     | NO   | PRI | NULL    | auto_increment |
-| size  | varchar(45) | YES  |     | NULL    |                |
+| name  | varchar(45) | YES  |     | NULL    |                |
 +-------+-------------+------+-----+---------+----------------+
 +----+--------+
 | id | size   |

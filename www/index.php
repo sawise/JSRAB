@@ -14,6 +14,7 @@
     <div class="row-fluid">
       <div class="span12">
         <ul class="nav nav-tabs menu" id="myTab">
+
           <li class="active"><a href="#week"  data-toggle="tab">Veckoöversikt</a></li>
           <li><a href="#createOrder"  data-toggle="tab">Lägg till ny order</a></li>
           <li><a href="#search"  data-toggle="tab">Sök</a></li>
@@ -37,7 +38,8 @@
 <script>
     <?php
       if(isset($_SESSION['search'])){
-        echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name
+        $_SESSION['search'] = null;
+        echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name        
       } ?> 
   </script>
 
