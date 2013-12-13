@@ -41,9 +41,8 @@
 
 	$orderID = $db->createOrder($customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, 1 ,$now);
 	if($orderID){
-		
 		set_feedback('success', 'Ordern skapades, gå in i sök för att hitta den');
-		header('index.php');
+		 header("Location: index.php");
 	} else{
 		set_feedback('error', 'Något blev galet, försök igen');
 	}
