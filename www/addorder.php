@@ -1,6 +1,8 @@
  <div class="alignleft">	
  <?php 
 require_once('../config.php');
+//require_once('../style.php');
+$db = new Db();
    $tireTreads = $db->getTiretreads();
    $tireSize = $db->getTiresize();
    $customers = $db->getCustomers();

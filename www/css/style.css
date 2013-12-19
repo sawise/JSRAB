@@ -4,8 +4,6 @@ body{
 	background-repeat:no-repeat;
 	background-size: 100%;
 	 font-family: 'Ubuntu Mono';
-
-
 }
 
 .button {
@@ -13,18 +11,18 @@ body{
    display: inline-block;
    color: rgba(0,0,0,1);
 }
-  .tab-content > .nav-tabs li a {
-  	font-size:1em;
-  }
+.tab-content > .nav-tabs li a {
+	font-size:1em;
+}
 
-  button {
-  	font-size:1.2em;
-  }
+button {
+	font-size:1.2em;
+}
 
 .centered {
   top:10%;
   left:8%;
-  margin-top: 5%;
+  margin-top: 0.5%;
 }
 .alignleft {
 	text-align: left;
@@ -39,7 +37,21 @@ body{
 }
 .mainDiv{
 	opacity:0.9;
-	height: 40em;
+	min-height: 40em;
+	background-color: #FFFFFF;
+	text-align: center;
+	padding:0.35em;
+	-webkit-border-radius: 3em;
+-moz-border-radius: 3em;
+border-radius: 3em;
+	border: 0.3em ridge blue;
+
+}
+
+.popUp{
+	opacity:0.9;
+	height: 100%;
+	width: 80%;
 	background-color: #FFFFFF;
 	text-align: center;
 	padding:0.5em;
@@ -48,6 +60,28 @@ body{
 border-radius: 3em;
 	border: 0.3em ridge blue;
 }
+
+#tabs .tabs-spacer { float: left; height: 200px; }
+  .tabs-bottom .ui-tabs-nav { clear: left; padding: 0 .2em .2em .2em; }
+  .tabs-bottom .ui-tabs-nav li { top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: auto; border-top: 0; }
+  .tabs-bottom .ui-tabs-nav li.ui-tabs-active { margin-top: -1px; padding-top: 1px; }
+
+  #indextabs,#yeartabs{ 
+  	font-family: 'Ubuntu Mono';
+	border: none
+  }
+#indextabs {
+	width: 96%;
+	margin-left: 1em;
+}
+#yeartabs{
+	width: 100%;
+	border: none
+}
+#yeartabs .ui-tabs-nav li {
+	font-size: 0.9em;
+}
+
 
 .searchInput{
 	text-align: center;

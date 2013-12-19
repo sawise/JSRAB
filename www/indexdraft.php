@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <?php
-    require_once('../config.php');
-$title = "Sök";
 
-              ?>
+        require_once('../config.php');
+    $title = "Lägg till ny order";
+    $db = new Db();
+
+?>
+
 <?php require_once(ROOT_PATH.'/header.php');?>
-  <body><img src="img/logo.png" class="logo">
-<div class="container centered mainDiv">
-	<div class="row-fluid">
-	<div class="span12">
-	<?php echo menu($title); ?>
-	  <div class="searchInput">
-	         <form>
-	         <input type="text" placeholder="" class="input-xxlarge search-query">
-			    <button type="submit" class="btn">Search</button>	
-			    
-		</form>
-		</div>
-	      <div class="searchResult"><table class="table table-striped">
-	 		<thead><th>Ordernummer<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>
-	 		 <tbody><?php foreach($orders as $order) : ?>
-	            <tr>
-	                <td><?php echo $order[0] ?></td>
-	                <td><?php echo $order[1] ?></td>
-	                <td><?php echo $order[2] ?></td>
-	                <td><?php echo $order[3] ?></td>
-	                <td><?php echo $order[4] ?></td>
-	                <td><a href="#" class="btn btn-mini btn-primary btn-Action" type="button">Mer info</button></td>
-	 			</tr>
-	 		<?php endforeach ?>
-			</tbody>
-	 		</table>
+<body>
+  <img src="img/logo.png" class="logo">
+  <div class="container centered mainDiv">
+    <div class="row-fluid">
+      <div class="span12">
+        <ul class="nav nav-tabs menu" id="myTab">
 
-		</div>
-		</div>
-	    </div>
+          <li class="active"><a href="#week"  data-toggle="tab">Veckoöversikt</a></li>
+          <li><a href="#createOrder"  data-toggle="tab">Lägg till ny order</a></li>
+          <li><a href="#search"  data-toggle="tab">Sök</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane active fade in" id="week"><?php require_once('weekview.php');?></div>
+          <div class="tab-pane fade" id="createOrder"><?php require_once('addorder.php');?></div>
+          <div class="tab-pane fade" id="search"><?php require_once('search.php');?></div>
+        </div>
+      </div>
+     </div>
+    </div>
+   </div>
   </div>
-</div>
-  
-  </body>
 
+</body>
+<script>
+
+    <?php
+      if(isset($_SESSION['search'])){
+        $_SESSION['search'] = null;
+        echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name        
+      } ?> 
+  </script>
 
 <?php require_once(ROOT_PATH.'/footer.php');?>

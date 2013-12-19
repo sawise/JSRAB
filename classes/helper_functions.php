@@ -99,6 +99,32 @@ function toggle($toggle = null, $togglearray = null){
   return $html;
 }
 
+
+function yearViewtest(){
+    $startyear = 2013;
+    $thisyear = 2014;
+     $html = '<div id="yeartabs"><ul>';
+        for($i = $startyear; $i <= $thisyear; $i++){
+          $html .= '<li><a href="weekoverview.php?year='.$i.'">'.$i.'</a></li>';
+        }
+        $html .= '</ul></div>';
+    return $html;
+  }
+
+  function weekViewtest($year){//, $searchresult){
+  $startweek = 50;
+  $totalweeks = 52;
+
+   $html = '';
+  $html = '<style> #weektabs_'.$year.' .ui-tabs-nav li { font-size: 0.7em; font-family: \'Ubuntu Mono\';}</style>';
+    $html .= '<div id="weektabs_'.$year.'"><ul>';  
+      for($i = $startweek; $i <= $totalweeks; $i++){
+          $html .= '<li><a href="orderinweek.php?year='.$year.'&week='.$i.'">'.$i.'</a></li>';
+      }
+      $html .= '</ul></div>';
+  return $html;
+}
+
   function yearView($db){
     $startyear = 2012;
     $thisyear = 2014;
@@ -135,11 +161,6 @@ function weekView($year, $searchresult){
   $html .= '<div class="tab-content">';
   if($s != null){
     for($i = $startweek; $i <= $totalweeks; $i++){
-      if($i == $startweek){
-        $html .= '<div class="tab-pane active fade in" id="y'.$year.'_w'.$i.'">';
-      } else {
-        $html .= '<div class="tab-pane fade" id="y'.$year.'_w'.$i.'">';
-      }
         $html .= '<table class="table table-striped">';
         $html .='<thead><th>Leveransdag<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>';
         $html .= '<tbody>';

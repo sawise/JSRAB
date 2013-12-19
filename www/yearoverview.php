@@ -1,11 +1,13 @@
-<html>
-  <head>
-  <meta charset="UTF-8">
 
-  <?php require_once('../style.php') ?>
-  <script>
-  $(function() {
-    $( "#indextabs" ).tabs({
+  <?php 
+
+        require_once('../config.php');
+  //require_once('../style.php');
+
+?>
+<script>
+$(function() {
+    $( "#yeartabs" ).tabs({
       beforeLoad: function( event, ui ) {
         ui.jqXHR.error(function() {
           ui.panel.html(
@@ -15,7 +17,10 @@
       }
     });
   });
-  </script>
+</script>
 
-  </head>
-  <?php echo get_feedback(); ?>
+<?php echo yearViewtest(); ?>
+
+   
+
+       

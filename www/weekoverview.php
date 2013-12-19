@@ -1,11 +1,12 @@
-<html>
-  <head>
-  <meta charset="UTF-8">
 
-  <?php require_once('../style.php') ?>
-  <script>
+<?php
+ require_once('../config.php');
+	$year = $_GET['year'];
+	?>
+
+<script>
   $(function() {
-    $( "#indextabs" ).tabs({
+    $( "#weektabs_<?php echo $year ?>" ).tabs({
       beforeLoad: function( event, ui ) {
         ui.jqXHR.error(function() {
           ui.panel.html(
@@ -17,5 +18,8 @@
   });
   </script>
 
-  </head>
-  <?php echo get_feedback(); ?>
+
+<?php
+	echo weekViewtest($year);
+	echo $year;
+ ?>

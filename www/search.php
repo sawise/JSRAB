@@ -1,6 +1,13 @@
+  <?php
+
+        require_once('../config.php');
+  //require_once('../style.php');
+
+?>
+
   <div class="searchInput">
 	         <form method="get" action="searchcaller.php">
-	         <input id="search" name="search" type="text" placeholder="" value="<?php if(isset($_SESSION['search'])) {echo $_SESSION['searchstring'];} ?>" class="input-xxlarge search-query">
+	         <input id="search" name="search" type="text" placeholder="" value="<?php echo $_SESSION['searchstring'] ?>" class="input-xxlarge search-query">
 			    <button type="submit" class="btn">Sök</button>	
 		</form>
 		</div>
@@ -20,5 +27,9 @@
 			 		<?php endforeach ?>
 					</tbody>
 			 		</table>
+			<?php //$_SESSION['search'] = null;$_SESSION['searchstring'] = null; ?>
 		 <?php endif ?>
 		</div>
+
+
+		

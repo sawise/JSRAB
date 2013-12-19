@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <?php
 
         require_once('../config.php');
@@ -13,16 +14,13 @@
   <div class="container centered mainDiv">
     <div class="row-fluid">
       <div class="span12">
-        <ul class="nav nav-tabs menu" id="myTab">
-
-          <li class="active"><a href="#week"  data-toggle="tab">Veckoöversikt</a></li>
-          <li><a href="#createOrder"  data-toggle="tab">Lägg till ny order</a></li>
-          <li><a href="#search"  data-toggle="tab">Sök</a></li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane active fade in" id="week"><?php require_once('weekview.php');?></div>
-          <div class="tab-pane fade" id="createOrder"><?php require_once('addorder.php');?></div>
-          <div class="tab-pane fade" id="search"><?php require_once('search.php');?></div>
+        <div id="indextabs">
+          <ul> 
+          <li><a href="yearoverview.php">Veckoöversikt</a></li>
+            <li><a href="addorder.php">Skapa order</a></li>
+            <li><a href="search.php">Sök</a></li>
+            <li><a href="orderdetails.php">Order</a></li>
+          </ul>
         </div>
       </div>
      </div>
@@ -32,11 +30,17 @@
 
 </body>
 <script>
+
+// setter
+//$('#tabs').tabs({ selected: 1 });
     <?php
       if(isset($_SESSION['search'])){
-        $_SESSION['search'] = null;
-        echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name        
-      } ?> 
+        echo "$('#indextabs').tabs({active: 2})";
+        //echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name        
+      } else if(isset($_SESSION['createdorder'])){
+        echo "$('#indextabs').tabs({active: 3})";
+      }
+        ?> 
   </script>
 
 <?php require_once(ROOT_PATH.'/footer.php');?>
