@@ -112,7 +112,7 @@ function yearViewtest(){
   }
 
   function weekViewtest($year){//, $searchresult){
-  $startweek = 50;
+  $startweek = 1;
   $totalweeks = 52;
 
    $html = '';
