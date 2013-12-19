@@ -60,6 +60,30 @@
 
 		}
 
+		public function search($text) {
+			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'");
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+				return $objects;
+		}
+
+		public function searchYear($year) {
+			$sth = $this->dbh->query($this->sql_search." WHERE deliverydate LIKE '%".$year."'");
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+				return $objects;
+		}
+
 
 		public function getContact($id) {
 			$sql = $this->sql_contacts." where contacts.id = :id";
@@ -147,18 +171,7 @@
 			}
 		}
 
-		public function search($text) {
-			$advsearch_contacttypes = "";
-			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'");
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-				return $objects;
-		}
+		
 
 		public function advsearch($text, $sort, $ascdesc, $startform, $limit, $contacttypes_id = null, $mailshots_id = null, $activities_id = null) {
 			$advsearch = "";
