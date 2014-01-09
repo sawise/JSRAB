@@ -102,6 +102,9 @@ function toggle($toggle = null, $togglearray = null){
 
 //----------------
 
+
+
+
 function yearViewtest(){
     $startyear = 2013;
     $thisyear = 2014;
@@ -252,6 +255,38 @@ function getWeekday($date){
     $returnWeekday = 'Lördag';
   }
   return $returnWeekday;
+}
+
+function tooltipButton($searchresult){
+  $ordernumberArray = explode(",", $searchresult->comments);
+   $html = '<a class="tooltip_display_'.$searchresult->id.' btn btn-mini btn-primary btn-Action" href="#" type="button">Mer info</button></a>';
+   $html .= '<div class="ttip_'.$searchresult->id.'">';
+   $html .= '<div class="contents_'.$searchresult->id.'">';
+   $html .= '<p>Leveransdatum:'.$searchresult->customer_name.'</p>
+               <p>Kund:'.$searchresult->customer_name.'</p>
+               <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
+               <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
+               <p>Antal: '.$searchresult->total.'</p>';
+               
+             for ($i=0; $i < count($ordernumberArray) ; $i++) { 
+                $arrayCount = count($ordernumberArray);
+                if($i == 0){
+                  $html .= '<p>Ordernummer: '.$ordernumberArray[$i].'<p>';
+                  $html .= '<p>Följenummer: '.$i;
+                } else if($i == $arrayCount-1) {
+                   $html .= $ordernumberArray[$i].'<p>'; 
+                } else {
+                  $html .= $ordernumberArray[$i].',';
+                } 
+            } 
+              $html .= '</p>';
+              $html .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera order</p></a>';
+              $html .= '<p><a href="#">Skriv ut</p></a>';
+              //$html .= '</div>';
+              $html .= '<span class="note_'.$searchresult->id.'">(click here to close the box)</span>';
+              $html .= '</div></div>';
+              return $html;
+
 }
 
 function showTooltip($searchresults){

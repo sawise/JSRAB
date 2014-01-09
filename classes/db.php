@@ -347,9 +347,9 @@
 
 	
 
-		public function updateContract($id, $title) {
-      $data = array($title, $id);
-      $sth = $this->dbh->prepare("UPDATE contracts SET title = ? WHERE id = ?");
+		public function updateOrder($id, $date, $customerID, $tiretreadID, $tiresizeID, $total, $comments, $deliverydate, $userID,$lastChange){
+      $data = array($date, $customerID, $tiretreadID, $tiresizeID, $total, $comments, $deliverydate, $userID,$lastChange, $id);
+      $sth = $this->dbh->prepare("UPDATE orders SET date = ?, customerID = ?, tiretreadID = ?, tiresizeID = ?, total = ?, comments = ?, deliverydate = ?, userID = ?, lastChange = ? WHERE id = ?");
       $sth->execute($data);
 
       if($sth->execute($data)) {

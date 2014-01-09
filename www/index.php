@@ -5,6 +5,10 @@
         require_once('../config.php');
     $title = "Lägg till ny order";
     $db = new Db();
+    $editorderLink = "editOrder.php";
+    if(isset($_GET['editOrder'])){
+      $editorderLink = "editOrder.php?orderId=".$_GET['editOrder'];
+    }
 
 ?>
 
@@ -19,7 +23,7 @@
           <li><a href="yearoverview.php">Veckoöversikt</a></li>
             <li><a href="addorder.php">Skapa order</a></li>
             <li><a href="search.php">Sök</a></li>
-            <li><a href="orderdetails.php">Order</a></li>
+            <li><a href="<?php echo $editorderLink ?>">Redigera order</a></li>
           </ul>
         </div>
       </div>
@@ -35,7 +39,7 @@
     <?php
       if(isset($_SESSION['search'])){
         echo "$('#indextabs').tabs({active: 2})";     
-      } else if(isset($_SESSION['createdorder'])){
+      }  else if(isset($_GET['editOrder'])){
         echo "$('#indextabs').tabs({active: 3})";
       }
         ?> 
