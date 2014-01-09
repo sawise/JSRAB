@@ -19,6 +19,10 @@ button {
 	font-size:1.2em;
 }
 
+.bordertest{
+	border: solid 4px rgba(0,0,0,1);
+}
+
 .centered {
   top:10%;
   left:8%;
@@ -61,11 +65,78 @@ border-radius: 3em;
 	border: 0.3em ridge blue;
 }
 
+ .photo {
+    width: 300px;
+    text-align: center;
+  }
+  .photo .ui-widget-header {
+    margin: 1em 0;
+  }
+  .map {
+    width: 350px;
+    height: 350px;
+  }
+  .ui-tooltip {
+    max-width: 350px;
+  }
+
+  .ttip {
+    position: absolute;
+    color: #fff;
+    width: 50%;
+    padding: 20px;
+    -webkit-box-shadow: 0 1px 2px #303030;
+    -moz-box-shadow: 0 1px 2px #303030;
+    box-shadow: 0 1px 2px #303030;
+    border-radius: 8px 8px 8px 8px;
+    -moz-border-radius: 8px 8px 8px 8px;
+    -webkit-border-radius: 8px 8px 8px 8px;
+    -o-border-radius: 8px 8px 8px 8px;
+    background-image:-moz-linear-gradient(top, #F45000, #FF8000);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#F45000), to(#FF8000));
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F45000', endColorstr='#FF8000', GradientType=0);
+    background-color:#000;
+    display: none
+}
+.contents {
+    font-size: 15px;
+    font-weight:bold
+}
+.note {
+    font-size: 13px;
+    text-align:center;
+    display:block;
+    width: 100%
+}
+#background{
+    display: none;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #000000;
+    z-index: 1;
+}
+#large {
+    display: none;
+    position: absolute;
+    background: #FFFFFF;
+    padding: 0px;
+    z-index: 10;
+    min-height: 0px;
+    min-width: 0px;
+    color: #336699;
+}
+
 #tabs .tabs-spacer { float: left; height: 200px; }
   .tabs-bottom .ui-tabs-nav { clear: left; padding: 0 .2em .2em .2em; }
   .tabs-bottom .ui-tabs-nav li { top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: auto; border-top: 0; }
   .tabs-bottom .ui-tabs-nav li.ui-tabs-active { margin-top: -1px; padding-top: 1px; }
 
+#Ubuntufont{ 
+  	font-family: 'Ubuntu Mono';
+  }
   #indextabs,#yeartabs{ 
   	font-family: 'Ubuntu Mono';
 	border: none
@@ -81,7 +152,6 @@ border-radius: 3em;
 #yeartabs .ui-tabs-nav li {
 	font-size: 0.9em;
 }
-
 
 .searchInput{
 	text-align: center;

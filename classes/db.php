@@ -57,9 +57,26 @@
 				$objects[] = $obj;
 			}
 			return $objects;
-
 		}
 
+		public function getOrder($id) {
+			$sql = $this->sql_search." WHERE orders.id = :id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
+			$sth->execute();
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+			if (count($objects) > 0) {
+				return $objects[0];
+			} else {
+				return null;
+			}
+		}
 		public function search($text) {
 			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'");
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');

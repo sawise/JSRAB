@@ -13,6 +13,7 @@ function menu($currentPage){
   return $menu;
 }
 
+
 function form_select($name, $title, $items, $selected_id = null, $dbcolumn, $toggle, $togglearray) {
   $html = form_control_wrapper($name);
     $html .= form_label($name, $title);
@@ -99,6 +100,7 @@ function toggle($toggle = null, $togglearray = null){
   return $html;
 }
 
+//----------------
 
 function yearViewtest(){
     $startyear = 2013;
@@ -251,6 +253,76 @@ function getWeekday($date){
   }
   return $returnWeekday;
 }
+
+function showTooltip($searchresults){
+  $html = '';
+  foreach($searchresults as $searchresult){
+    $html .= '<style>';
+      $html .= '.ttip_'.$searchresult->id.' {';
+    $html .= 'position: absolute;
+        color: #fff;
+        width: 50%;
+        padding: 20px;
+        -webkit-box-shadow: 0 1px 2px #303030;
+        -moz-box-shadow: 0 1px 2px #303030;
+        box-shadow: 0 1px 2px #303030;
+        border-radius: 8px 8px 8px 8px;
+        -moz-border-radius: 8px 8px 8px 8px;
+        -webkit-border-radius: 8px 8px 8px 8px;
+        -o-border-radius: 8px 8px 8px 8px;
+        background-image:-moz-linear-gradient(top, #F45000, #FF8000);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#F45000), to(#FF8000));
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'#F45000\', endColorstr=\'#FF8000\', GradientType=0);
+        background-color:#000;
+        display: none
+        }';
+
+$html .= '.contents_'.$searchresult->id.' {';
+   $html .= ' font-size: 15px;
+    font-size: 1em; 
+    font-family: \'Ubuntu Mono\';
+       font-weight:bold;
+       text-align:left;
+       }';
+
+$html .= '.note_'.$searchresult->id.' {';
+  $html .= '  font-size: 13px;
+      text-align:center;
+      display:block;
+      width: 100%
+  }';
+  $html .= '</style>';
+
+  //Script
+     $html .= '<script>';
+     $html .= '$(\'.tooltip_display_'.$searchresult->id.'\').click(function() {';
+    $html .= 'var $this = $(this);';
+        /*$("#background").css({
+        "opacity": "0.3"
+        }).fadeIn("slow");*/
+
+        $html .= '$("#large").html(function() {';
+        $html .= '$(\'.ttip_'.$searchresult->id.'\').css({';
+        $html .=  'left: $this.position() + \'20px\',';
+        $html .= 'top: $this.position() + \'50px\'';
+        $html .= '}).show(500)';
+        $html .= '}).fadeIn("slow");';
+        $html .= '});';
+
+         $html .= '$(\'.note_'.$searchresult->id.'\').on(\'click\', function() {';
+        $html .= '$(\'.ttip_'.$searchresult->id.'\').hide(500);';
+        //$("#background").fadeOut("slow");
+        $html .= '$("#large").fadeOut("slow");';
+        $html .= '});';
+        $html .= '$("#large").click(function() {';
+        $html .= '$(this).fadeOut();';
+      $html .= '});';
+    $html .= '</script>';
+  }
+
+  return $html;
+}
+
 
 //$dw = date( "w", $timestamp);
   /* Will be used later to sort items by week

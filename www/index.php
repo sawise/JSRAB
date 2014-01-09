@@ -31,12 +31,10 @@
 </body>
 <script>
 
-// setter
-//$('#tabs').tabs({ selected: 1 });
+
     <?php
       if(isset($_SESSION['search'])){
-        echo "$('#indextabs').tabs({active: 2})";
-        //echo '$(\'#myTab a[href="#search"]\').tab(\'show\');'; // Select tab by name        
+        echo "$('#indextabs').tabs({active: 2})";     
       } else if(isset($_SESSION['createdorder'])){
         echo "$('#indextabs').tabs({active: 3})";
       }
