@@ -289,6 +289,51 @@ function tooltipButton($searchresult){
 
 }
 
+function showTooltiptest($searchresult){
+  $ordernumberArray = explode(",", $searchresult->comments);
+  $content = '<div id="content_'.$searchresult->id.'""><p>Leveransdatum:'.$searchresult->deliverydate.'</p>
+                 <p>Kund:'.$searchresult->customer_name.'</p>
+                 <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
+                 <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
+                 <p>Antal: '.$searchresult->total.'</p>';
+
+             for ($i=0; $i < count($ordernumberArray) ; $i++) { 
+                $arrayCount = count($ordernumberArray);
+                if($i == 0){
+                  $content .= '<p>Ordernummer: '.$ordernumberArray[$i].'<p>';
+                  $content .= '<p>Följenummer: '.$i;
+                } else if($i == $arrayCount-1) {
+                   $content .= $ordernumberArray[$i].'<p>'; 
+                } else {
+                  $content .= $ordernumberArray[$i].',';
+                } 
+            } 
+            $content .= '</div>';
+            echo $content;
+  $html = '<div><span id="searchItem_'.$searchresult->id.'" rel="popover" class="btn">
+            Click to pop
+            </span>';
+$html .= '<script>
+
+            $(document).ready(function() {
+              var div1Html = $(\'#content_'.$searchresult->id.'\').html();
+              console.log(div1Html);
+                $("#searchItem_'.$searchresult->id.'").popover({
+                    html: true,
+                    animation: true,
+                    content: div1Html,
+                    placement: "bottom"
+                });
+
+            });
+      $(\'#content_'.$searchresult->id.'\').hide()
+        </script></div>';
+        
+
+        //$(\'#content_'.$searchresult->id.'\').html()
+  return $html;
+}
+
 function showTooltip($searchresults){
   $html = '';
   foreach($searchresults as $searchresult){

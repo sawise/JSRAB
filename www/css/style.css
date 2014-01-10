@@ -91,6 +91,8 @@ border-radius: 3em;
     color: #336699;
 }
 
+
+
 #tabs .tabs-spacer { float: left; height: 200px; }
   .tabs-bottom .ui-tabs-nav { clear: left; padding: 0 .2em .2em .2em; }
   .tabs-bottom .ui-tabs-nav li { top: auto; bottom: 0; margin: 0 .2em 1px 0; border-bottom: auto; border-top: 0; }
@@ -118,6 +120,7 @@ border-radius: 3em;
 .searchInput{
 	text-align: center;
 	padding:1em 0 0 0;
+	margin-bottom: 1em;
 }
 .menu{
 	padding: 0 0 0 2em;
@@ -126,3 +129,4 @@ border-radius: 3em;
 .bgTest{
 	background-color: #FFFFFF;
 }
+

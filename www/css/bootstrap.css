@@ -1995,12 +1995,12 @@ legend + .control-group {
   padding-left: 180px;
 }
 
-table {
+/*table {
   max-width: 100%;
   background-color: transparent;
   border-collapse: collapse;
   border-spacing: 0;
-}
+}*/
 
 .table {
   width: 100%;
@@ -5421,6 +5421,7 @@ input[type="submit"].btn.btn-mini {
 }
 
 .popover.left {
+  margin-top: 25px;
   margin-left: -10px;
 }
 

@@ -2,6 +2,9 @@
   <head>
   <meta charset="UTF-8">
 
+                 
+                
+
   <?php require_once('../style.php') ?>
   <script>
   $(function() {
@@ -15,6 +18,7 @@
       }
     });
   });
+
   </script>
 
   </head>
