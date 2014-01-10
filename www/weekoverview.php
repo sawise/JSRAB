@@ -16,10 +16,8 @@
       }
     });
   });
-  </script>
-
+</script>
 
 <?php
-	echo weekViewtest($year);
-	echo $year;
+	echo weekView($year);
  ?>

@@ -5413,15 +5413,16 @@ input[type="submit"].btn.btn-mini {
 }
 
 .popover.right {
+
   margin-left: 10px;
 }
 
 .popover.bottom {
+  left: 500px;
   margin-top: 10px;
 }
 
 .popover.left {
-  margin-top: 25px;
   margin-left: -10px;
 }
 

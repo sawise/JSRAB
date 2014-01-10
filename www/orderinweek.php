@@ -4,11 +4,24 @@
   $week = $_GET['week'];
   $db = new Db();
   $searchresults = $db->searchyear($year);
-  echo showTooltip($searchresults);
+  //echo showTooltip($searchresults);
 ?>	
-<style> #Ubuntufont { font-size: 0.7em; font-family: 'Ubuntu Mono';}</style>
+
+<link rel="stylesheet" type="text/css" href="css/flexigrid.pack.css" />
+ <link rel="stylesheet" href="css/flexigridstyle.css" />
+<script type="text/javascript" src="js/flexigrid.pack.js"></script>
+
+
+<script type="text/javascript">
+$(function () {
+    $(".popover-examples").popover({
+        
+    });
+});
+</script>
+
 <div class="searchResult Ubuntufont">
-	<table class="table table-striped">
+	<table class="flexme1 table table-striped">
 		<thead>
 			<th>Leveransdatum</th>
 			<th>Företag/Kund</th>
@@ -21,16 +34,19 @@
 		<?php foreach($searchresults as $searchresult) : ?>
 			<?php if (getWeek($searchresult->deliverydate) == $week) : ?>
 				<tr>
-				<td><?php echo getWeekday($searchresult->deliverydate) ?></td>
-					<td><?php echo $searchresult->customer_name ?></td>
-					<td><?php echo $searchresult->tiretread_name ?></td>
-					<td><?php echo $searchresult->tiresize_name ?></td>
-					<td><?php echo $searchresult->total ?></td>
-					<td><?php echo tooltipButton($searchresult); ?></td>
+				   <td><?php echo $searchresult->deliverydate ?></td>
+			                <td><?php echo $searchresult->customer_name ?></td>
+			                <td><?php echo $searchresult->tiretread_name ?></td>
+			                <td><?php echo $searchresult->tiresize_name ?></td>
+			                <td><?php echo $searchresult->total ?></td>
+			                <td><?php echo showTooltiptest($searchresult) ?></td>
 					 
 				</tr>
 			<?php endif ?>
 		<?php endforeach ?>
 		</tbody>
-	</table><div id="large"></div>
-</div>
+	</table>
+</div>   <script>
+        $('.flexme1').flexigrid({height:500,striped:false});
+
+        </script>

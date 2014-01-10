@@ -57,7 +57,7 @@ $(function () {
 			<?php $_SESSION['search'] = null;$_SESSION['searchstring'] = null; ?>
 		 <?php endif ?>
         <script>
-        $('.flexme1').flexigrid();
+        $('.flexme1').flexigrid({height:500,striped:false});
 
         </script>
 <body> <!--<a href="#" class="btn popover-examples" data-toggle="popover" title="Popover title" data-content="Default popover<br>ss<br>">Popover</a><?php //echo tooltipButton($searchresult); ?> -->

@@ -105,7 +105,7 @@ function toggle($toggle = null, $togglearray = null){
 
 
 
-function yearViewtest(){
+function yearView(){
     $startyear = 2013;
     $thisyear = 2014;
      $html = '<div id="yeartabs"><ul>';
@@ -116,7 +116,7 @@ function yearViewtest(){
     return $html;
   }
 
-  function weekViewtest($year){//, $searchresult){
+  function weekView($year){//, $searchresult){
   $startweek = 1;
   $totalweeks = 52;
 
@@ -130,7 +130,7 @@ function yearViewtest(){
   return $html;
 }
 
-  function yearView($db){
+ /* function yearViewtest($db){
     $startyear = 2012;
     $thisyear = 2014;
     $html = '<div class="tabbable tabs-below">';
@@ -166,7 +166,7 @@ function weekView($year, $searchresult){
   $html .= '<div class="tab-content">';
   if($s != null){
     for($i = $startweek; $i <= $totalweeks; $i++){
-        $html .= '<table class="table table-striped">';
+        $html .= '<table class="flexme1 Ubuntufont table table-striped">';
         $html .='<thead><th>Leveransdag<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>';
         $html .= '<tbody>';
       foreach($s as $ss){
@@ -179,7 +179,7 @@ function weekView($year, $searchresult){
           $html .= '<td>'.$ss->tiretread_name.'</td>';
           $html .= '<td>'.$ss->tiresize_name.'</td>';
           $html .= '<td>'.$ss->total.'</td>';
-          $html .= '<td>'.popUp(1).'</td>';
+          $html .= '<td>'.showTooltiptest($ss).'</td>';
           $html .= '</tr>';
         } 
       }            
@@ -203,7 +203,7 @@ function weekView($year, $searchresult){
     
   $html .= '</div></div>';
   return $html;
-}
+}*/
 
 function tableView(){
   $totalweeks = 52;
@@ -257,7 +257,7 @@ function getWeekday($date){
   return $returnWeekday;
 }
 
-function tooltipButton($searchresult){
+/*function tooltipButton($searchresult){
   $ordernumberArray = explode(",", $searchresult->comments);
    $html = '<a class="tooltip_display_'.$searchresult->id.' btn btn-mini btn-primary btn-Action" href="#" type="button">Mer info</button></a>';
    $html .= '<div class="ttip_'.$searchresult->id.'">';
@@ -286,12 +286,11 @@ function tooltipButton($searchresult){
               $html .= '<span class="note_'.$searchresult->id.'">(click here to close the box)</span>';
               $html .= '</div></div>';
               return $html;
-
-}
+}*/
 
 function showTooltiptest($searchresult){
   $ordernumberArray = explode(",", $searchresult->comments);
-  $content = '<div id="content_'.$searchresult->id.'""><p>Leveransdatum:'.$searchresult->deliverydate.'</p>
+  $content = '<div id="content_'.$searchresult->id.'" class="Ubuntufont"><p>Leveransdatum:'.$searchresult->deliverydate.'</p>
                  <p>Kund:'.$searchresult->customer_name.'</p>
                  <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
                  <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
@@ -308,16 +307,17 @@ function showTooltiptest($searchresult){
                   $content .= $ordernumberArray[$i].',';
                 } 
             } 
+            $content .= '</p>';
+              $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera order</p></a>';
+              $content .= '<p><a href="#">Skriv ut</p></a>';
             $content .= '</div>';
             echo $content;
   $html = '<div><span id="searchItem_'.$searchresult->id.'" rel="popover" class="btn">
             Click to pop
             </span>';
 $html .= '<script>
-
             $(document).ready(function() {
               var div1Html = $(\'#content_'.$searchresult->id.'\').html();
-              console.log(div1Html);
                 $("#searchItem_'.$searchresult->id.'").popover({
                     html: true,
                     animation: true,
@@ -328,12 +328,11 @@ $html .= '<script>
             });
       $(\'#content_'.$searchresult->id.'\').hide()
         </script></div>';
-        
-
-        //$(\'#content_'.$searchresult->id.'\').html()
   return $html;
 }
 
+/*
+  Old beta
 function showTooltip($searchresults){
   $html = '';
   foreach($searchresults as $searchresult){
@@ -379,7 +378,7 @@ $html .= '.note_'.$searchresult->id.' {';
     $html .= 'var $this = $(this);';
         /*$("#background").css({
         "opacity": "0.3"
-        }).fadeIn("slow");*/
+        }).fadeIn("slow");
 
         $html .= '$("#large").html(function() {';
         $html .= '$(\'.ttip_'.$searchresult->id.'\').css({';
@@ -401,7 +400,7 @@ $html .= '.note_'.$searchresult->id.' {';
   }
 
   return $html;
-}
+}*/
 
 
 //$dw = date( "w", $timestamp);

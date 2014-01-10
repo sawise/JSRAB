@@ -19,7 +19,7 @@ $(function() {
   });
 </script>
 
-<?php echo yearViewtest(); ?>
+<?php echo yearView(); ?>
 
    
 
