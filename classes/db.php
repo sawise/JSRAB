@@ -15,6 +15,7 @@
 		//private $sql_search = "SELECT DISTINCT contacts.id, contacts.first_name, contacts.last_name, contacts.email, contacts.cell_phone, contacts.work_phone,  companies.title AS companies_title, contacts.contact_person, contacts.notes, companies.id AS companies_id, companies.title AS companies_title, companies.alt_title AS companies_alt_title, companies.url AS companies_url, companies.email AS companies_email, companies.contact_id AS companies_contact_id, companies.billed AS companies_billed, companies.total AS companies_total, companies.reference AS companies_reference, companies.visit_address AS companies_visit_address, companies.visit_zip_code AS companies_visit_zip_code, companies.visit_city AS companies_visit_city, companies.mail_address AS companies_mail_address, companies.mail_zip_code AS companies_mail_zip_code, companies.mail_city AS companies_mail_city, companies.billing_address AS companies_billing_address, companies.billing_zip_code AS companies_billing_zip_code, companies.billing_city AS companies_billing_city FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id";
 
 		//Many to many-kladd
+		//private $sql_search_count = "SELECT COUNT(orders.id) as idcountm customers.name as customer_name FROM orders LEFT JOIN customers ON customers.id = orders.customerID LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
 		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.customerID LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
 
 		private $sql_tiretreads = "select * from tiretreads";
@@ -76,9 +77,29 @@
 			} else {
 				return null;
 			}
+		}  /*<td><?php echo $searchresult->deliverydate ?></td>
+			                <td><?php echo $searchresult->customer_name ?></td>
+			                <td><?php echo $searchresult->tiretread_name ?></td>
+			                <td><?php echo $searchresult->tiresize_name ?></td>
+			                <td><?php echo $searchresult->total ?></td>*/
+
+			    
+
+		public function search_count($text) {
+			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'" );
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Ordercount');
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+				return count($objects);
 		}
-		public function search($text) {
-			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'");
+
+		public function search($text, $sortby, $descasc, $startform ,$limit) {
+
+			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%' ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
 
 			$objects = array();
@@ -121,135 +142,9 @@
 			}
 		}
 
-		public function search_count($text, $searchstring = null, $contacttypes_id = null, $mailshots_id = null, $activities_id = null) {
-			$advsearch = "";
-			if($contacttypes_id != null) {
-				for ($i=0; $i <= count($contacttypes_id); $i++) {
-					if(isset($contacttypes_id['contacttype_'.$i])) {
-						$and = ' AND ';
-						 if($contacttypes_id['contacttype_'.$i.'_date'] != null || $contacttypes_id['contacttype_'.$i.'_date'] != '') {
-							$advsearch .= " contacts_branches_contact_types.date LIKE '%".$contacttypes_id['contacttype_'.$i.'_date']."%'".$and;
-						} if($contacttypes_id['contacttype_'.$i.'_branch'] != null) {
-							$j = 0;
-							$divide = count($contacttypes_id['contacttype_'.$i.'_branch']);
-								foreach ($contacttypes_id['contacttype_'.$i.'_branch']	 as $branch_id) {
-
-									$advsearch .= " contacts_branches_contact_types.branch_id = ".$branch_id.$and;
-									$j++;
-								}
-						}		if ($i == (count($contacttypes_id)/3-1) && $activities_id == null && $mailshots_id == null) {
-									$and = ' ';
-								}
-						$advsearch .= " contacts_branches_contact_types.contact_type_id = ".$contacttypes_id['contacttype_'.$i].$and;
-					}
-				}
-			}
-			if($mailshots_id != null) {
-				for ($i=0; $i <= count($mailshots_id); $i++) {
-					if(isset($mailshots_id['mailshot_'.	$i])) {
-						$and = ' AND ';
-						if ($i == (count($mailshots_id)/2-1) && $activities_id == null) {
-							$and = ' ';
-						}
-						$advsearch .= " contacts_mailshots_branches.mailshot_id = ".$mailshots_id['mailshot_'.$i]." AND contacts_mailshots_branches.branch_id = ".$mailshots_id['mailshot_'.$i.'_branch'].$and;
-					}
-				}
-			}
-			if($activities_id != null) {
-				for ($i=0; $i <= count($activities_id); $i++) {
-					if(isset($activities_id[$i])) {
-						$and = ' AND ';
-						if ($i == (count($activities_id)-1)) {
-							$and = ' ';
-						}
-						$advsearch .= " contacts_activities.activity_id = ".$activities_id[$i].$and;
-					}
-				}
-			}
-			if($advsearch != null){
-				$sql = "SELECT DISTINCT COUNT( DISTINCT ".$text.".id) AS ".$text." FROM ".$text." LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id WHERE (contacts.first_name LIKE '%".$searchstring."%' OR contacts.last_name LIKE '%".$searchstring."%' OR contacts.email LIKE '%".$searchstring."%' OR companies.title  LIKE '%".$searchstring."%' OR contacts.cell_phone LIKE '%".$searchstring."%') AND (".$advsearch.")";
-			} else {
-				$sql = "SELECT COUNT(".$text.".id) AS ".$text." FROM ".$text." LEFT JOIN companies ON companies.contact_id = contacts.company_id WHERE contacts.first_name LIKE '%".$searchstring."%' OR contacts.last_name LIKE '%".$searchstring."%' OR contacts.email LIKE '%".$searchstring."%' OR companies.title  LIKE '%".$searchstring."%' OR contacts.cell_phone LIKE '%".$searchstring."%'";
-			}
-
-			$sth = $this->dbh->prepare($sql);
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'count');
-			$sth->execute();
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-			if (count($objects) > 0) {
-				return $objects[0];
-			} else {
-				return $sql;
-			}
-		}
-
 		
 
-		public function advsearch($text, $sort, $ascdesc, $startform, $limit, $contacttypes_id = null, $mailshots_id = null, $activities_id = null) {
-			$advsearch = "";
-			if($contacttypes_id != null) {
-				for ($i=0; $i <= count($contacttypes_id); $i++) {
-					if(isset($contacttypes_id['contacttype_'.$i])) {
-						$and = ' AND ';
-						 if($contacttypes_id['contacttype_'.$i.'_date'] != null || $contacttypes_id['contacttype_'.$i.'_date'] != '') {
-							$advsearch .= " contacts_branches_contact_types.date LIKE '%".$contacttypes_id['contacttype_'.$i.'_date']."%'".$and;
-						} if($contacttypes_id['contacttype_'.$i.'_branch'] != null) {
-							$j = 0;
-							$divide = count($contacttypes_id['contacttype_'.$i.'_branch']);
-								foreach ($contacttypes_id['contacttype_'.$i.'_branch']	 as $branch_id) {
-
-									$advsearch .= " contacts_branches_contact_types.branch_id = ".$branch_id.$and;
-									$j++;
-								}
-						}		if ($i == (count($contacttypes_id)/3-1) && $activities_id == null && $mailshots_id == null) {
-									$and = ' ';
-								}
-						$advsearch .= " contacts_branches_contact_types.contact_type_id = ".$contacttypes_id['contacttype_'.$i].$and;
-					}
-				}
-			}
-			if($mailshots_id != null) {
-				for ($i=0; $i <= count($mailshots_id); $i++) {
-					if(isset($mailshots_id['mailshot_'.	$i])) {
-						$and = ' AND ';
-						if ($i == (count($mailshots_id)/2-1) && $activities_id == null) {
-							$and = ' ';
-						}
-						$advsearch .= " contacts_mailshots_branches.mailshot_id = ".$mailshots_id['mailshot_'.$i]." AND contacts_mailshots_branches.branch_id = ".$mailshots_id['mailshot_'.$i.'_branch'].$and;
-					}
-				}
-			}
-			if($activities_id != null) {
-				for ($i=0; $i <= count($activities_id); $i++) {
-					if(isset($activities_id[$i])) {
-						$and = ' AND ';
-						if ($i == (count($activities_id)-1)) {
-							$and = ' ';
-						}
-						$advsearch .= " contacts_activities.activity_id = ".$activities_id[$i].$and;
-					}
-				}
-			}
-
-			if($contacttypes_id != null  || $activities_id != null  || $mailshots_id != null) {
-				$sth = $this->dbh->query($this->sql_search." WHERE (contacts.first_name LIKE '%".$text."%' OR contacts.last_name LIKE '%".$text."%') AND (".$advsearch.") ORDER BY ".$sort." ".$ascdesc." LIMIT ".$startform.", ".$limit);
-			} else  {
-				$sth = $this->dbh->query($this->sql_search." WHERE contacts.first_name LIKE '%".$text."%' OR contacts.last_name LIKE '%".$text."%' OR contacts.email LIKE '%".$text."%' OR companies.title  LIKE '%".$text."%' OR contacts.cell_phone LIKE '%".$text."%'  ORDER BY ".$sort." ".$ascdesc." LIMIT ".$startform.", ".$limit);
-			}
-			$sth->setFetchMode(PDO::FETCH_CLASS, 'Contacts');
-
-			$objects = array();
-
-			while($obj = $sth->fetch()) {
-				$objects[] = $obj;
-			}
-				return $objects;
-		}
+	
 
 		public function updateContact($id, $firstname, $lastname, $email, $mobile, $workphone, $contactperson, $notes) {
 			$data = array($firstname, $lastname, $email, $mobile, $workphone, $contactperson, $notes, $id);

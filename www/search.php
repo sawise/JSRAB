@@ -3,11 +3,9 @@
         require_once('../config.php');
   //require_once('../style.php');
 
+
 ?>
-<?php if(isset($_SESSION['search'])) : ?>   
-	<?php //$searchresults = $_SESSION['search'];
-	//echo showTooltip($searchresults); ?>
-<?php endif ?>
+
 
 
  <link rel="stylesheet" type="text/css" href="css/flexigrid.pack.css" />
@@ -34,30 +32,40 @@ $(function () {
 <div>
         
     </div>
-
-<?php if(isset($_SESSION['search'])) : ?>   
-					<?php $searchresults = $_SESSION['search']; ?>
 <table class="flexme1 Ubuntufont">
-            <thead><th>Leveransdatum<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th></th></thead>
-            <tbody><?php foreach($searchresults as $searchresult) : ?>
-                <tr>
-			                <td><?php echo $searchresult->deliverydate ?></td>
-			                <td><?php echo $searchresult->customer_name ?></td>
-			                <td><?php echo $searchresult->tiretread_name ?></td>
-			                <td><?php echo $searchresult->tiresize_name ?></td>
-			                <td><?php echo $searchresult->total ?></td>
-			                <td><?php echo showTooltiptest($searchresult) ?></td>
-			               
-			 			</tr>
-                <?php endforeach ?>
-            </tbody>
-        </table>
-        
+</table>
 
-			<?php $_SESSION['search'] = null;$_SESSION['searchstring'] = null; ?>
-		 <?php endif ?>
-        <script>
-        $('.flexme1').flexigrid({height:500,striped:false});
 
-        </script>
+<?php if(isset($_SESSION['searchstring'])) : ?>   
+	<?php $searchstring = $_SESSION['searchstring'];
+	$_SESSION['searchstring'] = null;
+	//echo showTooltip($searchresults); ?>
+
+        <script> 
+
+        	$(".flexme1").flexigrid({
+                url : "post-json.php?search=<?php echo $searchstring ?>",
+                dataType: 'json',
+	colModel : [
+	{display:  'Leveransdatum', name : 'deliverydate', width : 60, sortable : true, align: 'left'},
+		{display: 'Name', name : 'customer_name', width : 180, sortable : true, align: 'left'},
+		{display:  'Mönster', name : 'tiretread_name', width : 40, sortable : true, align: 'left'},
+		{display: 'Dimension', name : 'tiresize_name', width : 120, sortable : true, align: 'left'},
+		{display: 'Antal', name : 'total', width : 130, sortable : true, align: 'left'},
+		{display: '', name : 'numcode', sortable : false, align: 'center'}
+		], 	
+	
+	sortname: "deliverydate",
+	sortorder: "asc",
+	usepager: true,
+	title: '',
+	useRp: true,
+	rp: 15,
+	showTableToggleBtn: true,
+	width: 'auto',
+	height: 300
+            });      
+
+            
+        </script>      <?php endif ?>  
 <body> <!--<a href="#" class="btn popover-examples" data-toggle="popover" title="Popover title" data-content="Default popover<br>ss<br>">Popover</a><?php //echo tooltipButton($searchresult); ?> -->

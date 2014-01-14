@@ -4,6 +4,7 @@ body{
 	background-repeat:no-repeat;
 	background-size: 100%;
 	 font-family: 'Ubuntu Mono';
+	 font-size: 0.8em;
 }
 
 .button {
@@ -12,7 +13,7 @@ body{
    color: rgba(0,0,0,1);
 }
 .tab-content > .nav-tabs li a {
-	font-size:1em;
+	font-size:0.8em;
 }
 
 button {
@@ -41,7 +42,7 @@ button {
 }
 .mainDiv{
 	opacity:0.9;
-	min-height: 40em;
+	min-height: 35em;
 	background-color: #FFFFFF;
 	text-align: center;
 	padding:0.35em;

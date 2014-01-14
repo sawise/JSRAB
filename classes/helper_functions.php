@@ -289,8 +289,30 @@ function getWeekday($date){
 }*/
 
 function showTooltiptest($searchresult){
+
+            $html = tooltipContent($searchresult);
+  $html .= '<div><span id="searchItem_'.$searchresult->id.'" rel="popover" class="btn">
+            Mer info
+            </span>';
+$html .= '<script>
+            $(document).ready(function() {
+              var div1Html = $(\'#content_'.$searchresult->id.'\').html();
+                $("#searchItem_'.$searchresult->id.'").popover({
+                    html: true,
+                    animation: true,
+                    content: div1Html,
+                    placement: "bottom"
+                });
+
+            });
+      $(\'#content_'.$searchresult->id.'\').hide()
+        </script></div>';
+  return $html;
+}
+
+function tooltipContent($searchresult){
   $ordernumberArray = explode(",", $searchresult->comments);
-  $content = '<div id="content_'.$searchresult->id.'" class="Ubuntufont"><p>Leveransdatum:'.$searchresult->deliverydate.'</p>
+   $content = '<div id="content_'.$searchresult->id.'" class="Ubuntufont"><p>Leveransdatum:'.$searchresult->deliverydate.'</p>
                  <p>Kund:'.$searchresult->customer_name.'</p>
                  <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
                  <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
@@ -311,24 +333,7 @@ function showTooltiptest($searchresult){
               $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera order</p></a>';
               $content .= '<p><a href="#">Skriv ut</p></a>';
             $content .= '</div>';
-            echo $content;
-  $html = '<div><span id="searchItem_'.$searchresult->id.'" rel="popover" class="btn">
-            Click to pop
-            </span>';
-$html .= '<script>
-            $(document).ready(function() {
-              var div1Html = $(\'#content_'.$searchresult->id.'\').html();
-                $("#searchItem_'.$searchresult->id.'").popover({
-                    html: true,
-                    animation: true,
-                    content: div1Html,
-                    placement: "bottom"
-                });
-
-            });
-      $(\'#content_'.$searchresult->id.'\').hide()
-        </script></div>';
-  return $html;
+            return $content;
 }
 
 /*

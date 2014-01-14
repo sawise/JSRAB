@@ -47,6 +47,6 @@ $(function () {
 		</tbody>
 	</table>
 </div>   <script>
-        $('.flexme1').flexigrid({height:500,striped:false});
+        $('.flexme1').flexigrid({height:400,striped:false});
 
         </script>
