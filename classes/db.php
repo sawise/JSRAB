@@ -77,16 +77,18 @@
 			} else {
 				return null;
 			}
-		}  /*<td><?php echo $searchresult->deliverydate ?></td>
-			                <td><?php echo $searchresult->customer_name ?></td>
-			                <td><?php echo $searchresult->tiretread_name ?></td>
-			                <td><?php echo $searchresult->tiresize_name ?></td>
-			                <td><?php echo $searchresult->total ?></td>*/
+		}  
 
 			    
 
 		public function search_count($text) {
-			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'" );
+			$sqlquery = '';
+			if(is_numeric($text)){
+				$sqlquery = $this->sql_search." WHERE orders.id = ".$text;
+			} else {
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'";	
+			}
+			$sth = $this->dbh->query($sqlquery);//$this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%' ".$orderid);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Ordercount');
 
 			$objects = array();
@@ -98,8 +100,13 @@
 		}
 
 		public function search($text, $sortby, $descasc, $startform ,$limit) {
-
-			$sth = $this->dbh->query($this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%' ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit);
+			$sqlquery = '';
+			if(is_numeric($text)){
+				$sqlquery = $this->sql_search." WHERE orders.id = ".$text." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;
+			} else {
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%' ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
+			}
+			$sth = $this->dbh->query($sqlquery);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
 
 			$objects = array();

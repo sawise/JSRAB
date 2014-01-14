@@ -47,16 +47,17 @@ $(function () {
                 url : "post-json.php?search=<?php echo $searchstring ?>",
                 dataType: 'json',
 	colModel : [
-	{display:  'Leveransdatum', name : 'deliverydate', width : 60, sortable : true, align: 'left'},
-		{display: 'Name', name : 'customer_name', width : 180, sortable : true, align: 'left'},
+	{display:  'ID', name : 'id', width : 10, sortable : true, align: 'left'},
+	{display:  'Leveransdatum', name : 'deliverydate', width : 75, sortable : true, align: 'left'},
+		{display: 'Kund', name : 'customer_name', width : 180, sortable : true, align: 'left'},
 		{display:  'Mönster', name : 'tiretread_name', width : 40, sortable : true, align: 'left'},
 		{display: 'Dimension', name : 'tiresize_name', width : 120, sortable : true, align: 'left'},
 		{display: 'Antal', name : 'total', width : 130, sortable : true, align: 'left'},
-		{display: '', name : 'numcode', sortable : false, align: 'center'}
+		{display: ' ', name : 'numcode', sortable : false, align: 'center'}
 		], 	
 	
 	sortname: "deliverydate",
-	sortorder: "asc",
+	sortorder: "desc",
 	usepager: true,
 	title: '',
 	useRp: true,

@@ -29,15 +29,12 @@
       </div>
      </div>
     </div>
-   </div>
-  </div>
+
 
 </body>
 <script>
-
-
     <?php
-      if(isset($_SESSION['search'])){
+      if(isset($_SESSION['searchstring'])){
         echo "$('#indextabs').tabs({active: 2})";     
       }  else if(isset($_GET['editOrder'])){
         echo "$('#indextabs').tabs({active: 3})";

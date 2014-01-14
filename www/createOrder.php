@@ -41,7 +41,7 @@
 
 	$orderID = $db->createOrder($customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, 1 ,$now);
 	if($orderID){
-		$_SESSION['createdorder'] = $orderID;
+		$_SESSION['searchstring'] = $orderID;
 		set_feedback('success', 'Ordern skapades, gå in i sök för att hitta den');
 		 header("Location: index.php");
 	} else{
