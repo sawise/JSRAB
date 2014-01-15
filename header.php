@@ -2,7 +2,7 @@
   <head>
   <meta charset="UTF-8">
 <title>JS Retreading AB</title>
-                 
+
                 
 
   <?php require_once('../style.php') ?>
@@ -17,6 +17,7 @@
         });
       }
     });
+    $("div.ui-tabs-panel").css('padding','0');
   });
 
   </script>

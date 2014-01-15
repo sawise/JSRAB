@@ -1,4 +1,4 @@
- <div class="alignleft">	
+ <div class="alignleft paddingInTab">	
  <?php 
 require_once('../config.php');
 //require_once('../style.php');
@@ -17,7 +17,8 @@ if(isset($_GET['orderId'])){
   $(function() {
     $( "#datepicker" ).datepicker({
       showWeek: true,
-      firstDay: 1
+      firstDay: 1,
+      dateFormat: 'yy-mm-dd'
     });
   });
 

@@ -9,13 +9,16 @@
   $customerID = '';
 
   $id = $_POST['id'];
-  $deliverydate = $_POST['datepicker'];
+  
   $customer = $_POST['customer'];
   $dimension = $_POST['dimension'];
   $tirethread = $_POST['tirethreads'];
   $total = $_POST['total'];
   $notes = $_POST['notes'];
-  $now = date('m/d/y');
+  $now = date('Y-m-d');
+
+  $deliverydate = $_POST['datepicker'];
+
 
 	if (strpos($tirethread,'->')) {
 		$arrayslice = explode('->',$tirethread);

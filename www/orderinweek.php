@@ -2,9 +2,6 @@
   require_once('../config.php');
   $year = $_GET['year'];
   $week = $_GET['week'];
-  $db = new Db();
-  $searchresults = $db->searchyear($year);
-  //echo showTooltip($searchresults);
 ?>	
 
 <link rel="stylesheet" type="text/css" href="css/flexigrid.pack.css" />
@@ -21,32 +18,33 @@ $(function () {
 </script>
 
 <div class="searchResult Ubuntufont">
-	<table class="flexme1 table table-striped">
-		<thead>
-			<th>Leveransdatum</th>
-			<th>Företag/Kund</th>
-			<th>Mönster</th>
-			<th>Dimension</th>
-			<th>Antal</th>
-			<th></th>
-		</thead>
-		<tbody>
-		<?php foreach($searchresults as $searchresult) : ?>
-			<?php if (getWeek($searchresult->deliverydate) == $week) : ?>
-				<tr>
-				   <td><?php echo $searchresult->deliverydate ?></td>
-			                <td><?php echo $searchresult->customer_name ?></td>
-			                <td><?php echo $searchresult->tiretread_name ?></td>
-			                <td><?php echo $searchresult->tiresize_name ?></td>
-			                <td><?php echo $searchresult->total ?></td>
-			                <td><?php echo showTooltiptest($searchresult) ?></td>
-					 
-				</tr>
-			<?php endif ?>
-		<?php endforeach ?>
-		</tbody>
+	<table class="flexme1">
 	</table>
-</div>   <script>
-        $('.flexme1').flexigrid({height:300,striped:false});
+</div>   
 
-        </script>
+
+<script> 
+	$(".flexme1").flexigrid({
+	    url : "post_year-json.php?year=<?php echo $year ?>&week=<?php echo $week ?>",
+	    dataType: 'json',
+	colModel : [
+	{display:  'ID', name : 'id', width : 10, sortable : true, align: 'left'},
+	{display:  'Leveransdag', name : 'deliverydate', width : 75, sortable : true, align: 'left'},
+	{display: 'Kund', name : 'customer_name', width : 180, sortable : true, align: 'left'},
+	{display:  'Mönster', name : 'tiretread_name', width : 40, sortable : true, align: 'left'},
+	{display: 'Dimension', name : 'tiresize_name', width : 120, sortable : true, align: 'left'},
+	{display: 'Antal', name : 'total', width : 130, sortable : true, align: 'left'},
+	{display: ' ', name : 'numcode', sortable : false, align: 'center'}
+	], 	
+
+	sortname: "deliverydate",
+	sortorder: "asc",
+	usepager: true,
+	title: '',
+	useRp: true,
+	rp: 10,
+	showTableToggleBtn: true,
+	width: 'auto',
+	height: 300
+	});      
+</script>

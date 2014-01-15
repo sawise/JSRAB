@@ -7,7 +7,7 @@
     $db = new Db();
     $editorderLink = "editOrder.php";
     if(isset($_GET['editOrder'])){
-      $editorderLink = "editOrder.php?orderId=".$_GET['editOrder'];
+      $editorderLink .= "?orderId=".$_GET['editOrder'];
     }
 
 ?>

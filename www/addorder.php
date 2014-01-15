@@ -1,4 +1,4 @@
- <div class="alignleft">	
+ <div class="alignleft paddingInTab">	
  <?php 
 require_once('../config.php');
 //require_once('../style.php');

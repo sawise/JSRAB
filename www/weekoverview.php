@@ -15,6 +15,7 @@
         });
       }
     });
+    $("div.ui-tabs-panel").css('padding','0px');
   });
 </script>
 

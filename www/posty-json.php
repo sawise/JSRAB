@@ -6,7 +6,7 @@ $page = isset($_POST['page']) ? $_POST['page'] : 1;
 $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
 $sortname = isset($_POST['sortname']) ? $_POST['sortname'] : 'deliverydate';
 $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
-$total = 100;
+$total = 0;
 
  if (isset($_GET['search'])) {
  	$db = new Db();

@@ -20,6 +20,10 @@ button {
 	font-size:1.2em;
 }
 
+.paddingInTab{
+	padding-top: 1em;
+}
+
 .bordertest{
 	border: solid 4px rgba(0,0,0,1);
 }

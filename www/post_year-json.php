@@ -1,21 +1,19 @@
 <?php
 require_once('../config.php');
 
-$searchresult = '';
 $page = isset($_POST['page']) ? $_POST['page'] : 1;
 $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
 $sortname = isset($_POST['sortname']) ? $_POST['sortname'] : 'deliverydate';
 $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
-$total = 100;
 
- if (isset($_GET['search'])) {
+	
  	$db = new Db();
-    $searchstring = $_GET['search'];
-    $total = $db->search_count($searchstring);
+ 	$year = $_GET['year'];
+  	$week = $_GET['week'];
+  	$total = $db->searchYear_count($year, $week);
     $pages = ceil($total / $rp);
     $start_from = ($page-1) * $rp;
-    $searchresult = $db->search($searchstring, $sortname, $sortorder, $start_from ,$rp);
-  }  
+    $searchresult = $db->searchyear($year, $week, $sortname, $sortorder, $start_from ,$rp);
 
 	header("Content-type: application/json");
 	$jsonData = array('page'=>$page,'total'=>$total,'rows'=>array());
@@ -23,7 +21,7 @@ $total = 100;
 		$entry = array('id'=>$searchitem->id,
 			'cell'=>array(
 				'id'=>$searchitem->id,
-				'deliverydate'=>$searchitem->deliverydate,
+				'deliverydate'=>$searchitem->deliverydate,//getWeekday($searchitem->deliverydate),
 				'customer_name'=>$searchitem->customer_name,
 				'tiretread_name'=>$searchitem->tiretread_name,
 				'tiresize_name'=>$searchitem->tiresize_name,

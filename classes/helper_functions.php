@@ -106,8 +106,8 @@ function toggle($toggle = null, $togglearray = null){
 
 
 function yearView(){
-    $startyear = 2013;
-    $thisyear = 2014;
+    $startyear = 2000;
+    $thisyear = date("Y");
      $html = '<div id="yeartabs"><ul>';
         for($i = $startyear; $i <= $thisyear; $i++){
           $html .= '<li><a href="weekoverview.php?year='.$i.'">'.$i.'</a></li>';
