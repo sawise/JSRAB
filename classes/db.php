@@ -79,13 +79,25 @@
 
 			    
 
-		public function search_count($text) {
+		public function search_count($text, $tiresize, $tirethread, $datestart, $dateend) {
 			$sqlquery = '';
 			
+			$adv = '';
+			if(is_numeric($tiresize)){
+				$adv .= ' AND tiresizes.id = '.$tiresize;
+			}
+			if(is_numeric($tirethread)){
+				$adv .= ' AND tiretreads.id = '.$tirethread;	
+			}
+
+			if($datestart != 'nodate' && $dateend != 'nodate'){
+				$adv = 'AND orders.deliverydate>\''.$datestart.'\' AND orders.deliverydate<\''.$dateend.'\'';
+			}
+
 			if(is_numeric($text)){
 				$sqlquery = $this->sql_search." WHERE orders.id = ".$text;
 			} else {
-				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%'";	
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' ".$adv;	
 			}
 			
 			$sth = $this->dbh->query($sqlquery);
@@ -100,13 +112,23 @@
 			return count($objects);
 		}
 
-		public function search($text, $sortby, $descasc, $startform ,$limit) {
+		public function search($text, $tiresize, $tirethread, $datestart, $dateend, $sortby, $descasc, $startform ,$limit) {
 			$sqlquery = '';
-			
+			$adv = '';
+			if(is_numeric($tiresize)){
+				$adv .= ' AND tiresizes.id = '.$tiresize;
+			}
+			if(is_numeric($tirethread)){
+				$adv .= ' AND tiretreads.id = '.$tirethread;	
+			}
+			if($datestart != 'nodate' && $dateend != 'nodate'){
+				$adv .= ' AND orders.deliverydate>\''.$datestart.'\' AND orders.deliverydate<\''.$dateend.'\'';
+			}
+
 			if(is_numeric($text)){
-				$sqlquery = $this->sql_search." WHERE orders.id = ".$text." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;
+				$sqlquery = $this->sql_search." WHERE orders.id = ".$text." ".$adv." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;
 			} else {
-				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR tiresizes.name LIKE '%".$text."%' ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' ".$adv." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
 			}
 			$sth = $this->dbh->query($sqlquery);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');

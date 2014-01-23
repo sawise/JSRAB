@@ -13,24 +13,26 @@ function menu($currentPage){
   return $menu;
 }
 
+function form_select_script(){
 
-function form_select($name, $title, $items, $selected_id = null, $dbcolumn, $toggle, $togglearray) {
-  $html = form_control_wrapper($name);
-    $html .= form_label($name, $title);
+}
+
+function form_select($name, $title, $items, $selected_id = null, $dbcolumn/*, $toggle, $togglearray*/) {
+  $html = form_control_wrapper($name.'-');
+    $html .= form_label($name.'-', $title);
     $html .= '<div class="controls">';
-    $html .= '<select name="'.$name.'">';
-    $html .= '<option>-- Välj --</option>';
-
+    $html .= '<select name="'.$name.'" id="'.$name.'">';
+    $html .= '<option value="">Select one...</option>';
     foreach ($items as $item) {
       $selected = '';
-      /*if ($selected_id && $selected_id == $item->id) {
+      if ($selected_id && $selected_id == $item->id) {
         $selected = ' selected="selected"';
-      }*/
-      $html .= '<option'.$selected.' value="'.$item->$dbcolumn.'">'.$item->$dbcolumn.'</option>';
+      }
+      $html .= '<option'.$selected.' value="'.$item->id.'">'.$item->$dbcolumn.'</option>';
     }
 
     $html .= '</select>';
-    $html .= toggle($toggle,$togglearray);
+    //$html .= toggle($toggle,$togglearray);
     $html .= '</div></div>';
     return $html;
   }
@@ -106,10 +108,20 @@ function toggle($toggle = null, $togglearray = null){
 
 
 function yearView(){
-    $startyear = 2000;
     $thisyear = date("Y");
      $html = '<div id="yeartabs"><ul>';
-        for($i = $startyear; $i <= $thisyear; $i++){
+        for($i = $thisyear; $i <= $thisyear+10; $i++){
+          $html .= '<li><a href="weekoverview.php?year='.$i.'">'.$i.'</a></li>';
+        }
+        $html .= '</ul></div>';
+    return $html;
+  }
+
+
+function prevyearView(){
+    $thisyear = date("Y");
+     $html = '<div id="prevyeartabs"><ul>';
+        for($i = 1995; $i < $thisyear; $i++){
           $html .= '<li><a href="weekoverview.php?year='.$i.'">'.$i.'</a></li>';
         }
         $html .= '</ul></div>';

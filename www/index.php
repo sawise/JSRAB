@@ -19,7 +19,8 @@
     <div class="row-fluid">
       <div class="span12">
         <div id="indextabs">
-          <ul> 
+          <ul>
+          <li><a href="prevyearoverview.php">Arkiverat</a></li> 
           <li><a href="yearoverview.php">Veckoöversikt</a></li>
             <li><a href="addorder.php">Skapa order</a></li>
             <li><a href="search.php">Sök</a></li>
@@ -35,9 +36,9 @@
 <script>
     <?php
       if(isset($_SESSION['searchstring'])){
-        echo "$('#indextabs').tabs({active: 2})";     
+        echo "$('#indextabs').tabs({active: 3})";     
       }  else if(isset($_GET['editOrder'])){
-        echo "$('#indextabs').tabs({active: 3})";
+        echo "$('#indextabs').tabs({active: 4})";
       }
         ?> 
   </script>

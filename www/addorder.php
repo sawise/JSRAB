@@ -11,7 +11,8 @@ $db = new Db();
   $(function() {
     $( "#datepicker" ).datepicker({
       showWeek: true,
-      firstDay: 1
+      firstDay: 1,
+       dateFormat: 'yy-mm-dd'
     });
   });
 

@@ -44,6 +44,12 @@ button {
 	width: 20%;
 	height: auto;
 }
+
+.adv{
+	  margin-left: auto ;
+  margin-right: auto ;
+
+}
 .mainDiv{
 	opacity:0.9;
 	min-height: 35em;
@@ -106,7 +112,7 @@ border-radius: 3em;
 #Ubuntufont{ 
   	font-family: 'Ubuntu Mono';
   }
-  #indextabs,#yeartabs{ 
+  #indextabs,#yeartabs, #prevyeartabs{ 
   	font-family: 'Ubuntu Mono';
 	border: none
   }

@@ -11,12 +11,12 @@ $total = 100;
  if (isset($_GET['search'])) {
  	$db = new Db();
     $searchstring = $_GET['search'];
-    $total = $db->search_count($searchstring);
+    $total = $db->search_count($searchstring, $_GET['tiresize'], $_GET['tirethread'], $_GET['datestart'], $_GET['dateend']);
     $pages = ceil($total / $rp);
     $start_from = ($page-1) * $rp;
-    $searchresult = $db->search($searchstring, $sortname, $sortorder, $start_from ,$rp);
+    $searchresult = $db->search($searchstring,$_GET['tiresize'], $_GET['tirethread'], $_GET['datestart'], $_GET['dateend'], $sortname, $sortorder, $start_from ,$rp);
   }  
-
+//search($text, $tiresize, $tirethread, $sortby, $descasc, $startform ,$limit)
 	header("Content-type: application/json");
 	$jsonData = array('page'=>$page,'total'=>$total,'rows'=>array());
 	foreach($searchresult AS $searchitem){
