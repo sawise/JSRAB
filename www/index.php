@@ -2,7 +2,8 @@
 
 <?php
 
-        require_once('../config.php');
+    require_once('../config.php');
+    require_once(ROOT_PATH.'/classes/authorization.php');
     $title = "Lägg till ny order";
     $db = new Db();
     $editorderLink = "editOrder.php";
@@ -14,6 +15,10 @@
 
 <?php require_once(ROOT_PATH.'/header.php');?>
 <body>
+
+
+</div>
+
   <img src="img/logo.png" class="logo">
   <div class="container centered mainDiv">
     <div class="row-fluid">

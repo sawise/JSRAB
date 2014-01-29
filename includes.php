@@ -7,4 +7,5 @@
   require_once(ROOT_PATH.'/classes/orders.php');
   require_once(ROOT_PATH.'/classes/customers.php');
   require_once(ROOT_PATH.'/classes/ordercount.php');
+  require_once(ROOT_PATH.'/classes/users.php');
   

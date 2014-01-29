@@ -245,8 +245,11 @@ function setDefaultsize(defValue) {
 <div class="searchInput">
 	<form method="get" action="searchcaller.php">
 	<input id="search" name="search" type="text" placeholder="" value="<?php echo $searchstring ?>" class="input-xxlarge search-query">
-	<button type="submit" class="btn">Sök</button>
-	<a class="accordion-toggle" data-toggle="collapse" href="#collapseOne">adv</a>
+	<button type="submit" class="btn "><span class="glyphicon glyphicon-search"></span></button>
+	<a class="accordion-toggle" data-toggle="collapse" href="#collapseOne"><i class="glyphicon glyphicon-arrow-down"></i></a>
+		<?php if(isset($_SESSION['searchstring'])) : ?>
+			<a href="print.php?search=<?php echo $searchstring.'&tirethread='.$searcharray[2].'&tiresize='.$searcharray[1].'&datestart='.$searcharray[3].'&dateend='.$searcharray[4] ?>" target="_blank"><i id="printbutton" class="glyphicon glyphicon-print"></i></a>
+		<?php endif ?>
 	<div id="collapseOne" class="collapse adv">		
 		<table class="adv">
 			<td>
@@ -267,7 +270,8 @@ function setDefaultsize(defValue) {
 
 
 	<?php if(isset($_SESSION['searchstring'])) : ?>   
-<?php $_SESSION['searchstring'] = null; ?>
+<?php $_SESSION['print']  = $_SESSION['searchstring'];
+ $_SESSION['searchstring'] = null; ?>
 	        <script>
 	        	$(".flexme1").flexigrid({
 	                url : "post-json.php?search=<?php echo $searchstring.'&tirethread='.$searcharray[2].'&tiresize='.$searcharray[1].'&datestart='.$searcharray[3].'&dateend='.$searcharray[4] ?>",

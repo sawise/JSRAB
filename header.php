@@ -23,4 +23,16 @@
   </script>
 
   </head>
+  <div class="topright">
+           <?php if (isset($_SESSION['is_logged_in']) && isset($_SESSION['user_username']) && !$print) : ?>
+                <?php $username = $_SESSION['user_username']; ?>
+                  <div class="well well-small" id="user_info">
+              <?php if (isset($register)) : ?>
+                <p>Logged in as <span id="username-span"><?php echo $username; ?></span><br><a class="logout_link" href="logout.php">Log out</a> | <a class="logout_link" href="index.php">Tillbaka</a></p>
+              <?php else : ?>
+                <p>Logged in as <span id="username-span"><?php echo $username; ?></span><br><a class="logout_link" href="logout.php">Log out</a> | <a class="logout_link" href="register.php">Skapa konto</a></p>
+              <?php endif ?>
+            <?php endif ?>
+            </div>
+    </div>
   <?php echo get_feedback(); ?>

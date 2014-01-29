@@ -16,9 +16,49 @@
 
 		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.customerID LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
 
+		private $users_sql = "select * from users";
 		private $sql_tiretreads = "select * from tiretreads";
 		private $sql_tiresize = "select * from tiresizes";
 		private $sql_customers = "select * from customers";
+
+		public function getUsername($username) {
+			$sql = $this->users_sql." WHERE username = :username";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindParam(':username', $username, PDO::PARAM_INT);
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Users');
+			$sth->execute();
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+			if (count($objects) > 0) {
+				return $objects[0];
+			} else {
+				return null;
+			}
+		}
+		
+		public function getPassword($password) {
+			$sql = $this->users_sql." WHERE password = :password";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindParam(':password', $password, PDO::PARAM_INT);
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Users');
+			$sth->execute();
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+			if (count($objects) > 0) {
+				return $objects[0];
+			} else {
+				return null;
+			}
+		}
+		
 
 		public function getCustomers() {
 			$sth = $this->dbh->query($this->sql_customers);
@@ -183,6 +223,18 @@
 		public function createTiretread($name){
 			$data = array($name);
 			$sth = $this->dbh->prepare("INSERT INTO tiretreads (name) VALUES (?)");
+			$sth->execute($data);
+
+			if($sth->rowCount() > 0) {
+				return $this->dbh->lastInsertId();
+			} else {
+				return null;
+			}
+		}
+
+		public function createUser($username, $password){
+			$data = array($username, $password);
+			$sth = $this->dbh->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
 			$sth->execute($data);
 
 			if($sth->rowCount() > 0) {

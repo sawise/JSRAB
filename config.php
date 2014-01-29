@@ -8,9 +8,9 @@
   define('DB_NAME', 'jsrab');
   define('DB_HOST', 'localhost');
   
-  
   define('USER', 'user');
   define('PASS', 'pass');
+  define('SALT', '34A75DD4C4DF5E4DDFC68CA975B35');
 
   date_default_timezone_set('Europe/Stockholm');  
   
