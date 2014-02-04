@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/JSRAB.iml" filepath="$PROJECT_DIR$/JSRAB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jsrab/jsrab.iml" filepath="$PROJECT_DIR$/jsrab/jsrab.iml" />
+    </modules>
+  </component>
+</project>
+

@@ -89,6 +89,7 @@ $(function() {
 	 	 $customername = $order->customerID.'->'.$order->customer_name;
 	 	 $tiresize = $order->tiresizeID.'->'.$order->tiresize_name; ?>
 	 	 	<?php echo hidden_input('id', $order->id); ?>
+	 	 	<?php echo hidden_input('user_id', $_SESSION['user_id']); ?>
 	 		 <?php echo form_input('text', 'datepicker', 'Leveransdatum:', 'Tryck här för att välja datum', $order->deliverydate) ?>
 			 <?php echo form_input('text', 'customer', 'Kund:', 'Kundnamn', $customername) ?>
 			  <?php echo form_input('text', 'dimension', 'Dimension:', 'Skriv in däckmönstret här', $tirethread) ?>

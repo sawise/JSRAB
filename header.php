@@ -5,7 +5,7 @@
 
                 
 
-  <?php require_once('../style.php') ?>
+  <?php require_once(ROOT_PATH.'/style.php') ?>
   <script>
   $(function() {
     $( "#indextabs" ).tabs({

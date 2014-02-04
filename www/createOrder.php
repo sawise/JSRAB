@@ -14,6 +14,7 @@
   $tirethread = $_POST['tirethreads'];
   $total = $_POST['total'];
   $notes = $_POST['notes'];
+  $userid = $_POST['user_id'];
   $now = date('m/d/y');
 
 	if (strpos($tirethread,'->')) {
@@ -39,7 +40,7 @@
 		$customerID = $db->createCustomer($customer, 0000);
 	}
 
-	$orderID = $db->createOrder($customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, 1 ,$now);
+	$orderID = $db->createOrder($customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, $userid ,$now);
 	if($orderID){
 		$_SESSION['searchstring'] = $orderID;
 		set_feedback('success', 'Ordern skapades, gå in i sök för att hitta den');
@@ -48,9 +49,3 @@
 		set_feedback('error', 'Något blev galet, försök igen');
 		header("Location: index.php");
 	}
-
-
-
-
- 
-

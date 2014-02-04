@@ -74,6 +74,7 @@ $(function() {
   </script> 
  <form class="form-horizontal" method="post" action="createOrder.php">
  	 <fieldset>
+ 	 <?php echo hidden_input('user_id', $_SESSION['user_id']); ?>
  		 <?php echo form_input('text', 'datepicker', 'Leveransdatum:', 'Tryck här för att välja datum') ?>
 		 <?php echo form_input('text', 'customer', 'Kund:', 'Kundnamn') ?>
 		  <?php echo form_input('text', 'dimension', 'Dimension:', 'Skriv in däckmönstret här', '') ?>

@@ -2,7 +2,9 @@
 
 <?php
 
+    //require_once('../../private/config.php');
     require_once('../config.php');
+    
     require_once(ROOT_PATH.'/classes/authorization.php');
     $title = "Lägg till ny order";
     $db = new Db();
@@ -13,7 +15,7 @@
 
 ?>
 
-<?php require_once(ROOT_PATH.'/header.php');?>
+<?php  require_once(ROOT_PATH.'/header.php');?>
 <body>
 
 
@@ -44,6 +46,8 @@
         echo "$('#indextabs').tabs({active: 3})";     
       }  else if(isset($_GET['editOrder'])){
         echo "$('#indextabs').tabs({active: 4})";
+      }  else {
+        echo "$('#indextabs').tabs({active: 1})";
       }
         ?> 
   </script>

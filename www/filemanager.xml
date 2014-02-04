@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<filemanager>
+
+  <owner name="WIN\fm00148056">
+    <accounts>
+      <account name="WIN\i00148056">
+        <types>
+          <type>web_anonymous</type>
+        </types>
+      </account>
+      <account name="WIN\ex_p00148056">
+        <types>
+          <type>application_pool</type>
+        </types>
+      </account>
+      <account name="WIN\w00148056">
+        <types>
+          <type>ftp</type>
+        </types>
+      </account>
+    </accounts>
+  </owner>
+
+</filemanager>

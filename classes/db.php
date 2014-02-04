@@ -21,6 +21,19 @@
 		private $sql_tiresize = "select * from tiresizes";
 		private $sql_customers = "select * from customers";
 
+		public function deleteOrder($id){
+	      $sql = "delete FROM orders WHERE id = :id";
+	      $sth = $this->dbh->prepare($sql);
+	      $sth->bindParam(':id', $id, PDO::PARAM_INT);
+	      $sth->execute();
+
+	      if ($sth->rowCount() > 0) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    }
+
 		public function getUsername($username) {
 			$sql = $this->users_sql." WHERE username = :username";
 			$sth = $this->dbh->prepare($sql);

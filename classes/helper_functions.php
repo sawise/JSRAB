@@ -342,8 +342,8 @@ function tooltipContent($searchresult){
                 } 
             } 
             $content .= '</p>';
-              $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera order</p></a>';
-              $content .= '<p><a href="#">Skriv ut</p></a>';
+              $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera</p></a>';
+              $content .= '<p><a href="deleteorder.php?orderid='.$searchresult->id.'">Ta bort</p></a>';
             $content .= '</div>';
             return $content;
 }
