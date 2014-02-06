@@ -5,7 +5,6 @@ $page = isset($_POST['page']) ? $_POST['page'] : 1;
 $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
 $sortname = isset($_POST['sortname']) ? $_POST['sortname'] : 'deliverydate';
 $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
-
 	
  	$db = new Db();
  	$year = $_GET['year'];
@@ -26,6 +25,7 @@ $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
 				'tiretread_name'=>$searchitem->tiretread_name,
 				'tiresize_name'=>$searchitem->tiresize_name,
 				'total'=>$searchitem->total,
+				'comments'=>$searchitem->comments,
 				'numcode'=>showTooltiptest($searchitem)
 			),
 		);

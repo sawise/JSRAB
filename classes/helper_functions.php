@@ -328,9 +328,10 @@ function tooltipContent($searchresult){
                  <p>Kund:'.$searchresult->customer_name.'</p>
                  <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
                  <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
-                 <p>Antal: '.$searchresult->total.'</p>';
+                 <p>Antal: '.$searchresult->total.'</p>
+                 <p>Kommentarer: '.$searchresult->comments.'</p>';
 
-             for ($i=0; $i < count($ordernumberArray) ; $i++) { 
+             /*for ($i=0; $i < count($ordernumberArray) ; $i++) { 
                 $arrayCount = count($ordernumberArray);
                 if($i == 0){
                   $content .= '<p>Ordernummer: '.$ordernumberArray[$i].'<p>';
@@ -341,7 +342,7 @@ function tooltipContent($searchresult){
                   $content .= $ordernumberArray[$i].',';
                 } 
             } 
-            $content .= '</p>';
+            $content .= '</p>';*/
               $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera</p></a>';
               $content .= '<p><a href="deleteorder.php?orderid='.$searchresult->id.'">Ta bort</p></a>';
             $content .= '</div>';

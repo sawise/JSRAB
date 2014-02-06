@@ -24,9 +24,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <Button
+            android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sök"
+            android:clickable="true"
             android:layout_weight="0.1"/>
     </LinearLayout>
     <ListView

@@ -1,10 +1,4 @@
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/createorder_scrollview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -22,41 +16,55 @@
     <EditText
         android:id="@+id/deliverydate"
         android:hint="Leveransdatum"
-        android:inputType="datetime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <EditText
+        android:inputType="date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:focusable="false"
+        android:singleLine="true"
+        android:focusableInTouchMode="false"/>
+    <AutoCompleteTextView
         android:id="@+id/customer"
         android:hint="Kund"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
-    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+    <AutoCompleteTextView
         android:id="@+id/dimension"
         android:hint="Dimension"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
-    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:singleLine="true"/>
+
+    <AutoCompleteTextView
         android:id="@+id/thread"
         android:hint="Mönster"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:singleLine="true"/>
     <EditText
         android:id="@+id/total"
         android:hint="Totalt"
         android:inputType="number"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:singleLine="true"/>
     <EditText
         android:id="@+id/comments"
-        android:hint="ordernummer mm"
-
-        android:layout_width="200dp"
-        android:layout_height="80dp" />
+        android:hint="kommentarer, ordernummer, följenummer mm"
+        android:layout_width="match_parent"
+        android:layout_weight="12"
+        android:layout_height="wrap_content"
+        android:gravity="top"/>
 
     <Button
+        android:id="@+id/postOrder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sök"/>
+            android:text="Skapa order"/>
 
 </LinearLayout>
-</ScrollView>
