@@ -1,5 +1,5 @@
 <?php
-require_once('../config.php');
+require_once('../../config.php');
 
 $searchresult = '';
 $page = isset($_POST['page']) ? $_POST['page'] : 1;
@@ -23,23 +23,9 @@ $total = 100;
 //search($text, $tiresize, $tirethread, $sortby, $descasc, $startform ,$limit)
 	header("Content-type: application/json");
 	$jsonData = array('page'=>$page,'total'=>$total,'rows'=>array());
-	if(isset($_GET['mobile'])){
+
 		foreach($searchresult AS $searchitem){
-			$entry = array('id'=>$searchitem->id,
-				'cell'=>array(
-					'id'=>$searchitem->id,
-					'deliverydate'=>$searchitem->deliverydate,
-					'customer_name'=>$searchitem->customer_name,
-					'tiretread_name'=>$searchitem->tiretread_name,
-					'tiresize_name'=>$searchitem->tiresize_name,
-					'comments'=>$searchitem->comments,
-					'total'=>$searchitem->total
-				),
-			);
-			$jsonData['rows'][] = $entry;
-		} 
-	} else {
-		foreach($searchresult AS $searchitem){
+			$output = str_split($searchitem->comments, 25);
 			$entry = array('id'=>$searchitem->id,
 				'cell'=>array(
 					'id'=>$searchitem->id,
@@ -48,11 +34,13 @@ $total = 100;
 					'tiretread_name'=>$searchitem->tiretread_name,
 					'tiresize_name'=>$searchitem->tiresize_name,
 					'total'=>$searchitem->total,
-					'numcode'=>showTooltiptest($searchitem)
+					'comments'=>$searchitem->comments,
+					'actions'=>showTooltiptest($searchitem)
 				),
 			);
 			$jsonData['rows'][] = $entry;
 		} 
-	}
+	   /*$content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera</p></a>';
+              $content .= '<p><a href="deleteorder.php?orderid='.$searchresult->id.'">Ta bort</p></a>';*/
 
 echo json_encode($jsonData);

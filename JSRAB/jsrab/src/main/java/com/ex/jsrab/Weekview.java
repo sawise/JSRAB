@@ -3,6 +3,7 @@ package com.ex.jsrab;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TabActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -47,7 +48,7 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.weekview, container, false);
-        setHasOptionsMenu(true);
+
 
         week = (EditText) rootView.findViewById(R.id.week);
         weeklistview = (ListView) rootView.findViewById(R.id.weeklistview);
@@ -71,34 +72,14 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         return rootView;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.drinkmenu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        /*switch (item.getItemId()) {
-            case R.id.cl:
-
-                return true;
-            case R.id.oz:
-
-                return true;
-            case R.id.starInMenu:
-
-            default:
-                break;
-        }*/
-        return false;
-    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(parent == weeklistview){
             int itemid = data.get(position).getId();
             dialog(itemid, data.get(position));
+
+
             //selectedItem = position;
             //String text = gridArray.get(position).getName();
             //String category = gridArray.get(position).getCategoryName();
@@ -142,6 +123,7 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
 
     public void dialog(int id, Searchresult searchitem){
         final Dialog dialog = new Dialog(getActivity());
+        final int idOnclick = id;
         dialog.setContentView(R.layout.searchresultdialog);
         dialog.setTitle("text");
         dialog.setCancelable(true);
@@ -149,7 +131,16 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         TextView dialogText = (TextView) dialog.findViewById(R.id.dialogText);
         Button removeButton = (Button) dialog.findViewById(R.id.buttonRemove);
         Button cancelButton = (Button) dialog.findViewById(R.id.buttonCancel);
+        Button editButton = (Button) dialog.findViewById(R.id.buttonEdit);
 
+        editButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Session.setOrderID(idOnclick);
+
+                getActivity().getActionBar().setSelectedNavigationItem(3);
+                dialog.dismiss();
+            }
+        });
         removeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 

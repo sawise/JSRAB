@@ -60,8 +60,8 @@ function form_select($name, $title, $items, $selected_id = null, $dbcolumn/*, $t
     $html .= form_label($name, $label_text);
     $html .= '<div class="controls">';
     $html .= '<textarea id="'.$name.'" name="'.$name.'"';
-    $html .= $placeholder_text.' onKeyDown="LimitText(this.form.notes,this.form.countdown,1000);"
-onKeyUp="LimitText(this.form.notes,this.form.countdown,1000);" rows="8" maxlength="1000">';
+    $html .= $placeholder_text.' onKeyDown="LimitText(this.form.notes,this.form.countdown,255);"
+onKeyUp="LimitText(this.form.notes,this.form.countdown,1000);" rows="8" maxlength="255">';
     $html .= $valuetext;
     $html .= "</textarea></div></div>";
 
@@ -103,9 +103,6 @@ function toggle($toggle = null, $togglearray = null){
 }
 
 //----------------
-
-
-
 
 function yearView(){
     $thisyear = date("Y");
@@ -301,11 +298,13 @@ function getWeekday($date){
 }*/
 
 function showTooltiptest($searchresult){
-
             $html = tooltipContent($searchresult);
-  $html .= '<div><span id="searchItem_'.$searchresult->id.'" rel="popover" class="btn">
+            $html .= '<a href="#" id="searchItem_'.$searchresult->id.'" rel="popover"><i class="glyphicon glyphicon-info-sign"></i></a> ';
+            $html .= '<a href="index.php?editOrder='.$searchresult->id.'"><i class="glyphicon glyphicon-edit"></i></a> ';
+            $html .= '<a href="deleteorder.php?orderid='.$searchresult->id.'"><i class="glyphicon glyphicon-trash"></i></a>';
+/*  $html .= '<div><span id="searchItem_'.$searchresult->id.'" rel="popover" class="btn">
             Mer info
-            </span>';
+            </span>';*/
 $html .= '<script>
             $(document).ready(function() {
               var div1Html = $(\'#content_'.$searchresult->id.'\').html();
@@ -323,26 +322,12 @@ $html .= '<script>
 }
 
 function tooltipContent($searchresult){
-  $ordernumberArray = explode(",", $searchresult->comments);
    $content = '<div id="content_'.$searchresult->id.'" class="Ubuntufont"><p>Leveransdatum:'.$searchresult->deliverydate.'</p>
                  <p>Kund:'.$searchresult->customer_name.'</p>
                  <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
                  <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
                  <p>Antal: '.$searchresult->total.'</p>
                  <p>Kommentarer: '.$searchresult->comments.'</p>';
-
-             /*for ($i=0; $i < count($ordernumberArray) ; $i++) { 
-                $arrayCount = count($ordernumberArray);
-                if($i == 0){
-                  $content .= '<p>Ordernummer: '.$ordernumberArray[$i].'<p>';
-                  $content .= '<p>Följenummer: '.$i;
-                } else if($i == $arrayCount-1) {
-                   $content .= $ordernumberArray[$i].'<p>'; 
-                } else {
-                  $content .= $ordernumberArray[$i].',';
-                } 
-            } 
-            $content .= '</p>';*/
               $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera</p></a>';
               $content .= '<p><a href="deleteorder.php?orderid='.$searchresult->id.'">Ta bort</p></a>';
             $content .= '</div>';
@@ -434,7 +419,7 @@ function set_feedback($status, $text) {
   function get_feedback() {
     $html = "";
     if (isset($_SESSION['feedback'])) {
-      $html .= '<div class="alert alert-'.$_SESSION['feedback']['status'].'">';
+      $html .= '<div class="alert alert-'.$_SESSION['feedback']['status'].' onfront">';
       $html .= '<button type="button" class="close" data-dismiss="alert">×</button>';
       $html .= $_SESSION['feedback']['text'];
       $html .= '</div>';

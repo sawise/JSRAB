@@ -37,6 +37,12 @@ button {
 	text-align: left;
 }
 
+.onfront{
+	z-index: 1000;
+	position: relative;
+	width: 10%;
+}
+
 .logo{
 	position: absolute;
 	top: 0;
@@ -60,6 +66,13 @@ button {
 -moz-border-radius: 3em;
 border-radius: 3em;
 	border: 0.3em ridge blue;
+
+}
+.adminDiv{
+	-webkit-border-radius: 3em;
+-moz-border-radius: 3em;
+border-radius: 3em;
+	border: 0.3em ridge red;
 
 }
 
@@ -148,11 +161,16 @@ border-radius: 3em;
 				background-color:rgba(255, 255 ,255 ,0.4);
 				padding:8px;
 				border-radius:5px;
-				 top:30%;
+				top:30%;
      left:40%;
      position:absolute;
 			}
 
+.tableusers {
+  width: 30%;
+  float: left;
+  margin-right: 1em;
+}
 
 .topright {
 	width: 15%;

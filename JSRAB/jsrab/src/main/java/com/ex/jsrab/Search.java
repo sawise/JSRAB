@@ -3,78 +3,62 @@ package com.ex.jsrab;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.AsyncTask;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ex.jsrab.async.CreateOrderPOST;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 public class Search extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
     private ArrayAdapter<Searchresult> adapter;
     private List<Searchresult> data = new ArrayList<Searchresult>();
+    private List<Tiresize> dataTiresize = new ArrayList<Tiresize>();
+    private List<Tirethread> dataTirethread = new ArrayList<Tirethread>();
     private ArrayList<Searchresult> datatoList;
     private ListView searchresult;
     private EditText searchText;
-    private Button searchButton;
+    private ImageButton searchButton;
     private String searchString = "";
     private String tireThread = "nothread";
     private String tireSize = "nosize";
     private String dateStart = "nodate";
     private String dateEnd = "";
+    private ArrayList<Tiresize> tiresizes;
+    private ArrayList<Tirethread> tirethreads;
     private ProgressDialog progress;
     private int allowedRetries = 10;
+    private Spinner spinner1, spinner2;
+    private Button btnSubmit;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.searchtest, container, false);
+        setHasOptionsMenu(true);
 
         searchresult = (ListView) rootView.findViewById(R.id.searchresult);
         searchText = (EditText) rootView.findViewById(R.id.searchText);
-        searchButton = (Button) rootView.findViewById(R.id.searchButton);
+        searchButton = (ImageButton) rootView.findViewById(R.id.searchButton);
 
         datatoList = new ArrayList<Searchresult>();
 
@@ -86,6 +70,25 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         searchresult.setOnItemClickListener(this);
         searchButton.setOnClickListener(this);
         return rootView;
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.drinkmenu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.advsearch:
+                advSearchdialog();
+            return true;
+            default:
+                break;
+        }
+        return false;
     }
 
 
@@ -180,7 +183,55 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         }
     }
 
+
+    public void advSearchdialog(){
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.searchadvdialog);
+        dialog.setTitle("text");
+        dialog.setCancelable(true);
+        spinner1 = (Spinner) dialog.findViewById(R.id.spinner1);
+        spinner2 = (Spinner) dialog.findViewById(R.id.spinner2);
+        btnSubmit = (Button) dialog.findViewById(R.id.setAdvsearch);
+
+        tiresizes = APIManager.getTiresizes();
+        tirethreads = APIManager.getTirethreads();
+
+
+
+        spinner1.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+        List<String> list = new ArrayList<String>();
+        list.add("list 1");
+        list.add("list 2");
+        list.add("list 3");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner2.setAdapter(dataAdapter);
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getActivity(),
+                        "OnClickListener : " +
+                                "\nSpinner 1 : " + String.valueOf(spinner1.getSelectedItem()) +
+                                "\nSpinner 2 : " + String.valueOf(spinner2.getSelectedItem()),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        dialog.show();
+
+    }
+
+
+
+
+
     public void dialog(int id, Searchresult searchitem){
+
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.searchresultdialog);
         dialog.setTitle("text");
@@ -213,4 +264,29 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
 
     }
 
+    public void getTiresize(){
+        try{
+            dataTiresize.clear();
+            dataTiresize = APIManager.getTiresizes();
+            //adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.custom_list_item, datatoList);
+            if(!data.isEmpty()) {
+                adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
+                if(!adapter.isEmpty()){
+                    adapter.clear();
+                }
+                searchresult.setAdapter(adapter);
+                //APIManager.updateSearch();
+                for(Searchresult searchdata : data){
+                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
+                    //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
+                    adapter.add(stringToAdd);
+                }
+                progress.dismiss();
+            } else {
+                startRefreshThread();
+            }
+        } catch (Exception e){
+            Log.i("Post", ""+e);
+        }
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-	require_once('../config.php');
+	require_once('../../config.php');
 	 $db = new Db();
 	$tirethreads = $db->getTiretreads();
    $tireSize = $db->getTiresize();
@@ -60,7 +60,7 @@ if(isset($_SESSION['searchstring'])) {
 setDefaultthread("<?php echo $tirethreadID ?>");
 	  setDefaultsize("<?php echo $tiresizeID ?>");
 function setDefaultthread(defValue) {
-    $('#tirethreads option').each(function () {
+    $('#tirethreadssearch option').each(function () {
     	console.log("thread_"+$(this).attr('value'));
         if (($(this).attr('value')) == defValue) {
             $(this).attr('selected', 'selected');
@@ -68,7 +68,7 @@ function setDefaultthread(defValue) {
     });
 }
 function setDefaultsize(defValue) {
-    $('#tiresizes option').each(function () {
+    $('#tiresizessearch option').each(function () {
     	console.log($(this).attr('value'));
         if (($(this).attr('value')) == defValue) {
             $(this).attr('selected', 'selected');
@@ -207,16 +207,16 @@ function setDefaultsize(defValue) {
   })( jQuery );
  
   $(function() {
-    $( "#tiresizes" ).combobox();
+    $( "#tiresizessearch" ).combobox();
     $( "#toggle" ).click(function() {
-      $( "#tiresizes" ).toggle();
+      $( "#tiresizessearch" ).toggle();
     });
 
   });
   $(function() {
-    $( "#tirethreads" ).combobox();
+    $( "#tirethreadssearch" ).combobox();
     $( "#toggle" ).click(function() {
-      $( "#tirethreads" ).toggle();
+      $( "#tirethreadssearch" ).toggle();
     });
   });
   </script>
@@ -257,8 +257,8 @@ function setDefaultsize(defValue) {
 				<?php echo form_input('text', 'datepickerend', '|', 'Tryck här för att välja datum', $dateend) ?>	
 			</td>
 			<td>
-				<?php echo form_select("tirethreads", "Mönster", $tirethreads, $tirethreadID, 'name') ?>
-				<?php  echo form_select("tiresizes", "Storlek", $tireSize, $tiresizeID, 'name') ?>
+				<?php echo form_select("tirethreadssearch", "Mönster", $tirethreads, $tirethreadID, 'name') ?>
+				<?php  echo form_select("tiresizessearch", "Storlek", $tireSize, $tiresizeID, 'name') ?>
 			</td>
 		</table>
 	</div>
@@ -277,13 +277,14 @@ function setDefaultsize(defValue) {
 	                url : "post-json.php?search=<?php echo $searchstring.'&tirethread='.$searcharray[2].'&tiresize='.$searcharray[1].'&datestart='.$searcharray[3].'&dateend='.$searcharray[4] ?>",
 	                dataType: 'json',
 		colModel : [
-		{display:  'ID', name : 'id', width : 10, sortable : true, align: 'left'},
-		{display:  'Leveransdatum', name : 'deliverydate', width : 75, sortable : true, align: 'left'},
-			{display: 'Kund', name : 'customer_name', width : 180, sortable : true, align: 'left'},
-			{display:  'Mönster', name : 'tiretread_name', width : 40, sortable : true, align: 'left'},
-			{display: 'Dimension', name : 'tiresize_name', width : 120, sortable : true, align: 'left'},
-			{display: 'Antal', name : 'total', width : 130, sortable : true, align: 'left'},
-			{display: ' ', name : 'numcode', sortable : false, align: 'center'}
+		{display:  'ID', name : 'id', width : 20, sortable : true, align: 'left'},
+		{display:  'Leveransdatum', name : 'deliverydate', width : 100, sortable : true, align: 'left'},
+			{display: 'Kund', name : 'customer_name', width : 100, sortable : true, align: 'left'},
+			{display:  'Mönster', name : 'tiretread_name', width : 100, sortable : true, align: 'left'},
+			{display: 'Dimension', name : 'tiresize_name', width : 100, sortable : true, align: 'left'},
+			{display: 'Antal', name : 'total', width : 35, sortable : true, align: 'left'},
+			{display: 'Kommentarer', name : 'comments', width : 350, sortable : false, align: 'left'},
+      {display: '', name : 'actions', width : 50, sortable : false, align: 'center'}
 			], 	
 		
 		sortname: "deliverydate",
@@ -293,16 +294,9 @@ function setDefaultsize(defValue) {
 		useRp: true,
 		rp: 10,
 		showTableToggleBtn: true,
-		width: 'auto',
+		width: 900,
 		height: 300
 	            });      
-
-	           $('#tirethreads option').each(function () {
-        if (($(this).attr('value')) === "BDR-W+") {
-            $(this).attr('selected', 'selected');
-        }
-        //setDefault("BDR-W+");
-    });
 	        </script>
 	<?php endif ?>  
 <body> <!--<a href="#" class="btn popover-examples" data-toggle="popover" title="Popover title" data-content="Default popover<br>ss<br>">Popover</a><?php //echo tooltipButton($searchresult); ?> -->

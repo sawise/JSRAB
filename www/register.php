@@ -1,5 +1,5 @@
 <?php
-	require_once('../config.php');
+	require_once('../../config.php');
 	$register = true;	
 if (isset($_POST) && isset($_POST['username'])) {
 	$db = new Db();
@@ -9,35 +9,13 @@ if (isset($_POST) && isset($_POST['username'])) {
 	$createduser = $db->createUser($username, $password);
 
 	if($createduser != null){
-		$db_username = $db->getUsername($username);
-		$db_password = $db->getPassword($password);
-
-		if (count($db_username) > 0) {		
-			if ($db_username->username == $username) {
-				if (count($db_password) > 0) {
-					if ($db_password->password == $password) {
-						$_SESSION['is_logged_in'] = true;
-						$_SESSION['user_username'] = $db_username->username;
-						$_SESSION['user_id'] = $db_username->id;
-					header('location: index.php');
-					} else {
-					set_feedback("error", "Wrong username or password.");
-					}
-				} else {
-					set_feedback("error", "Wrong username or password.");
-				}
-			} else {
-				set_feedback("error", "Wrong username or password.");
-			}
-			} else {
-			set_feedback("error", "Wrong username or password.");
+		set_feedback("success", "Kontot skapades.");
+			header('location: admin.php');
 	}
 }
-}
 ?>
-<?php require_once(ROOT_PATH.'/header.php'); ?>
 
-    	<div class="login-form">
+    	<div class="searchInput">
         	<form role="form" method="post" action="register.php">
             	<div class="form-group">
                 <label class="sr-only" for="username"></label>
@@ -52,5 +30,3 @@ if (isset($_POST) && isset($_POST['username'])) {
                 </div>
     		</form>
         </div>
-
-<?php require_once(ROOT_PATH.'/footer.php'); ?>

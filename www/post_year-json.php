@@ -1,5 +1,5 @@
 <?php
-require_once('../config.php');
+require_once('../../config.php');
 
 $page = isset($_POST['page']) ? $_POST['page'] : 1;
 $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
@@ -20,13 +20,13 @@ $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
 		$entry = array('id'=>$searchitem->id,
 			'cell'=>array(
 				'id'=>$searchitem->id,
-				'deliverydate'=>$searchitem->deliverydate,//getWeekday($searchitem->deliverydate),
+				'deliverydate'=>$searchitem->deliverydate,
 				'customer_name'=>$searchitem->customer_name,
 				'tiretread_name'=>$searchitem->tiretread_name,
 				'tiresize_name'=>$searchitem->tiresize_name,
 				'total'=>$searchitem->total,
 				'comments'=>$searchitem->comments,
-				'numcode'=>showTooltiptest($searchitem)
+				'actions'=>showTooltiptest($searchitem)
 			),
 		);
 		$jsonData['rows'][] = $entry;

@@ -4,6 +4,7 @@ package com.ex.jsrab;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +13,24 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-
-import com.ex.jsrab.async.CreateOrderPOST;
+import android.widget.ImageButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Createorder extends Fragment implements EditText.OnClickListener {
 
     private EditText deliverydate, comments, customer, total;
     private AutoCompleteTextView thread, dimension;
-    private Button setDate, cancelDialog, createOrder;
+    private Button setDate, cancelDialog;
+    private ImageButton createOrder;
     private DatePicker datePicker;
-    private CreateOrderPOST post;
-    ArrayAdapter<String> dimensionAdapter, threadAdapter;
-    private String[] dimensionString = new String[] {
-            "195/75", "145/65"};
-    private String[] threadString = new String[] {
-            "195/75", "145/65","195/75", "145/65","195/75", "145/65"};
+    ArrayAdapter<Tirethread> threadAdapter;
+    ArrayAdapter<Tiresize> dimensionAdapter;
+    private ArrayList<Tiresize> tiresizes;
+    private ArrayList<Tirethread> tirethreads;
+    private List<Searchresult> data = new ArrayList<Searchresult>();
+    private ArrayList<Searchresult> datatoList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,12 +42,15 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
         deliverydate = (EditText) rootView.findViewById(R.id.deliverydate);
         comments = (EditText) rootView.findViewById(R.id.comments);
         total = (EditText) rootView.findViewById(R.id.total);
-        createOrder = (Button) rootView.findViewById(R.id.postOrder);
+        createOrder = (ImageButton) rootView.findViewById(R.id.postOrder);
 
-        dimensionAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, dimensionString);
+        tiresizes = APIManager.getTiresizes();
+        tirethreads = APIManager.getTirethreads();
+
+        dimensionAdapter = new ArrayAdapter<Tiresize>(getActivity(), android.R.layout.simple_dropdown_item_1line, tiresizes);
         dimension.setAdapter(dimensionAdapter);
 
-        threadAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, threadString);
+        threadAdapter = new ArrayAdapter<Tirethread>(getActivity(), android.R.layout.simple_dropdown_item_1line, tirethreads);
         thread.setAdapter(threadAdapter);
 
         createOrder.setOnClickListener(this);
@@ -58,15 +63,16 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
         if(v == deliverydate){
             dialog();
         } else if(v == createOrder){
-
-            ArrayList<String> arrayList = new ArrayList<String>();
+            Log.i("Post ID", "");
+            /*ArrayList<String> arrayList = new ArrayList<String>();
             arrayList.add(deliverydate.getText().toString());
             arrayList.add(customer.getText().toString());
             arrayList.add(dimension.getText().toString());
+
             arrayList.add(thread.getText().toString());
             arrayList.add(total.getText().toString());
             arrayList.add(comments.getText().toString());
-            APIManager.createOrder(getActivity().getApplicationContext(), arrayList);
+            APIManager.createOrder(getActivity().getApplicationContext(), arrayList);*/
         }
 
         //post.execute((Void) null);
@@ -100,6 +106,7 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
         });
         dialog.show();
     }
+
 
 
 }

@@ -124,6 +124,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     return new Search();
                 case 2:
                     return new Createorder();
+                case 3:
+                    return new Editorder();
                 default:
                     return new Weekview();
             }
@@ -132,7 +134,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
 
         @Override
@@ -145,6 +147,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     return "Sök";
                 case 2:
                     return "Skapa order";
+                case 3:
+                    return "Redigera order";
             }
             return null;
         }

@@ -1,6 +1,6 @@
 <?php
 
-  require_once('../config.php');
+  require_once('../../config.php');
 
  if (isset($_GET['search'])) {
  	$adv = '';
@@ -11,13 +11,13 @@
  	}
  	
     
- 	if(isset($_GET['tiresizes']) && $_GET['tiresizes'] != null || $_GET['tiresizes'] != ''){
- 		$adv .= ','.$_GET['tiresizes'];
+ 	if(isset($_GET['tiresizessearch']) && $_GET['tiresizessearch'] != null || $_GET['tiresizessearch'] != ''){
+ 		$adv .= ','.$_GET['tiresizessearch'];
  	} else {
  		$adv .=',nosize';
  	}
- 	if(isset($_GET['tirethreads']) && $_GET['tirethreads'] != null || $_GET['tirethreads'] != ''){
- 		$adv .= ','.$_GET['tirethreads'];	
+ 	if(isset($_GET['tirethreadssearch']) && $_GET['tirethreadssearch'] != null || $_GET['tirethreadssearch'] != ''){
+ 		$adv .= ','.$_GET['tirethreadssearch'];	
  	} else {
  		$adv .= ',nothread';
  	}
@@ -28,6 +28,7 @@
  		$adv .= ',nodate';
  	}
     $_SESSION['searchstring'] = $adv;
+    
     header("Location: index.php");
   }  
 

@@ -34,10 +34,107 @@
 	      }
 	    }
 
+	    public function deleteUser($id){
+	      $sql = "delete FROM users WHERE id = :id";
+	      $sth = $this->dbh->prepare($sql);
+	      $sth->bindParam(':id', $id, PDO::PARAM_INT);
+	      $sth->execute();
+
+	      if ($sth->rowCount() > 0) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    }
+
+	    public function deleteTiretread($id){
+	      $sql = "delete FROM tiretreads WHERE id = :id";
+	      $sth = $this->dbh->prepare($sql);
+	      $sth->bindParam(':id', $id, PDO::PARAM_INT);
+	      $sth->execute();
+
+	      if ($sth->rowCount() > 0) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    }
+
+	    public function deleteTiresize($id){
+	      $sql = "delete FROM tiresizes WHERE id = :id";
+	      $sth = $this->dbh->prepare($sql);
+	      $sth->bindParam(':id', $id, PDO::PARAM_INT);
+	      $sth->execute();
+
+	      if ($sth->rowCount() > 0) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    }
+
+	    public function deleteCustomer($id){
+	      $sql = "delete FROM customers WHERE id = :id";
+	      $sth = $this->dbh->prepare($sql);
+	      $sth->bindParam(':id', $id, PDO::PARAM_INT);
+	      $sth->execute();
+
+	      if ($sth->rowCount() > 0) {
+	        return true;
+	      } else {
+	        return false;
+	      }
+	    }
+
+	    public function updateUser($id, $username, $password){
+	      $data = array($password, $username, $id);
+	      $sth = $this->dbh->prepare("UPDATE users SET password = ?, username = ? WHERE id = ?");
+	      $sth->execute($data);
+
+	      if($sth->execute($data)) {
+	        return true;
+	      } else {
+	        //return false;
+	        return "UPDATE users SET password = ".$password.", SET username = ".$username." WHERE id = ".$id;
+	      }
+	    }
+
 		public function getUsername($username) {
 			$sql = $this->users_sql." WHERE username = :username";
 			$sth = $this->dbh->prepare($sql);
 			$sth->bindParam(':username', $username, PDO::PARAM_INT);
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Users');
+			$sth->execute();
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+			if (count($objects) > 0) {
+				return $objects[0];
+			} else {
+				return null;
+			}
+		}
+
+		public function getUsers() {
+			$sth = $this->dbh->query($this->users_sql);
+			$sth->setFetchMode(PDO::FETCH_CLASS, 'Users');
+
+			$objects = array();
+
+			while($obj = $sth->fetch()) {
+				$objects[] = $obj;
+			}
+			return $objects;
+
+		}
+
+		public function getUser($id) {
+			$sql = $this->users_sql." WHERE id = :id";
+			$sth = $this->dbh->prepare($sql);
+			$sth->bindParam(':id', $id, PDO::PARAM_INT);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Users');
 			$sth->execute();
 

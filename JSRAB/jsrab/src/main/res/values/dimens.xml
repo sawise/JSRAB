@@ -4,5 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="searchtablecell_bottom">2dp</dimen>
     <dimen name="searchtablecell_right">8dp</dimen>
+    <dimen name="createordermargin">3dp</dimen>
+    <dimen name="createorderpadding">10dp</dimen>
 
     </resources>

@@ -1,6 +1,6 @@
  <div class="alignleft paddingInTab">	
  <?php 
-require_once('../config.php');
+require_once('../../config.php');
 //require_once('../style.php');
 $db = new Db();
    $tireTreads = $db->getTiretreads();
@@ -19,7 +19,7 @@ $db = new Db();
   $(function() {
 	    var tireTreads = [
 	    <?php for ($i = 0; $i < count($tireTreads); $i++){
-	    	echo '"'.$tireTreads[$i]->id.'->'.$tireTreads[$i]->name.'"';
+	    	echo '"'.$tireTreads[$i]->name.'"';
 	    	if($i < count($tireTreads)-1){
 	    		echo ',';
 	    	}
@@ -28,7 +28,7 @@ $db = new Db();
 
 	    var customers = [
 	    <?php for ($i = 0; $i < count($customers); $i++){
-	    	echo '"'.$customers[$i]->id.'->'.$customers[$i]->name.'"';
+	    	echo '"'.$customers[$i]->name.'"';
 	    	if($i < count($customers)-1){
 	    		echo ',';
 	    	}
@@ -37,7 +37,7 @@ $db = new Db();
 
 	    var tireSize = [
 	    <?php for ($i = 0; $i < count($tireSize); $i++){
-	    	echo '"'.$tireSize[$i]->id.'->'.$tireSize[$i]->name.'"';
+	    	echo '"'.$tireSize[$i]->name.'"';
 	    	if($i < count($tireSize)-1){
 	    		echo ',';
 	    	}

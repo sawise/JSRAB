@@ -1,6 +1,6 @@
  <div class="alignleft paddingInTab">	
  <?php 
-require_once('../config.php');
+require_once('../../config.php');
 //require_once('../style.php');
 $db = new Db();
 $tireTreads = $db->getTiretreads();
@@ -25,7 +25,7 @@ if(isset($_GET['orderId'])){
   $(function() {
 	    var tireTreads = [
 	    <?php for ($i = 0; $i < count($tireTreads); $i++){
-	    	echo '"'.$tireTreads[$i]->id.'->'.$tireTreads[$i]->name.'"';
+	    	echo '"'.$tireTreads[$i]->name.'"';
 	    	if($i < count($tireTreads)-1){
 	    		echo ',';
 	    	}
@@ -34,7 +34,7 @@ if(isset($_GET['orderId'])){
 
 	    var customers = [
 	    <?php for ($i = 0; $i < count($customers); $i++){
-	    	echo '"'.$customers[$i]->id.'->'.$customers[$i]->name.'"';
+	    	echo '"'.$customers[$i]->name.'"';
 	    	if($i < count($customers)-1){
 	    		echo ',';
 	    	}
@@ -43,12 +43,13 @@ if(isset($_GET['orderId'])){
 
 	    var tireSize = [
 	    <?php for ($i = 0; $i < count($tireSize); $i++){
-	    	echo '"'.$tireSize[$i]->id.'->'.$tireSize[$i]->name.'"';
+	    	echo '"'.$tireSize[$i]->name.'"';
 	    	if($i < count($tireSize)-1){
 	    		echo ',';
 	    	}
 	    } ?>
 	    ];
+	    
 
  $( "#customer" ).autocomplete({
       source: customers
@@ -85,15 +86,12 @@ $(function() {
   <?php if(isset($_GET['orderId'])) : ?>
 	 <form class="form-horizontal" method="post" action="updateOrder.php">
 	 	 <fieldset>
-	 	 <?php $tirethread = $order->tiretreadID.'->'.$order->tiretread_name;
-	 	 $customername = $order->customerID.'->'.$order->customer_name;
-	 	 $tiresize = $order->tiresizeID.'->'.$order->tiresize_name; ?>
 	 	 	<?php echo hidden_input('id', $order->id); ?>
 	 	 	<?php echo hidden_input('user_id', $_SESSION['user_id']); ?>
 	 		 <?php echo form_input('text', 'datepicker', 'Leveransdatum:', 'Tryck här för att välja datum', $order->deliverydate) ?>
-			 <?php echo form_input('text', 'customer', 'Kund:', 'Kundnamn', $customername) ?>
-			  <?php echo form_input('text', 'dimension', 'Dimension:', 'Skriv in däckmönstret här', $tirethread) ?>
-			 <?php echo form_input('text', 'tirethreads', 'Mönster:', 'Skriv in mönster här', $tiresize) ?>
+			 <?php echo form_input('text', 'customer', 'Kund:', 'Kundnamn', $order->customer_name) ?>
+			  <?php echo form_input('text', 'dimension', 'Dimension:', 'Skriv in däckmönstret här', $order->tiretread_name) ?>
+			 <?php echo form_input('text', 'tirethreads', 'Mönster:', 'Skriv in mönster här', $order->tiresize_name) ?>
 			 <?php echo form_input('text', 'total', 'Antal:','ex. 1', $order->total ) ?>
 			 <?php echo text_area('notes', 'Kommentar: ', 'Ordernummer, följenummer mm', $order->comments); ?>
 			 <?php echo submit_button("Spara") ?>

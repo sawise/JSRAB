@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
 <?php
-    require_once('../config.php');
+    require_once('../../config.php');
     //require_once(ROOT_PATH.'/classes/authorization.php');
     $print = true;
   $db = new Db();
     $page = isset($_POST['page']) ? $_POST['page'] : 1;
-$rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
+$rp = isset($_POST['rp']) ? $_POST['rp'] : 20;
 $sortname = isset($_POST['sortname']) ? $_POST['sortname'] : 'deliverydate';
 $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
 $total = 100;
@@ -18,10 +18,11 @@ $total = 100;
    $dateend = '';
    $tiresizeID = '';
    $tirethreadID = '';
+   $week = '';
  //$adv->search->size->thread->datestart->dateend
 if(isset($_SESSION['print'])) {
   $searcharray = explode(",", $_SESSION['print']);
-    
+
    $tirethreadID = $searcharray[2];
    $tiresizeID = $searcharray[1];
 
@@ -37,16 +38,20 @@ if(isset($_SESSION['print'])) {
     $pages = ceil($total / $rp);
     $start_from = ($page-1) * $rp;
     $searchresult = $db->search($searchstring,$_GET['tiresize'], $_GET['tirethread'], $_GET['datestart'], $_GET['dateend'], $sortname, $sortorder, $start_from ,$rp);
+    //$week  = (int)date('W',$searchresult[0]->deliverydate);
+    //$dt   = new DateTime($searchresult[0]->deliverydate);
+    //$week = date("W", $dt->getTimestamp());
+    $a = $searchresult[0]->deliverydate;
+    $week =  date('W', strtotime($a));
   }  
-//search($text, $tiresize, $tirethread, $sortby, $descasc, $startform ,$limit)
-  
 ?>
 
 <?php require_once(ROOT_PATH.'/header.php');?>
 <body>
-
-<table class="Ubuntufont table table-bordered printtable">;
-        <thead><th>Leveransdag<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th>Kommentarer</th></thead>';
+<legend><?php //echo date("YW", strtotime("2011-01-07"));
+echo 'Kundplanering leveranser v.'.$week  ?></legend>
+<table class="Ubuntufont table table-bordered printtable">
+<thead><th>Leveransdag<th>Företag/Kund<th>Mönster</th><th>Dimension</th><th>Antal</th><th>Kommentarer</th></thead>
         <tbody>
           <?php foreach($searchresult AS $searchitem) : ?>
             <tr> 
@@ -63,7 +68,7 @@ if(isset($_SESSION['print'])) {
 </body>
 <?php require_once(ROOT_PATH.'/footer.php');?>
 <script type="text/javascript">
-<!--
-window.print();
-//-->
+  <!--
+  window.print();
+  //-->
 </script>
