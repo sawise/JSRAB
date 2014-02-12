@@ -7,6 +7,7 @@ import android.util.Log;
 import com.ex.jsrab.Search;
 import com.ex.jsrab.Searchresult;
 import com.ex.jsrab.async.CreateOrder;
+import com.ex.jsrab.async.EditOrder;
 import com.ex.jsrab.async.JsonSearch;
 import com.ex.jsrab.async.JsonTiresize;
 import com.ex.jsrab.async.JsonTirethread;
@@ -31,7 +32,7 @@ public class APIManager {
     public static void updateEverything() {
         try {
             Calendar c = Calendar.getInstance();
-            updateSearch("");
+            //updateSearch("");
             updateTiresize();
             updateTirethread();
             updateWeeklyOrders(c.get(Calendar.YEAR),c.get(Calendar.WEEK_OF_YEAR));
@@ -116,15 +117,15 @@ public class APIManager {
         return null;
     }
 
-    public static void updateSearch(String searchString) throws IOException, JSONException {
+    public static void updateSearch(String searchString, String tireThread, String tireSize, String dateStart, String dateEnd) throws IOException, JSONException {
         JsonSearch task = new JsonSearch();
-        task.execute(URL+"/post-json.php?search="+searchString+"&tirethread=nothread&tiresize=nosize&datestart=nodate&dateend=&mobile=yes");
+        task.execute(URL+"/post-json.php?search="+searchString+"&tirethread="+tireThread+"&tiresize="+tireSize+"&datestart="+dateStart+"&dateend="+dateEnd+"&mobile=yes");
     }
 
-    public static ArrayList<Searchresult> getSearchresults(String searchString) {
+    public static ArrayList<Searchresult> getSearchresults(String searchString, String tireThread, String tireSize, String dateStart, String dateEnd) {
         //if(!hazInternetz()) return new ArrayList<Cocktail>();
         try {
-            updateSearch(searchString);
+            updateSearch(searchString, tireThread, tireSize, dateStart, dateEnd);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -220,34 +221,18 @@ public class APIManager {
         return null;
     }
 
-    public static void createOrder(Context context, ArrayList<String> ordervalue) {
+    public static void createOrder(Createorder context, ArrayList<String> ordervalue) {
         CreateOrder createOrder = new CreateOrder(context, ordervalue);
         createOrder.execute(URL+"/createOrder.php");
     }
-
-
-
-    /*
-
-
-    public static void updateCategories() throws IOException, JSONException {
-        JsonDownloadCategories task = new JsonDownloadCategories();
-        task.execute("http://dev2-vyh.softwerk.se:8080/bottomAppServer/json/categories/all");
+    public static void editOrder(Editorder context, ArrayList<String> ordervalue) {
+        EditOrder editOrder = new EditOrder(context, ordervalue);
+        editOrder.execute(URL+"/updateOrder.php");
     }
 
-    public static void updateIngredients() throws IOException, JSONException {
-        JsonDownloadIngredients task = new JsonDownloadIngredients();
-        task.execute("http://dev2-vyh.softwerk.se:8080/bottomAppServer/json/ingredients/all");
-    }
 
-    public static void updateIngredientsUser(int userID) throws IOException, JSONException {
-        JsonDownloadIngredientsByUser task = new JsonDownloadIngredientsByUser();
-        task.execute("http://dev2-vyh.softwerk.se:8080/bottomAppServer/json/users/"+userID+"/ingredients");
-    }
-    public static void updateCocktailByFavorite(int userID) throws IOException, JSONException {
-        JsonDownloadFavoriteDrinksByUser task = new JsonDownloadFavoriteDrinksByUser();
-        task.execute("http://dev2-vyh.softwerk.se:8080/bottomAppServer/json/users/"+userID+"/favorite/drink");
-    }
+
+  /*
 
 
 

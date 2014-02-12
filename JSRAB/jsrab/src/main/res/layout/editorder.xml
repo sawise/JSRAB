@@ -13,9 +13,24 @@
     tools:context=".ColorPicker"
     android:background="@drawable/bg">
 
-
+    <TextView
+        android:id="@+id/noEdittext"
+        android:background="#FFF"
+        android:alpha="0.8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Du måste välja en order via Sök eller Veckoöversikt"
+        android:visibility="gone"
+        android:textStyle="bold"
+        android:textSize="25dip" />
+    <TextView
+        android:id="@+id/editorderID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="gone"/>
     <EditText
-        android:id="@+id/deliverydate"
+        android:id="@+id/editOrderdeliverydate"
         android:hint="Leveransdatum"
         android:inputType="date"
         android:layout_width="match_parent"
@@ -29,7 +44,7 @@
         android:paddingLeft="@dimen/createorderpadding"
         />
     <AutoCompleteTextView
-        android:id="@+id/customer"
+        android:id="@+id/editOrdercustomer"
         android:hint="Kund"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +54,7 @@
         android:paddingLeft="@dimen/createorderpadding"
         />
     <AutoCompleteTextView
-        android:id="@+id/dimension"
+        android:id="@+id/editOrderdimension"
         android:hint="Dimension"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +66,7 @@
         android:paddingLeft="@dimen/createorderpadding"/>
 
     <AutoCompleteTextView
-        android:id="@+id/thread"
+        android:id="@+id/editOrderthread"
         android:hint="Mönster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,7 +77,7 @@
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
     <EditText
-        android:id="@+id/total"
+        android:id="@+id/editOrdertotal"
         android:hint="Totalt"
         android:inputType="number"
         android:layout_width="match_parent"
@@ -74,7 +89,7 @@
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
     <EditText
-        android:id="@+id/comments"
+        android:id="@+id/editOrdercomments"
         android:hint="kommentarer, ordernummer, följenummer mm"
         android:layout_width="match_parent"
         android:layout_weight="12"
@@ -86,7 +101,7 @@
         />
 
     <ImageButton
-        android:id="@+id/postOrder"
+        android:id="@+id/postEditorder"
         android:src="@drawable/ic_action_send_now"
         android:background="#000"
         android:alpha="0.8"

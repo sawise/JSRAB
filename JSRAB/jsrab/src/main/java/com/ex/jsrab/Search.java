@@ -3,7 +3,6 @@ package com.ex.jsrab;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Search extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
@@ -46,10 +48,12 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
     private ProgressDialog progress;
     private int allowedRetries = 10;
     private Spinner spinner1, spinner2;
+    private int spinner1Pos = 0;
+    private int spinner2Pos = 0;
+    private CheckBox dimensionCheckbox, threadCheckbox, deliverydateCheckbox;
+    private DatePicker datepickerStart, datepickerEnd;
     private Button btnSubmit;
-
-
-
+    private MenuItem resetAdv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,8 +79,9 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.drinkmenu, menu);
+        inflater.inflate(R.menu.searchmenu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        resetAdv = menu.findItem(R.id.resetadvsearch);
     }
 
     @Override
@@ -84,7 +89,17 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         switch (item.getItemId()) {
             case R.id.advsearch:
                 advSearchdialog();
+
             return true;
+            case R.id.resetadvsearch:
+                resetAdv.setVisible(false);
+                tireThread = "nothread";
+                tireSize = "nosize";
+                dateStart = "nodate";
+                dateEnd = "";
+                spinner1Pos = 0;
+                spinner2Pos = 0;
+                Toast.makeText(getActivity(), "Den avancerade sökningen är nollställd", Toast.LENGTH_LONG).show();
             default:
                 break;
         }
@@ -100,8 +115,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
             progress.show();
            try{
                data.clear();
-               data = APIManager.getSearchresults(searchString);
-               //adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.custom_list_item, datatoList);
+               data = APIManager.getSearchresults(searchString, tireThread, tireSize, dateStart, dateEnd);
                if(!data.isEmpty()) {
                    adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
                    if(!adapter.isEmpty()){
@@ -110,7 +124,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                    searchresult.setAdapter(adapter);
                    //APIManager.updateSearch();
                    for(Searchresult searchdata : data){
-                           Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
+                           Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
                            //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
                            adapter.add(stringToAdd);
                    }
@@ -142,12 +156,13 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                         public void run() {
 
                             Log.i("retry...", "no =)");
-                            data = APIManager.getSearchresults(searchString);
+                            //, String tireThread, String tireSize, String dateStart, String dateEnd
+                            data = APIManager.getSearchresults(searchString, tireThread, tireSize, dateStart, dateEnd);
                             adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
                             if (!data.isEmpty()) {
                                 adapter.clear();
                                 for(Searchresult searchdata : data){
-                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
                                     //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
                                     adapter.add(stringToAdd);
                                 }
@@ -191,35 +206,66 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         dialog.setCancelable(true);
         spinner1 = (Spinner) dialog.findViewById(R.id.spinner1);
         spinner2 = (Spinner) dialog.findViewById(R.id.spinner2);
+        dimensionCheckbox = (CheckBox) dialog.findViewById(R.id.dimensionCheckbox);
+        threadCheckbox = (CheckBox) dialog.findViewById(R.id.threadCheckbox);
+        deliverydateCheckbox = (CheckBox) dialog.findViewById(R.id.deliverydateCheckbox);
         btnSubmit = (Button) dialog.findViewById(R.id.setAdvsearch);
+        datepickerStart = (DatePicker) dialog.findViewById(R.id.dateStart);
+        datepickerEnd = (DatePicker) dialog.findViewById(R.id.dateEnd);
 
         tiresizes = APIManager.getTiresizes();
         tirethreads = APIManager.getTirethreads();
 
+        if(spinner1Pos != 0){
+            spinner1.setSelection(spinner1Pos);
+            threadCheckbox.setChecked(true);
+        }
+        if(spinner2Pos != 0){
+            spinner2.setSelection(spinner2Pos);
+            dimensionCheckbox.setChecked(true);
+        }
+        TirethreadAdvsearchAdapter tirethreadAdvsearchAdapter = new TirethreadAdvsearchAdapter(getActivity(), tirethreads);
+        spinner1.setAdapter(tirethreadAdvsearchAdapter);
 
-
-        spinner1.setOnItemSelectedListener(new CustomOnItemSelectedListener());
-        List<String> list = new ArrayList<String>();
-        list.add("list 1");
-        list.add("list 2");
-        list.add("list 3");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(dataAdapter);
+        TiresizeAdvsearchAdapter tiresizeAdvsearchAdapter = new TiresizeAdvsearchAdapter(getActivity(), tiresizes);
+        spinner2.setAdapter(tiresizeAdvsearchAdapter);
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(),
-                        "OnClickListener : " +
-                                "\nSpinner 1 : " + String.valueOf(spinner1.getSelectedItem()) +
-                                "\nSpinner 2 : " + String.valueOf(spinner2.getSelectedItem()),
-                        Toast.LENGTH_SHORT).show();
-            }
+                if(threadCheckbox.isChecked()){
+                    spinner1Pos = spinner1.getSelectedItemPosition();
+                    Log.i("advanced search", "dimension yees"+spinner1Pos);
+                    int threadID = tirethreads.get(spinner1.getSelectedItemPosition()).getId();
+                    tireThread = Integer.toString(threadID);
 
+                }
+                if(dimensionCheckbox.isChecked()){
+                    spinner2Pos = spinner2.getSelectedItemPosition();
+                    Log.i("advanced search", "dimension yees"+spinner2Pos);
+                    int threadID = tiresizes.get(spinner2.getSelectedItemPosition()).getId();
+                    tireThread = Integer.toString(threadID);
+                    tireSize = "nosize";
+                }
+                if(deliverydateCheckbox.isChecked()){
+                    int stY = datepickerStart.getYear();
+                    int stM = datepickerStart.getMonth();
+                    int stD = datepickerStart.getDayOfMonth();
+                    int enY = datepickerEnd.getYear();
+                    int enM = datepickerEnd.getMonth();
+                    int enD = datepickerEnd.getDayOfMonth();
+
+                    //Log.i("datepickerr", stY+"-"+HelperFunctions.monthWithTwoInt(stM)+"-"+HelperFunctions.monthWithTwoInt(stD)+" | "+enY+"-"+HelperFunctions.monthWithTwoInt(enM)+"-"+HelperFunctions.monthWithTwoInt(enD));
+                    //choosenDate.get(Calendar.)
+                    dateStart = HelperFunctions.dateToString(stY, stM, stD);
+                    dateEnd = HelperFunctions.dateToString(enY, enM, enD);;
+                }
+                resetAdv.setVisible(true);
+                dialog.dismiss();
+
+            }
         });
 
         dialog.show();
@@ -231,15 +277,24 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
 
 
     public void dialog(int id, Searchresult searchitem){
-
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.searchresultdialog);
-        dialog.setTitle("text");
+        final int idOnclick = id;
+        dialog.setTitle(searchitem.getDeliverydate());
         dialog.setCancelable(true);
 
         TextView dialogText = (TextView) dialog.findViewById(R.id.dialogText);
         Button removeButton = (Button) dialog.findViewById(R.id.buttonRemove);
         Button cancelButton = (Button) dialog.findViewById(R.id.buttonCancel);
+        Button editButton = (Button) dialog.findViewById(R.id.buttonEdit);
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Session.setOrderID(idOnclick);
+                getActivity().getActionBar().setSelectedNavigationItem(3);
+                dialog.dismiss();
+            }
+        });
 
         removeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -257,7 +312,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                 dialog.dismiss();
             }
         });
-        String dialogTextStr = "Leveransdatum: "+searchitem.getDate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments();
+        String dialogTextStr = "Leveransdatum: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments();
         dialogText.setText(dialogTextStr);
 
         dialog.show();

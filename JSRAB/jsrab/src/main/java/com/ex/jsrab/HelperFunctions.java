@@ -1,6 +1,8 @@
 package com.ex.jsrab;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 
@@ -17,6 +19,9 @@ public class HelperFunctions {
         public static String userEmail;
         public static String userIdentifier;
         public static int userId;
+        //public static Context context = MainActivity
+
+
 
 
         // This will set all values on login
@@ -47,9 +52,14 @@ public class HelperFunctions {
             } catch(IndexOutOfBoundsException iEx){
                 Log.e("BottomApp", "Exception: " + iEx.getMessage());
             }
-
         }
-
+    }
+    public static String monthWithTwoInt(int mount){
+        if(mount < 10){
+            return "0"+mount;
+        }else{
+            return Integer.toString(mount);
+        }
     }
 
     public static String getMonthForInt(int num) {

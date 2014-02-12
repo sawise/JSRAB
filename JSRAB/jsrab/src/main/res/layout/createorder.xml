@@ -84,14 +84,27 @@
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"
         />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/postOrder"
+            android:src="@drawable/ic_action_send_now"
+            android:background="#000"
+            android:alpha="0.8"
+            android:layout_weight="1"
+            android:layout_width="50dip"
+            android:layout_height="30dip"
+                android:text="Skapa order"/>
+        <TextView
+            android:id="@+id/toast"
+            android:layout_weight="2"
 
-    <ImageButton
-        android:id="@+id/postOrder"
-        android:src="@drawable/ic_action_send_now"
-        android:background="#000"
-        android:alpha="0.8"
-        android:layout_width="50dip"
-        android:layout_height="30dip"
-            android:text="Skapa order"/>
-
+            android:background="@drawable/borderradius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dthdfdfdf"
+            android:visibility="invisible"/>
+    </LinearLayout>
 </LinearLayout>

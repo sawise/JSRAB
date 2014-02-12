@@ -21,13 +21,10 @@ public class Searchresult {
     public Searchresult(){
 
     }
-    public Searchresult(String customerName){
-        this.customerName = customerName;
-    }
 
-    public Searchresult(int id, String date, String customerName, String tirethreadName, String tiresizeName, String comments, int total){
+    public Searchresult(int id, String deliverydate, String customerName, String tirethreadName, String tiresizeName, String comments, int total){
         this.id = id;
-        this.date = date;
+        this.deliverydate = deliverydate;
         this.customerName = customerName;
         this.tirethreadName = tirethreadName;
         this.tiresizeName = tiresizeName;

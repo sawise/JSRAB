@@ -2,6 +2,7 @@ package com.ex.jsrab.async;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.inputmethod.InputConnection;
 
 import com.ex.jsrab.APIManager;
 
@@ -41,7 +42,9 @@ public class JsonSearch extends AsyncTask<String, Void, String> {
     }
 
     public static String getJsonFromUrl(String url) throws IOException, JSONException {
+
         InputStream is = new URL(url).openStream();
+
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
             String jsonText = readAll(rd);

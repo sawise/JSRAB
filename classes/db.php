@@ -241,7 +241,7 @@
 			}
 
 			if($datestart != 'nodate' && $dateend != 'nodate'){
-				$adv = 'AND orders.deliverydate>\''.$datestart.'\' AND orders.deliverydate<\''.$dateend.'\'';
+				$adv = 'AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';
 			}
 
 			if(is_numeric($text)){
@@ -272,7 +272,7 @@
 				$adv .= ' AND tiretreads.id = '.$tirethread;	
 			}
 			if($datestart != 'nodate' && $dateend != 'nodate'){
-				$adv .= ' AND orders.deliverydate>\''.$datestart.'\' AND orders.deliverydate<\''.$dateend.'\'';
+				$adv = 'AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';
 			}
 
 			if(is_numeric($text)){

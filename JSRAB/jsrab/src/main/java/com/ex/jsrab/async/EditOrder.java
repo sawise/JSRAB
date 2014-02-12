@@ -1,48 +1,39 @@
 package com.ex.jsrab.async;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ex.jsrab.Createorder;
-import com.ex.jsrab.HelperFunctions;
-import com.ex.jsrab.MainActivity;
+import com.ex.jsrab.Editorder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.json.JSONObject;
 
-import java.io.InputStream;
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by FilipFransson on 2013-12-17.
  */
-public class CreateOrder extends AsyncTask<String, Void, String> {
+public class EditOrder extends AsyncTask<String, Void, String> {
 
-    Createorder context;
+    Editorder context;
     ArrayList<String> ordervalue;
 
-    public CreateOrder(){
+    public EditOrder(){
         //this.context = MainActivity;
     }
-    public CreateOrder(Createorder context, ArrayList<String> ordervalue){
+    public EditOrder(Editorder context, ArrayList<String> ordervalue){
         this.context = context;
         this.ordervalue = ordervalue;
-
     }
 
     @Override
@@ -69,13 +60,14 @@ public class CreateOrder extends AsyncTask<String, Void, String> {
 
 
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-                nameValuePairs.add(new BasicNameValuePair("datepicker",ordervalue.get(0).toString() ));
-                nameValuePairs.add(new BasicNameValuePair("customer", ordervalue.get(1).toString()));
-                nameValuePairs.add(new BasicNameValuePair("dimension", ordervalue.get(2).toString()));
-                nameValuePairs.add(new BasicNameValuePair("tirethreads", ordervalue.get(3).toString()));
-                nameValuePairs.add(new BasicNameValuePair("total", ordervalue.get(4).toString()));
-                nameValuePairs.add(new BasicNameValuePair("notes", ordervalue.get(5).toString()));
-                nameValuePairs.add(new BasicNameValuePair("user_id", "0"));
+                nameValuePairs.add(new BasicNameValuePair("id",ordervalue.get(0).toString()));
+                nameValuePairs.add(new BasicNameValuePair("datepicker",ordervalue.get(1).toString() ));
+                nameValuePairs.add(new BasicNameValuePair("customer", ordervalue.get(2).toString()));
+                nameValuePairs.add(new BasicNameValuePair("dimension", ordervalue.get(3).toString()));
+                nameValuePairs.add(new BasicNameValuePair("tirethreads", ordervalue.get(4).toString()));
+                nameValuePairs.add(new BasicNameValuePair("total", ordervalue.get(5).toString()));
+                nameValuePairs.add(new BasicNameValuePair("notes", ordervalue.get(6).toString()));
+                //nameValuePairs.add(new BasicNameValuePair("user_id", "0"));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 // Execute HTTP Post Request
@@ -85,9 +77,6 @@ public class CreateOrder extends AsyncTask<String, Void, String> {
 
             if(statusCode == 200){
                 Log.d("com.group2", "Lyckades favorisera");
-                //Toast.makeText(MainActivity., "blablabla", Toast.LENGTH_LONG).show();
-                //Createorder.toast.setText("Ordern skapades! :)");
-                //Toast.makeText(context.setToast(""), "Favorized ", 1000).show();
                 return "true";
             } else if(statusCode == 400 || statusCode == 401 || statusCode == 404 || statusCode == 500){
                 Log.d("com.group2", "Misslyckades med att favorisera, felkod: " + statusCode + " identifier: ");

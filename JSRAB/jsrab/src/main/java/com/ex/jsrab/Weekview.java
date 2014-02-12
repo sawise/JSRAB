@@ -58,14 +58,9 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         progress.setTitle("Loading");
         progress.setMessage("Please wait...");
 
-
-        Calendar c = Calendar.getInstance();
-        yearInt = c.get(Calendar.YEAR);
-        weekInt = c.get(Calendar.WEEK_OF_YEAR);
-        monthInt = c.get(Calendar.MONTH);
-        week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
-        Log.i("current year and week", yearInt+"<->"+weekInt);
-        fillListview();
+        if(Session.getYear() == 0){
+            setYearandWeek();
+        }
 
         weeklistview.setOnItemClickListener(this);
         week.setOnClickListener(this);
@@ -121,6 +116,31 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         dialog.show();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        yearInt = Session.getYear();
+        weekInt = Session.getWeek();
+        monthInt = Session.getMonth();
+        week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
+        Log.i("current year and week", yearInt+"<->"+weekInt);
+        fillListview();
+
+    }
+    public void setYearandWeek(){
+        Calendar c = Calendar.getInstance();
+        yearInt = c.get(Calendar.YEAR);
+        Session.setYear(yearInt);
+        weekInt = c.get(Calendar.WEEK_OF_YEAR);
+        Session.setWeek(weekInt);
+        monthInt = c.get(Calendar.MONTH);
+        Session.setMonth(monthInt);
+        week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
+        Log.i("current year and week", yearInt+"<->"+weekInt);
+        fillListview();
+    }
+
+
     public void dialog(int id, Searchresult searchitem){
         final Dialog dialog = new Dialog(getActivity());
         final int idOnclick = id;
@@ -136,7 +156,6 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         editButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Session.setOrderID(idOnclick);
-
                 getActivity().getActionBar().setSelectedNavigationItem(3);
                 dialog.dismiss();
             }
@@ -157,12 +176,13 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
                 dialog.dismiss();
             }
         });
-        String dialogTextStr = "Leveransdatum: "+searchitem.getDate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments();
+        String dialogTextStr = "Leveransdatum: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments();
         dialogText.setText(dialogTextStr);
 
         dialog.show();
 
     }
+
 
 
     @Override
@@ -188,7 +208,7 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
                 adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
 
                 for(Searchresult searchdata : data){
-                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
+                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
 
                     adapter.add(stringToAdd);
                 }
@@ -225,7 +245,7 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
                             if (!data.isEmpty()) {
                                 adapter.clear();
                                 for(Searchresult searchdata : data){
-                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
 
                                     adapter.add(stringToAdd);
                                 }

@@ -59,7 +59,7 @@ public class CustomSearchAdapter extends ArrayAdapter<Searchresult> {
         Searchresult item = data.get(position);
 
         String id = Integer.toString(item.getId());
-        String stringToAdd = "Leveransdatum: "+item.getDate()+"\n"+"Kund: "+item.getCustomerName()+"\n"+"Mönster: "+item.getTirethreadName()+"\n"+"Dimension: "+item.getTiresizeName()+"\n"+"Totalt: "+item.getTotal();
+        String stringToAdd = "Leveransdatum: "+item.getDeliverydate()+"\n"+"Kund: "+item.getCustomerName()+"\n"+"Mönster: "+item.getTirethreadName()+"\n"+"Dimension: "+item.getTiresizeName()+"\n"+"Totalt: "+item.getTotal();
         holder.searchResult.setText(id);
         holder.searchResult.setText(stringToAdd);
 
