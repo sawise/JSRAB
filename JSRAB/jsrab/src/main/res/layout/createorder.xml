@@ -25,6 +25,7 @@
         android:singleLine="true"
         android:focusableInTouchMode="false"
         android:background="@drawable/borderradius"
+        android:maxLines="1"
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"
         />
@@ -34,7 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:singleLine="true"
         android:background="@drawable/borderradius"
+        android:maxLines="1"
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"
         />
@@ -46,6 +49,7 @@
         android:layout_weight="1"
         android:singleLine="true"
         android:background="@drawable/borderradius"
+        android:maxLines="1"
 
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
@@ -58,6 +62,7 @@
         android:layout_weight="1"
         android:singleLine="true"
         android:background="@drawable/borderradius"
+        android:maxLines="1"
 
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
@@ -70,7 +75,7 @@
         android:layout_weight="1"
         android:singleLine="true"
         android:background="@drawable/borderradius"
-
+        android:maxLines="1"
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
     <EditText
@@ -83,6 +88,8 @@
         android:background="@drawable/borderradius"
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"
+        android:singleLine="true"
+        android:maxLines="1"
         />
     <LinearLayout
         android:orientation="horizontal"

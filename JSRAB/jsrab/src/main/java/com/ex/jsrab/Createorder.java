@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Createorder extends Fragment implements EditText.OnClickListener {
@@ -89,11 +90,11 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
             arrayList.add(deliverydate.getText().toString());
             arrayList.add(customer.getText().toString());
             arrayList.add(dimension.getText().toString());
-
             arrayList.add(thread.getText().toString());
             arrayList.add(total.getText().toString());
             arrayList.add(comments.getText().toString());
-            APIManager.createOrder(this, arrayList);
+            arrayList.add(Session.getUserIdStr());
+            APIManager.createOrder(getActivity(), arrayList);
         }
 
         //post.execute((Void) null);
@@ -107,19 +108,20 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
         dialog.setTitle("Välj datum");
         dialog.setCancelable(true);
         cancelDialog = (Button) dialog.findViewById(R.id.closeDialogCreateOrder);
-        setDate = (Button) dialog.findViewById(R.id.setDateCreateOrder);
         datePicker = (DatePicker) dialog.findViewById(R.id.datePickerCreateOrder);
-        setDate.setOnClickListener(new View.OnClickListener() {
+        Calendar currentDate  = Calendar.getInstance();
+        datePicker.init(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener()
+        {
+
             @Override
-            public void onClick(View v) {
-                int y = datePicker.getYear();
-                int m = datePicker.getMonth();
-                int d = datePicker.getDayOfMonth();
-                deliverydate.setText(HelperFunctions.dateToString(y,m,d));
+            public void onDateChanged(DatePicker periodDatePicker, int currentYear, int currentMonth,int currentDay) {
+                // TODO Auto-generated method stub
+                deliverydate.setText(HelperFunctions.dateToString(currentYear, currentMonth, currentDay));
                 dialog.dismiss();
-                return;
+
             }
         });
+
         cancelDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

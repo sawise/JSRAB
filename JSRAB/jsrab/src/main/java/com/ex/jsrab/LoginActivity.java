@@ -64,8 +64,7 @@ public class LoginActivity extends Activity {
     // Values for username and password at the time of the login attempt.
     private String mUsername;
     private String mPassword;
-    public static final String PREFSUSER = "PREFUSER";
-    public static final String PREFSPASS = "PREFPASS";
+
 
 
 
@@ -118,11 +117,15 @@ public class LoginActivity extends Activity {
             }
         });
         Log.i("LoginActivity", "Version: " +  android.os.Build.VERSION.SDK_INT);
-        if(getSharedPreferences(PREFSUSER, MODE_PRIVATE).getString("username", null) != null){
+        String rememberMe = getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).getString("username", null);
+        if(rememberMe != null){
+            int id = getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).getInt("id", 0);
+            Log.i("login id", ""+id);
+            Session.setUserID(id);
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
-            Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_SHORT).show();
             finish();
+            Toast.makeText(this, "Login lyckades!", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -199,7 +202,7 @@ public class LoginActivity extends Activity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mLoginStatusMessageView.setText("");
+            mLoginStatusMessageView.setText("Loggar in....");
             showProgress(true);
             mAuthTask = new UserLoginTask();
             mAuthTask.execute((Void) null);
@@ -289,9 +292,9 @@ public class LoginActivity extends Activity {
                     String[] pieces = success.split(":");
                     Session.setUserID(Integer.parseInt(pieces[1]));
                     User u = new User(Session.getUserID(), mUsername, SHA256(mPassword + salt));
-
-                    getSharedPreferences(PREFSUSER, MODE_PRIVATE).edit().putString("username", u.getUsername()).commit();
-                    getSharedPreferences(PREFSPASS, MODE_PRIVATE).edit().putString("password", u.getPassword()).commit();
+                    getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putString("username", u.getUsername()).commit();
+                    getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putString("password", u.getUsername()).commit();
+                    getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putInt("id", u.getId()).commit();
 
                     // Account exists, return true
                     return true;

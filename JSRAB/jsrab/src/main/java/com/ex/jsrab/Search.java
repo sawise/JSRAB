@@ -67,8 +67,8 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         datatoList = new ArrayList<Searchresult>();
 
         progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Please wait...");
+        progress.setTitle("Laddar");
+        progress.setMessage("Hämtar sökresultat...");
 
 
         searchresult.setOnItemClickListener(this);
@@ -89,7 +89,6 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         switch (item.getItemId()) {
             case R.id.advsearch:
                 advSearchdialog();
-
             return true;
             case R.id.resetadvsearch:
                 resetAdv.setVisible(false);
@@ -111,30 +110,33 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
     public void onClick(View v) {
         if(v == searchButton){
             Log.i("onclick","yeees");
-            searchString = searchText.getText().toString();
-            progress.show();
-           try{
-               data.clear();
-               data = APIManager.getSearchresults(searchString, tireThread, tireSize, dateStart, dateEnd);
-               if(!data.isEmpty()) {
-                   adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
-                   if(!adapter.isEmpty()){
-                       adapter.clear();
-                   }
-                   searchresult.setAdapter(adapter);
-                   //APIManager.updateSearch();
-                   for(Searchresult searchdata : data){
-                           Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
-                           //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
-                           adapter.add(stringToAdd);
-                   }
-                   progress.dismiss();
-                } else {
-                   startRefreshThread();
-               }
-           } catch (Exception e){
-               Log.i("Post", ""+e);
-           }
+            getSearchresult();
+        }
+    }
+
+    public void getSearchresult(){
+        searchString = searchText.getText().toString();
+        progress.show();
+        try{
+            data.clear();
+            data = APIManager.getSearchresults(searchString, tireThread, tireSize, dateStart, dateEnd);
+            if(!data.isEmpty()) {
+                adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
+                if(!adapter.isEmpty()){
+                    adapter.clear();
+                }
+                searchresult.setAdapter(adapter);
+                for(Searchresult searchdata : data){
+                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
+                    //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
+                    adapter.add(stringToAdd);
+                }
+                progress.dismiss();
+            } else {
+                startRefreshThread();
+            }
+        } catch (Exception e){
+            Log.i("Post", ""+e);
         }
     }
     private void startRefreshThread(){
@@ -162,7 +164,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                             if (!data.isEmpty()) {
                                 adapter.clear();
                                 for(Searchresult searchdata : data){
-                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
                                     //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
                                     adapter.add(stringToAdd);
                                 }
@@ -172,6 +174,13 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                                 Log.i("retry...", "yes o.O");
                                 retries++;
                                 if(retries < allowedRetries){
+                                    try {
+                                        if(!adapter.isEmpty() && adapter != null){
+                                            adapter.clear();
+                                        }
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                     stopRetrying = true;
                                     progress.dismiss();
                                 }
@@ -240,7 +249,6 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                     Log.i("advanced search", "dimension yees"+spinner1Pos);
                     int threadID = tirethreads.get(spinner1.getSelectedItemPosition()).getId();
                     tireThread = Integer.toString(threadID);
-
                 }
                 if(dimensionCheckbox.isChecked()){
                     spinner2Pos = spinner2.getSelectedItemPosition();
@@ -257,8 +265,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                     int enM = datepickerEnd.getMonth();
                     int enD = datepickerEnd.getDayOfMonth();
 
-                    //Log.i("datepickerr", stY+"-"+HelperFunctions.monthWithTwoInt(stM)+"-"+HelperFunctions.monthWithTwoInt(stD)+" | "+enY+"-"+HelperFunctions.monthWithTwoInt(enM)+"-"+HelperFunctions.monthWithTwoInt(enD));
-                    //choosenDate.get(Calendar.)
+
                     dateStart = HelperFunctions.dateToString(stY, stM, stD);
                     dateEnd = HelperFunctions.dateToString(enY, enM, enD);;
                 }
@@ -312,7 +319,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                 dialog.dismiss();
             }
         });
-        String dialogTextStr = "Leveransdatum: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments();
+        String dialogTextStr = "Leveransdatum: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments()+"\nSenast ändrad: "+searchitem.getDeliverydate()+" av "+searchitem.getUsername();
         dialogText.setText(dialogTextStr);
 
         dialog.show();
@@ -332,13 +339,13 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                 searchresult.setAdapter(adapter);
                 //APIManager.updateSearch();
                 for(Searchresult searchdata : data){
-                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal());
+                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
                     //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
                     adapter.add(stringToAdd);
                 }
                 progress.dismiss();
             } else {
-                startRefreshThread();
+                getTiresize();
             }
         } catch (Exception e){
             Log.i("Post", ""+e);

@@ -141,7 +141,7 @@ public class APIManager {
             ArrayList<Searchresult> listToReturn = new ArrayList<Searchresult>();
 
             if(searchArray.length() == 0){
-                listToReturn.add(new Searchresult(0, "N/A", "N/A", "N/A", "N/A","N/A", 0));
+                //listToReturn.add(new Searchresult(0, "N/A", "N/A", "N/A", "N/A","N/A", 0));
             } else {
                 for (int i = 0; i < searchArray.length(); i++) {
                     JSONObject searchObj = searchArray.getJSONObject(i);
@@ -154,8 +154,9 @@ public class APIManager {
                     String tirethreadName = searchObjinObj.getString("tiretread_name");
                     String tiresizeName = searchObjinObj.getString("tiresize_name");
                     String comments = searchObjinObj.getString("comments");
+                    String username = searchObjinObj.getString("username");
                     int total = searchObjinObj.getInt("total");
-                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total));
+                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total, username));
                 }
             }
 
@@ -206,9 +207,10 @@ public class APIManager {
                     String customerName = searchObjinObj.getString("customer_name");
                     String tirethreadName = searchObjinObj.getString("tiretread_name");
                     String tiresizeName = searchObjinObj.getString("tiresize_name");
+                    String username = searchObjinObj.getString("username");
                     String comments = searchObjinObj.getString("comments");
                     int total = searchObjinObj.getInt("total");
-                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total));
+                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total, username));
 
                 }
             }
@@ -221,11 +223,11 @@ public class APIManager {
         return null;
     }
 
-    public static void createOrder(Createorder context, ArrayList<String> ordervalue) {
+    public static void createOrder(Context context, ArrayList<String> ordervalue) {
         CreateOrder createOrder = new CreateOrder(context, ordervalue);
         createOrder.execute(URL+"/createOrder.php");
     }
-    public static void editOrder(Editorder context, ArrayList<String> ordervalue) {
+    public static void editOrder(Context context, ArrayList<String> ordervalue) {
         EditOrder editOrder = new EditOrder(context, ordervalue);
         editOrder.execute(URL+"/updateOrder.php");
     }

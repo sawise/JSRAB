@@ -15,7 +15,7 @@
 
   
   define('SALT', '34A75DD4C4DF5E4DDFC68CA975B35');
-//date_default_timezone_set('Europe/Stockholm');
+  date_default_timezone_set('Europe/Stockholm');
   require_once(ROOT_PATH.'/includes.php');
   session_start();
 

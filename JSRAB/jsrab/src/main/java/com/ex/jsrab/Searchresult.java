@@ -18,11 +18,15 @@ public class Searchresult {
     public int userID;
     public String lastChange;
 
+
+
+    public String username;
+
     public Searchresult(){
 
     }
 
-    public Searchresult(int id, String deliverydate, String customerName, String tirethreadName, String tiresizeName, String comments, int total){
+    public Searchresult(int id, String deliverydate, String customerName, String tirethreadName, String tiresizeName, String comments, int total, String username){
         this.id = id;
         this.deliverydate = deliverydate;
         this.customerName = customerName;
@@ -30,8 +34,15 @@ public class Searchresult {
         this.tiresizeName = tiresizeName;
         this.comments = comments;
         this.total = total;
+        this.username = username;
+    }
+    public String getUsername() {
+        return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public int getId() {
         return id;
     }

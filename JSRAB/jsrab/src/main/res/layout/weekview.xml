@@ -15,7 +15,7 @@
         android:id="@+id/week"
         android:background="@drawable/borderradius"
         android:paddingLeft="@dimen/createorderpadding"
-        android:hint="Välj år och vecka"
+        android:hint="Välj år och vecka via kalenderknappen ovan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="false"
@@ -24,9 +24,13 @@
 
 <ListView
 android:id="@+id/weeklistview"
+    android:background="@drawable/borderradius"
+    android:paddingLeft="@dimen/createorderpadding"
+    android:paddingTop="@dimen/createorderpadding"
+    android:paddingBottom="@dimen/createorderpadding"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-    android:background="#FFFFFF"
+
     android:alpha="0.8"/>
 
 

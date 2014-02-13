@@ -4,8 +4,12 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:visible="false"/>
+    <item android:id="@+id/refreshsearch"
+        android:icon="@drawable/refresh"
+        android:orderInCategory="100"
+        android:showAsAction="always" />
     <item android:id="@+id/advsearch"
-        android:title="adv"
+        android:icon="@drawable/advsearch"
         android:orderInCategory="100"
         android:showAsAction="always" />
 

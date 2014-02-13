@@ -21,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Weekview extends Fragment implements EditText.OnClickListener, ListView.OnItemClickListener {
+public class Weekview extends Fragment implements ListView.OnItemClickListener {
 
 
     private ArrayAdapter<Searchresult> adapter;
@@ -47,18 +48,31 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.weekview, container, false);
-
+        setHasOptionsMenu(true);
 
         week = (EditText) rootView.findViewById(R.id.week);
         weeklistview = (ListView) rootView.findViewById(R.id.weeklistview);
         datatoList = new ArrayList<Searchresult>();
 
+        progress = new ProgressDialog(getActivity());
+        progress.setTitle("Laddar...");
+        progress.setMessage("Hämtar veckoöversikten...");
 
+        if(Session.getYear() == 0){
+            setYearandWeek();
+        } else {
+            yearInt = Session.getYear();
+            weekInt = Session.getWeek();
+            monthInt = Session.getMonth();
+            week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
+            fillListview();
+        }
 
         weeklistview.setOnItemClickListener(this);
-        week.setOnClickListener(this);
+
         return rootView;
     }
+
 
 
     @Override
@@ -82,23 +96,28 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         dialog.setContentView(R.layout.searchyeardialog);
         dialog.setTitle("Välj vecka");
         cancelDialog = (Button) dialog.findViewById(R.id.closeDialog);
-        setDate = (Button) dialog.findViewById(R.id.setDate);
         datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
+        Calendar currentDate  = Calendar.getInstance();
+        datePicker.init(currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DAY_OF_MONTH), new DatePicker.OnDateChangedListener()
+        {
 
-        setDate.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onDateChanged(DatePicker periodDatePicker, int currentYear, int currentMonth,int currentDay) {
+                // TODO Auto-generated method stub
                 Calendar choosenDate  = Calendar.getInstance();
-                yearInt = datePicker.getYear();
-                monthInt = datePicker.getMonth();
-                int d = datePicker.getDayOfMonth();
+                yearInt = currentYear;
+                monthInt = currentMonth;
+                int d = currentDay;
                 choosenDate.set(yearInt, monthInt, d);
                 weekInt = choosenDate.get(Calendar.WEEK_OF_YEAR);
                 week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
                 dialog.dismiss();
                 fillListview();
+
             }
         });
+
+
         cancelDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,10 +131,6 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
     @Override
     public void onResume(){
         super.onResume();
-        progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Please wait...");
-
         if(Session.getYear() == 0){
             setYearandWeek();
         } else {
@@ -178,46 +193,56 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
                 dialog.dismiss();
             }
         });
-        String dialogTextStr = "Leveransdatum: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments();
+        String dialogTextStr = "Leveransdag: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments()+"\nSenast ändrad: "+searchitem.getDeliverydate()+" av "+searchitem.getUsername();
         dialogText.setText(dialogTextStr);
 
         dialog.show();
 
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.weekviewmenu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
 
     @Override
-    public void onClick(View v) {
-        if(v == week){
-            dateDialog();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.calendar:
+                dateDialog();
+                return true;
+            case R.id.refreshweek:
+                fillListview();
+            default:
+                break;
         }
+        return false;
     }
+
+
+
 
     public void fillListview(){
         Log.i("onclick","yeees");
         progress.show();
         try{
             data.clear();
-            datatoList.clear();
             data = APIManager.getWeeklyOrders(yearInt, weekInt);
             //adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.custom_list_item, datatoList);
             if(!data.isEmpty()) {
-                adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
-                if(!adapter.isEmpty()){
-
-                    adapter.clear();
-                }
                 data = APIManager.getWeeklyOrders(yearInt, weekInt);
                 adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
+                    adapter.clear();
 
                 for(Searchresult searchdata : data){
-                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
+                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
 
                     adapter.add(stringToAdd);
                 }
                 progress.dismiss();
             } else {
+
                 startRefreshThread();
             }
         } catch (Exception e){
@@ -245,24 +270,29 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
 
                             Log.i("retry...", "no =)");
                             data = APIManager.getWeeklyOrders(yearInt, weekInt);
-                            datatoList.clear();
                             if (!data.isEmpty()) {
                                 adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
-
-                                if(!adapter.isEmpty()){
                                     adapter.clear();
-                                }
                                 for(Searchresult searchdata : data){
-                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
 
                                     adapter.add(stringToAdd);
                                 }
                                 weeklistview.setAdapter(adapter);
                                 progress.dismiss();
                             } else {
-                                Log.i("retry...", "yes o.O");
+
+                                Log.i("retry...", ""+retries);
                                 retries++;
                                 if(retries < HelperFunctions.allowedRetries){
+
+                                    try {
+                                        if(!adapter.isEmpty() && adapter != null){
+                                            adapter.clear();
+                                        }
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
                                     stopRetrying = true;
                                     progress.dismiss();
                                 }

@@ -26,6 +26,15 @@ public class Session {
     private int spinner1Pos, spinner2Pos;
     private Calendar startDate;
     private Calendar endDate;
+    public static final String PREFSUSER = "PREFUSER";
+
+    public static String getUserIdStr() {
+        return Integer.toString(userID);
+    }
+
+    public static String getPrefsuser() {
+        return PREFSUSER;
+    }
 
     public int getSpinner1Pos() {
         return spinner1Pos;

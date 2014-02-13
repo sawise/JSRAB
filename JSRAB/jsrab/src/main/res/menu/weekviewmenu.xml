@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/calendar"
+        android:orderInCategory="100"
+        android:icon="@drawable/calendar"
+        android:showAsAction="always"/>
+    <item android:id="@+id/refreshweek"
+        android:icon="@drawable/refresh"
+        android:orderInCategory="100"
+        android:showAsAction="always" />
+
+
+    
+</menu>

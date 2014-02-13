@@ -27,7 +27,10 @@
             android:id="@+id/searchText"
             android:hint="Sök..."
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:maxLines="1"
+            ><requestFocus /></EditText>
         <ImageButton
             android:id="@+id/searchButton"
             android:background="#000"
@@ -39,7 +42,10 @@
     </LinearLayout>
 
     <ListView
-        android:background="#FFFFFF"
+        android:background="@drawable/borderradius"
+        android:paddingLeft="@dimen/createorderpadding"
+        android:paddingTop="@dimen/createorderpadding"
+        android:paddingBottom="@dimen/createorderpadding"
         android:alpha="0.8"
         android:id="@+id/searchresult"
         android:layout_width="match_parent"

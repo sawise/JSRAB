@@ -28,11 +28,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+
         android:visibility="gone"/>
     <EditText
         android:id="@+id/editOrderdeliverydate"
         android:hint="Leveransdatum"
         android:inputType="date"
+        android:maxLines="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -45,6 +47,8 @@
         />
     <AutoCompleteTextView
         android:id="@+id/editOrdercustomer"
+        android:singleLine="true"
+        android:maxLines="1"
         android:hint="Kund"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,6 +60,7 @@
     <AutoCompleteTextView
         android:id="@+id/editOrderdimension"
         android:hint="Dimension"
+        android:maxLines="1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -73,6 +78,7 @@
         android:layout_weight="1"
         android:singleLine="true"
         android:background="@drawable/borderradius"
+        android:maxLines="1"
 
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
@@ -84,12 +90,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:singleLine="true"
+        android:maxLines="1"
         android:background="@drawable/borderradius"
 
         android:layout_marginBottom="@dimen/createordermargin"
         android:paddingLeft="@dimen/createorderpadding"/>
     <EditText
         android:id="@+id/editOrdercomments"
+        android:singleLine="true"
+        android:maxLines="1"
         android:hint="kommentarer, ordernummer, följenummer mm"
         android:layout_width="match_parent"
         android:layout_weight="12"
@@ -102,6 +111,7 @@
 
     <ImageButton
         android:id="@+id/postEditorder"
+
         android:src="@drawable/ic_action_send_now"
         android:background="#000"
         android:alpha="0.8"

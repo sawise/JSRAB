@@ -21,7 +21,7 @@ public class HelperFunctions {
         public static String userEmail;
         public static String userIdentifier;
         public static int userId;
-        //public static Context context = MainActivity
+
 
 
 

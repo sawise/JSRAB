@@ -20,5 +20,6 @@
 </script>
 
 <?php
-	echo weekView($year);
+ $a = date('Y-m-d');
+	echo weekView($year, $a);
  ?>

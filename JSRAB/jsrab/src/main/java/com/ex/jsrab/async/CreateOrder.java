@@ -1,5 +1,6 @@
 package com.ex.jsrab.async;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -33,13 +34,14 @@ import java.util.List;
  */
 public class CreateOrder extends AsyncTask<String, Void, String> {
 
-    Createorder context;
+    Context context;
     ArrayList<String> ordervalue;
+    ProgressDialog progress;
 
     public CreateOrder(){
         //this.context = MainActivity;
     }
-    public CreateOrder(Createorder context, ArrayList<String> ordervalue){
+    public CreateOrder(Context context, ArrayList<String> ordervalue){
         this.context = context;
         this.ordervalue = ordervalue;
 
@@ -50,8 +52,17 @@ public class CreateOrder extends AsyncTask<String, Void, String> {
         return POSTIDENTIFIER(urls[0]);
     }
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPreExecute() {
+        progress = new ProgressDialog(context);
+        progress.setTitle("");
+        progress.setMessage("Sparar informationen...");
+        progress.show();
+    }
 
+    @Override
+    protected void onPostExecute(String result) {
+        progress.dismiss();
+        Toast.makeText(context, "Ordern är skapad, gå till sök för att hitta den", Toast.LENGTH_LONG).show();
     }
 
     public String POSTIDENTIFIER(String url){
@@ -75,7 +86,7 @@ public class CreateOrder extends AsyncTask<String, Void, String> {
                 nameValuePairs.add(new BasicNameValuePair("tirethreads", ordervalue.get(3).toString()));
                 nameValuePairs.add(new BasicNameValuePair("total", ordervalue.get(4).toString()));
                 nameValuePairs.add(new BasicNameValuePair("notes", ordervalue.get(5).toString()));
-                nameValuePairs.add(new BasicNameValuePair("user_id", "0"));
+                nameValuePairs.add(new BasicNameValuePair("user_id", ordervalue.get(6).toString()));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 // Execute HTTP Post Request
@@ -87,7 +98,6 @@ public class CreateOrder extends AsyncTask<String, Void, String> {
 
             if(statusCode == 200){
                 Log.d("com.group2", "Lyckades favorisera");
-                //Toast.makeText(MainActivity., "blablabla", Toast.LENGTH_LONG).show();
                 //Createorder.toast.setText("Ordern skapades! :)");
                 //Toast.makeText(context.setToast(""), "Favorized ", 1000).show();
                 return "true";

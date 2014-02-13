@@ -1,10 +1,14 @@
 package com.ex.jsrab.async;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ex.jsrab.Createorder;
 import com.ex.jsrab.Editorder;
+import com.ex.jsrab.MainActivity;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -25,13 +29,14 @@ import java.util.List;
  */
 public class EditOrder extends AsyncTask<String, Void, String> {
 
-    Editorder context;
+    Context context;
     ArrayList<String> ordervalue;
+    ProgressDialog progress;
 
     public EditOrder(){
         //this.context = MainActivity;
     }
-    public EditOrder(Editorder context, ArrayList<String> ordervalue){
+    public EditOrder(Context context, ArrayList<String> ordervalue){
         this.context = context;
         this.ordervalue = ordervalue;
     }
@@ -39,14 +44,35 @@ public class EditOrder extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... urls) {
         return POSTIDENTIFIER(urls[0]);
-    }
-    @Override
-    protected void onPostExecute(String result) {
 
     }
+
+    @Override
+    protected void onPreExecute() {
+        progress = new ProgressDialog(context);
+        progress.setTitle("");
+        progress.setMessage("Sparar informationen...");
+        progress.show();
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        progress.dismiss();
+        Toast.makeText(context, "Ordern är redigerad, gå till sök för att hitta den", Toast.LENGTH_LONG).show();
+    }
+
+
+
+   /*@Override
+    protected void onProgressUpdate(Void... v) {
+       super.onProgressUpdate(v);
+
+    }*/
+
 
     public String POSTIDENTIFIER(String url){
         String result = "";
+
         try {
             HttpParams httpParams = new BasicHttpParams();
 
@@ -67,7 +93,7 @@ public class EditOrder extends AsyncTask<String, Void, String> {
                 nameValuePairs.add(new BasicNameValuePair("tirethreads", ordervalue.get(4).toString()));
                 nameValuePairs.add(new BasicNameValuePair("total", ordervalue.get(5).toString()));
                 nameValuePairs.add(new BasicNameValuePair("notes", ordervalue.get(6).toString()));
-                //nameValuePairs.add(new BasicNameValuePair("user_id", "0"));
+            nameValuePairs.add(new BasicNameValuePair("user_id", ordervalue.get(7).toString()));
                 httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                 // Execute HTTP Post Request
@@ -76,9 +102,12 @@ public class EditOrder extends AsyncTask<String, Void, String> {
             int statusCode = response.getStatusLine().getStatusCode();
 
             if(statusCode == 200){
-                Log.d("com.group2", "Lyckades favorisera");
+                Log.d("com.group2", "Lyckades redigera");
+
+                //Toast.makeText(context, "blablabla", Toast.LENGTH_LONG).show();
                 return "true";
             } else if(statusCode == 400 || statusCode == 401 || statusCode == 404 || statusCode == 500){
+
                 Log.d("com.group2", "Misslyckades med att favorisera, felkod: " + statusCode + " identifier: ");
                 //Toast.makeText(context, "Failed to favorized", 1000).show();
                 return "false";

@@ -2,6 +2,7 @@ package com.ex.jsrab;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,15 +11,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
     //private static Fragment test = new MyCountries();
-
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -81,8 +84,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.colorpicker, menu);
+       getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logoff:
+                getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putString("username", null).commit();
+                getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putString("password", null).commit();
+                getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putInt("id", 0).commit();
+                Toast.makeText(this, "Du loggades ut", Toast.LENGTH_LONG).show();
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+            default:
+                break;
+        }
+        return false;
     }
 
     @Override

@@ -125,7 +125,7 @@ function prevyearView(){
     return $html;
   }
 
-  function weekView($year){//, $searchresult){
+  function weekView($year, $currentdate){
   $startweek = 1;
   $totalweeks = 52;
 
@@ -133,9 +133,16 @@ function prevyearView(){
   $html = '<style> #weektabs_'.$year.' .ui-tabs-nav li { font-size: 0.7em; font-family: \'Ubuntu Mono\';}</style>';
     $html .= '<div id="weektabs_'.$year.'"><ul>';  
       for($i = $startweek; $i <= $totalweeks; $i++){
+        $week = date('W', strtotime($currentdate));
+        $yearloop = date('Y', strtotime($currentdate));
+          $weektab = $week-1;
           $html .= '<li><a href="orderinweek.php?year='.$year.'&week='.$i.'">'.$i.'</a></li>';
+          if($i == $week && $yearloop == $year){
+              $script .=  "$('#weektabs_".$year."').tabs({active: ".$weektab."})";
+          }
       }
       $html .= '</ul></div>';
+$html .= '<script>'.$script.'</script>';
   return $html;
 }
 

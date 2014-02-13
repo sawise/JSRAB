@@ -1,5 +1,6 @@
 package com.ex.jsrab.async;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.inputmethod.InputConnection;
@@ -23,6 +24,8 @@ import java.nio.charset.Charset;
  */
 public class JsonSearch extends AsyncTask<String, Void, String> {
 
+    ProgressDialog progress;
+
     @Override
     protected String doInBackground(String... strings) {
         try {
@@ -32,6 +35,9 @@ public class JsonSearch extends AsyncTask<String, Void, String> {
 
         return null;
     }
+
+
+
 
     @Override
     protected void onPostExecute(String result) {
