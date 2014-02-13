@@ -16,21 +16,37 @@ $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
 
 	header("Content-type: application/json");
 	$jsonData = array('page'=>$page,'total'=>$total,'rows'=>array());
-	foreach($searchresult AS $searchitem){
-		$entry = array('id'=>$searchitem->id,
-			'cell'=>array(
-				'id'=>$searchitem->id,
-				'deliverydate'=>$searchitem->deliverydate,
-				'customer_name'=>$searchitem->customer_name,
-				'tiretread_name'=>$searchitem->tiretread_name,
-				'tiresize_name'=>$searchitem->tiresize_name,
-				'total'=>$searchitem->total,
-				'comments'=>$searchitem->comments,
-				'actions'=>showTooltiptest($searchitem)
-			),
-		);
-		$jsonData['rows'][] = $entry;
-
-	} 
-
+	if(isset($_GET['mobile'])){
+		foreach($searchresult AS $searchitem){
+			$entry = array('id'=>$searchitem->id,
+				'cell'=>array(
+					'id'=>$searchitem->id,
+					'deliverydate'=>getWeekday($searchitem->deliverydate),
+					'customer_name'=>$searchitem->customer_name,
+					'tiretread_name'=>$searchitem->tiretread_name,
+					'tiresize_name'=>$searchitem->tiresize_name,
+					'total'=>$searchitem->total,
+					'comments'=>$searchitem->comments
+				),
+			);
+			$jsonData['rows'][] = $entry;
+		} 
+	} else {
+		foreach($searchresult AS $searchitem){
+			$entry = array('id'=>$searchitem->id,
+				'cell'=>array(
+					'id'=>$searchitem->id,
+					'deliverydate'=>getWeekday($searchitem->deliverydate),
+					'customer_name'=>$searchitem->customer_name,
+					'tiretread_name'=>$searchitem->tiretread_name,
+					'tiresize_name'=>$searchitem->tiresize_name,
+					'total'=>$searchitem->total,
+					'comments'=>$searchitem->comments,
+					'actions'=>showTooltiptest($searchitem)
+				),
+			);
+			$jsonData['rows'][] = $entry;
+		}
+	}
+	
 echo json_encode($jsonData);

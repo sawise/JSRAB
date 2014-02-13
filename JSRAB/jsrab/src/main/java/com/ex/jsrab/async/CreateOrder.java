@@ -81,6 +81,8 @@ public class CreateOrder extends AsyncTask<String, Void, String> {
                 // Execute HTTP Post Request
                 HttpResponse response = httpclient.execute(httppost);
 
+
+
             int statusCode = response.getStatusLine().getStatusCode();
 
             if(statusCode == 200){

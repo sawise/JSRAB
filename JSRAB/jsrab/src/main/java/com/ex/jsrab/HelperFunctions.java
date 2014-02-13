@@ -11,6 +11,8 @@ import java.text.DateFormatSymbols;
  */
 public class HelperFunctions {
 
+    public static int allowedRetries = 20;
+
     public static class User{
 
         // This class stores all needed user data. Name, Email, Identifier and ID.

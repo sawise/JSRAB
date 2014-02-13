@@ -47,6 +47,9 @@ if(isset($_SESSION['print'])) {
 ?>
 
 <?php require_once(ROOT_PATH.'/header.php');?>
+<style type="text/css" media="print">
+  @page { size: landscape; }
+</style>
 <body>
 <legend><?php //echo date("YW", strtotime("2011-01-07"));
 echo 'Kundplanering leveranser v.'.$week  ?></legend>
@@ -68,7 +71,17 @@ echo 'Kundplanering leveranser v.'.$week  ?></legend>
 </body>
 <?php require_once(ROOT_PATH.'/footer.php');?>
 <script type="text/javascript">
-  <!--
-  window.print();
-  //-->
+  function PrintWindow() {                    
+       window.print();            
+       CheckWindowState();
+    }
+
+    function CheckWindowState()    {           
+        if(document.readyState=="complete") {
+            window.close(); 
+        } else {           
+            setTimeout("CheckWindowState()", 500)
+        }
+    }
+    PrintWindow();
 </script>

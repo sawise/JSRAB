@@ -36,7 +36,6 @@ public class Editorder extends Fragment implements EditText.OnClickListener {
             "195/75", "145/65","195/75", "145/65","195/75", "145/65"};
     private List<Searchresult> data = new ArrayList<Searchresult>();
     private String searchString;
-    private int allowedRetries = 10;
     private ProgressDialog progress;
     private String tireThread = "nothread";
     private String tireSize = "nosize";
@@ -88,7 +87,7 @@ public class Editorder extends Fragment implements EditText.OnClickListener {
         super.onResume();
         int orderid = Session.getOrderID();
         Session.setOrderID(0);
-        searchString = Integer.toString(orderid);
+        searchString = "id_"+orderid;
         if(orderid > 0){
             customer.setVisibility(View.VISIBLE);
             dimension.setVisibility(View.VISIBLE);
@@ -209,7 +208,7 @@ public class Editorder extends Fragment implements EditText.OnClickListener {
                             } else {
                                 Log.i("retry...", "yes o.O");
                                 retries++;
-                                if(retries < allowedRetries){
+                                if(retries < HelperFunctions.allowedRetries){
                                     stopRetrying = true;
                                     progress.dismiss();
                                 }

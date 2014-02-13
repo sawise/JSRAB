@@ -14,7 +14,7 @@
 
 		//private $sql_search = "SELECT DISTINCT contacts.id, contacts.first_name, contacts.last_name, contacts.email, contacts.cell_phone, contacts.work_phone,  companies.title AS companies_title, contacts.contact_person, contacts.notes, companies.id AS companies_id, companies.title AS companies_title, companies.alt_title AS companies_alt_title, companies.url AS companies_url, companies.email AS companies_email, companies.contact_id AS companies_contact_id, companies.billed AS companies_billed, companies.total AS companies_total, companies.reference AS companies_reference, companies.visit_address AS companies_visit_address, companies.visit_zip_code AS companies_visit_zip_code, companies.visit_city AS companies_visit_city, companies.mail_address AS companies_mail_address, companies.mail_zip_code AS companies_mail_zip_code, companies.mail_city AS companies_mail_city, companies.billing_address AS companies_billing_address, companies.billing_zip_code AS companies_billing_zip_code, companies.billing_city AS companies_billing_city FROM contacts LEFT JOIN contacts_branches_contact_types ON contacts_branches_contact_types.contact_id = contacts.id LEFT JOIN companies ON contacts.company_id = companies.id LEFT JOIN contacts_mailshots_branches ON contacts_mailshots_branches.contact_id = contacts.id LEFT JOIN contacts_activities ON contacts_activities.contact_id = contacts.id";
 
-		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name FROM orders LEFT JOIN customers ON customers.id = orders.customerID LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID";
+		private $sql_search = "SELECT orders.id, orders.date, orders.customerID, orders.tiretreadID, orders.tiresizeID, orders.total, orders.comments, orders.deliverydate, orders.userID, orders.lastChange, customers.id AS customer_id, customers.name AS customer_name, customers.phonenumber AS customer_phonenumber, tiretreads.id AS tiretread_id, tiretreads.name AS tiretread_name, tiresizes.id AS tiresize_id, tiresizes.name AS tiresize_name, users.username AS username FROM orders LEFT JOIN customers ON customers.id = orders.customerID LEFT JOIN tiretreads ON tiretreads.id = orders.tiretreadID LEFT JOIN tiresizes ON tiresizes.id = orders.tiresizeID LEFT JOIN users ON orders.userID = users.id";
 
 		private $users_sql = "select * from users";
 		private $sql_tiretreads = "select * from tiretreads";
@@ -234,21 +234,31 @@
 			
 			$adv = '';
 			if(is_numeric($tiresize)){
-				$adv .= ' AND tiresizes.id = '.$tiresize;
+				$adv .= 'tiresizes.id = '.$tiresize;
 			}
 			if(is_numeric($tirethread)){
-				$adv .= ' AND tiretreads.id = '.$tirethread;	
+				if(is_numeric($tiresize)){
+					$adv .= ' AND tiretreads.id = '.$tirethread;
+				} else {
+					$adv .= 'tiretreads.id = '.$tirethread;
+				}
+				
 			}
-
 			if($datestart != 'nodate' && $dateend != 'nodate'){
-				$adv = 'AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';
+				if(is_numeric($tirethread) || is_numeric($tiresize)){
+					$adv .= ' AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';	
+				} else {
+					$adv = 'orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';	
+				}
 			}
 
 			if(preg_match('/id_/', $text)){
 				$id = explode("_", $text);
 				$sqlquery = $this->sql_search." WHERE orders.id = ".$id[1];
+			} else if($adv != '') {
+				$sqlquery = $this->sql_search." WHERE (customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%') AND (".$adv.")";	
 			} else {
-				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%' ".$adv;	
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%'";	
 			}
 			
 			$sth = $this->dbh->query($sqlquery);
@@ -267,20 +277,30 @@
 			$sqlquery = '';
 			$adv = '';
 			if(is_numeric($tiresize)){
-				$adv .= ' AND tiresizes.id = '.$tiresize;
+				$adv .= 'tiresizes.id = '.$tiresize;
 			}
 			if(is_numeric($tirethread)){
-				$adv .= ' AND tiretreads.id = '.$tirethread;	
+				if(is_numeric($tiresize)){
+					$adv .= ' AND tiretreads.id = '.$tirethread;
+				} else {
+					$adv .= 'tiretreads.id = '.$tirethread;
+				}
 			}
 			if($datestart != 'nodate' && $dateend != 'nodate'){
-				$adv = 'AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';
+				if(is_numeric($tirethread) || is_numeric($tiresize)){
+					$adv .= ' AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';	
+				} else {
+					$adv .= 'orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';	
+				}
 			}
 
 			if(preg_match('/id_/', $text)){
 				$id = explode("_", $text);
 				$sqlquery = $this->sql_search." WHERE orders.id = ".$id[1]." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;
+			} else if($adv != '') {
+				$sqlquery = $this->sql_search." WHERE (customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%') AND (".$adv.")  ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
 			} else {
-				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%' ".$adv."  ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%' ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
 			}
 			$sth = $this->dbh->query($sqlquery);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');
@@ -290,6 +310,7 @@
 			while($obj = $sth->fetch()) {
 				$objects[] = $obj;
 			}
+			//return $this->sql_search." WHERE (customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%') ".$adv."  ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
 				return $objects;
 		}
 

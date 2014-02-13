@@ -327,7 +327,8 @@ function tooltipContent($searchresult){
                  <p>Däckmönster: '.$searchresult->tiretread_name.'</p>
                  <p>Däckstorlek: '.$searchresult->tiresize_name.'</p>
                  <p>Antal: '.$searchresult->total.'</p>
-                 <p>Kommentarer: '.$searchresult->comments.'</p>';
+                 <p>Kommentarer: '.$searchresult->comments.'</p>
+                 <p>Senast ändrad av: '.$searchresult->username.' '.$searchresult->lastChange.' </p>';
               $content .= '<p><a href="index.php?editOrder='.$searchresult->id.'">Redigera</p></a>';
               $content .= '<p><a href="deleteorder.php?orderid='.$searchresult->id.'">Ta bort</p></a>';
             $content .= '</div>';

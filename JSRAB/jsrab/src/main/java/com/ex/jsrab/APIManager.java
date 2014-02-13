@@ -170,7 +170,7 @@ public class APIManager {
 
     public static void updateWeeklyOrders(int year, int week) throws IOException, JSONException {
         JsonWeeklyOrder task = new JsonWeeklyOrder();
-        task.execute(URL+"/post_year-json.php?year="+year+"&week="+week);
+        task.execute(URL+"/post_year-json.php?year="+year+"&week="+week+"&mobile=yes");
     }
 
     public static ArrayList<Searchresult> getWeeklyOrders(int year, int week) {
@@ -194,7 +194,7 @@ public class APIManager {
             Log.i("JSON count", ""+searchArray.length());
 
             if(searchArray.length() == 0){
-                listToReturn.add(new Searchresult(0, "N/A", "N/A", "N/A", "N/A","N/A", 0));
+                //listToReturn.add(new Searchresult(0, "N/A", "N/A", "N/A", "N/A","N/A", 0));
             } else {
                 for (int i = 0; i < searchArray.length(); i++) {
                     JSONObject searchObj = searchArray.getJSONObject(i);

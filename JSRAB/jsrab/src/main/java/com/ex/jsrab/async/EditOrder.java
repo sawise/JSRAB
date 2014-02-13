@@ -50,8 +50,8 @@ public class EditOrder extends AsyncTask<String, Void, String> {
         try {
             HttpParams httpParams = new BasicHttpParams();
 
-            int timeoutConnection = 3000;
-            int timeoutSocket = 5000;
+            int timeoutConnection = 10000;
+            int timeoutSocket = 10000;
             HttpConnectionParams.setConnectionTimeout(httpParams, timeoutConnection);
             HttpConnectionParams.setSoTimeout(httpParams, timeoutSocket);
 

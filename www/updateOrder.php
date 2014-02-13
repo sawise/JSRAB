@@ -12,6 +12,7 @@
   $customerID = '';
 
   $id = $_POST['id'];
+  $userid = $_POST['user_id'];
   
   $customer = $_POST['customer'];
   $dimension = $_POST['dimension'];
@@ -81,7 +82,7 @@
 		$customerID = $db->createCustomer($customer, 0000);
 	}*/
 
-	$orderID = $db->updateOrder($id, $date, $customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, 1,$now);
+	$orderID = $db->updateOrder($id, $date, $customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, $userid,$now);
 	if($orderID){
 		set_feedback('success', 'Ordern redigerades');
 		 header("Location: searchcaller.php?search=id_".$id);

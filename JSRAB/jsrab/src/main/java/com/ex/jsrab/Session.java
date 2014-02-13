@@ -9,6 +9,16 @@ import java.util.Calendar;
  */
 public class Session {
 
+    private static int userID = 0;
+
+    public static int getUserID() {
+        return userID;
+    }
+
+    public static void setUserID(int userID) {
+        Session.userID = userID;
+    }
+
     private static int orderID = 0;
     private static int year = 0;
     private static int week = 0;

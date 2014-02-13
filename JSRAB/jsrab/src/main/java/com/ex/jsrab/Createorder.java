@@ -28,13 +28,14 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
     private Button setDate, cancelDialog;
     private ImageButton createOrder;
     private DatePicker datePicker;
-    ArrayAdapter<Tirethread> threadAdapter;
-    ArrayAdapter<Tiresize> dimensionAdapter;
+    private ArrayAdapter<String> threadAdapter;
+    private ArrayList<String> dimensionToList = new ArrayList<String>();
+    private ArrayList<String> threadToList = new ArrayList<String>();
+    private ArrayAdapter<String> dimensionAdapter;
     private ArrayList<Tiresize> tiresizes;
     private ArrayList<Tirethread> tirethreads;
     private List<Searchresult> data = new ArrayList<Searchresult>();
     private ArrayList<Searchresult> datatoList;
-    private View rootView;
 
 
 
@@ -52,14 +53,24 @@ public class Createorder extends Fragment implements EditText.OnClickListener {
         total = (EditText) rootView.findViewById(R.id.total);
         createOrder = (ImageButton) rootView.findViewById(R.id.postOrder);
 
-        /*tiresizes = APIManager.getTiresizes();
+        tiresizes = APIManager.getTiresizes();
         tirethreads = APIManager.getTirethreads();
 
-        dimensionAdapter = new ArrayAdapter<Tiresize>(getActivity(), android.R.layout.simple_dropdown_item_1line, tiresizes);
+
+        dimensionAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, dimensionToList);
         dimension.setAdapter(dimensionAdapter);
 
-        threadAdapter = new ArrayAdapter<Tirethread>(getActivity(), android.R.layout.simple_dropdown_item_1line, tirethreads);
-        thread.setAdapter(threadAdapter);*/
+        threadAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, threadToList);
+        thread.setAdapter(threadAdapter);
+
+        for(Tiresize tiresize : tiresizes){
+            dimensionAdapter.add(tiresize.getName());
+            Log.i("tiresize arraylist",tiresize.getName());
+        }
+        for(Tirethread tirethread : tirethreads){
+            threadAdapter.add(tirethread.getName());
+            Log.i("tiresize arraylist",tirethread.getName());
+        }
 
         createOrder.setOnClickListener(this);
         deliverydate.setOnClickListener(this);

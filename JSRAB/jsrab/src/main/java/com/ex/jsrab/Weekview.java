@@ -33,13 +33,12 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
 
     private ArrayAdapter<Searchresult> adapter;
     private List<Searchresult> data = new ArrayList<Searchresult>();
-    ArrayList<Searchresult> datatoList;
+    private ArrayList<Searchresult> datatoList;
     private ListView weeklistview;
     private EditText week;
     private Button setDate, cancelDialog;
     private DatePicker datePicker;
     private ProgressDialog progress;
-    private int allowedRetries = 10;
     int yearInt = 2014;
     int weekInt = 1;
     int monthInt = 0;
@@ -54,13 +53,7 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         weeklistview = (ListView) rootView.findViewById(R.id.weeklistview);
         datatoList = new ArrayList<Searchresult>();
 
-        progress = new ProgressDialog(getActivity());
-        progress.setTitle("Loading");
-        progress.setMessage("Please wait...");
 
-        if(Session.getYear() == 0){
-            setYearandWeek();
-        }
 
         weeklistview.setOnItemClickListener(this);
         week.setOnClickListener(this);
@@ -119,12 +112,21 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
     @Override
     public void onResume(){
         super.onResume();
-        yearInt = Session.getYear();
-        weekInt = Session.getWeek();
-        monthInt = Session.getMonth();
-        week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
+        progress = new ProgressDialog(getActivity());
+        progress.setTitle("Loading");
+        progress.setMessage("Please wait...");
+
+        if(Session.getYear() == 0){
+            setYearandWeek();
+        } else {
+            yearInt = Session.getYear();
+            weekInt = Session.getWeek();
+            monthInt = Session.getMonth();
+            week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
+            fillListview();
+        }
         Log.i("current year and week", yearInt+"<->"+weekInt);
-        fillListview();
+
 
     }
     public void setYearandWeek(){
@@ -197,11 +199,13 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
         progress.show();
         try{
             data.clear();
+            datatoList.clear();
             data = APIManager.getWeeklyOrders(yearInt, weekInt);
             //adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.custom_list_item, datatoList);
             if(!data.isEmpty()) {
                 adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
                 if(!adapter.isEmpty()){
+
                     adapter.clear();
                 }
                 data = APIManager.getWeeklyOrders(yearInt, weekInt);
@@ -241,9 +245,13 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
 
                             Log.i("retry...", "no =)");
                             data = APIManager.getWeeklyOrders(yearInt, weekInt);
-                            adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
+                            datatoList.clear();
                             if (!data.isEmpty()) {
-                                adapter.clear();
+                                adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
+
+                                if(!adapter.isEmpty()){
+                                    adapter.clear();
+                                }
                                 for(Searchresult searchdata : data){
                                     Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal());
 
@@ -254,7 +262,7 @@ public class Weekview extends Fragment implements EditText.OnClickListener, List
                             } else {
                                 Log.i("retry...", "yes o.O");
                                 retries++;
-                                if(retries < allowedRetries){
+                                if(retries < HelperFunctions.allowedRetries){
                                     stopRetrying = true;
                                     progress.dismiss();
                                 }

@@ -16,9 +16,7 @@ import java.nio.charset.Charset;
 
 //import com.group2.bottomapp.APIManager;
 
-/**
- * Created by Hugo on 2013-12-11.
- */
+
 public class JsonWeeklyOrder extends AsyncTask<String, Void, String> {
 
     @Override
