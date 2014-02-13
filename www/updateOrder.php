@@ -84,7 +84,7 @@
 	$orderID = $db->updateOrder($id, $date, $customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, 1,$now);
 	if($orderID){
 		set_feedback('success', 'Ordern redigerades');
-		 header("Location: searchcaller.php?search=".$id);
+		 header("Location: searchcaller.php?search=id_".$id);
 	} else{
 		set_feedback('error', 'Något blev galet, försök igen');
 		//header("Location: index.php");

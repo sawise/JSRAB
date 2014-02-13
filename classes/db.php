@@ -244,10 +244,11 @@
 				$adv = 'AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';
 			}
 
-			if(is_numeric($text)){
-				$sqlquery = $this->sql_search." WHERE orders.id = ".$text;
+			if(preg_match('/id_/', $text)){
+				$id = explode("_", $text);
+				$sqlquery = $this->sql_search." WHERE orders.id = ".$id[1];
 			} else {
-				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' ".$adv;	
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%' ".$adv;	
 			}
 			
 			$sth = $this->dbh->query($sqlquery);
@@ -275,10 +276,11 @@
 				$adv = 'AND orders.deliverydate >=\''.$datestart.'\' AND orders.deliverydate<=\''.$dateend.'\'';
 			}
 
-			if(is_numeric($text)){
-				$sqlquery = $this->sql_search." WHERE orders.id = ".$text." ".$adv." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;
+			if(preg_match('/id_/', $text)){
+				$id = explode("_", $text);
+				$sqlquery = $this->sql_search." WHERE orders.id = ".$id[1]." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;
 			} else {
-				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' ".$adv." ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
+				$sqlquery = $this->sql_search." WHERE customers.name LIKE '%".$text."%' OR orders.comments LIKE '%".$text."%' ".$adv."  ORDER BY ".$sortby." ".$descasc." LIMIT ".$startform.", ".$limit;	
 			}
 			$sth = $this->dbh->query($sqlquery);
 			$sth->setFetchMode(PDO::FETCH_CLASS, 'Search');

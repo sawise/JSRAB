@@ -77,7 +77,7 @@ $(function() {
  	 <?php echo hidden_input('user_id', $_SESSION['user_id']); ?>
  		 <?php echo form_input('text', 'datepicker', 'Leveransdatum:', 'Tryck här för att välja datum') ?>
 		 <?php echo form_input('text', 'customer', 'Kund:', 'Kundnamn') ?>
-		  <?php echo form_input('text', 'dimension', 'Dimension:', 'Skriv in däckmönstret här', '') ?>
+		  <?php echo form_input('text', 'dimension', 'Dimension:', 'Skriv in dimensionen här', '') ?>
 		 <?php echo form_input('text', 'tirethreads', 'Mönster:', 'Skriv in mönster här', '') ?>
 		 <?php echo form_input('text', 'total', 'Antal:','ex. 1' ) ?>
 		 <?php echo text_area('notes', 'Kommentar: ', 'Ordernummer, följenummer mm'); ?>

@@ -18,6 +18,7 @@
   $total = $_POST['total'];
   $notes = $_POST['notes'];
   $userid = $_POST['user_id'];
+  
   $now = date('m/d/y');
   foreach ($tireSizes as $tireSize) {
   	if($tireSize->name == $_POST['dimension']){
@@ -81,7 +82,7 @@
 	$orderID = $db->createOrder($customerID, $tiretreadID, $tiresizeID, $total, $notes, $deliverydate, $userid ,$now);
 	if($orderID){
 		set_feedback('success', 'Ordern skapades, gå in i sök för att hitta den');
-		 header("Location: searchcaller.php?search=".$orderID);
+		 header("Location: searchcaller.php?search=id_".$orderID);
 	} else{
 		set_feedback('error', 'Något blev galet, försök igen');
 		header("Location: index.php");
