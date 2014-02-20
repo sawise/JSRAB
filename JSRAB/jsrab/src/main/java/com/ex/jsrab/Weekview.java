@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -53,10 +54,12 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
         week = (EditText) rootView.findViewById(R.id.week);
         weeklistview = (ListView) rootView.findViewById(R.id.weeklistview);
         datatoList = new ArrayList<Searchresult>();
+        data = new ArrayList<Searchresult>();
 
         progress = new ProgressDialog(getActivity());
-        progress.setTitle("Laddar...");
         progress.setMessage("Hämtar veckoöversikten...");
+
+
 
         if(Session.getYear() == 0){
             setYearandWeek();
@@ -69,7 +72,6 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
         }
 
         weeklistview.setOnItemClickListener(this);
-
         return rootView;
     }
 
@@ -79,15 +81,7 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(parent == weeklistview){
             int itemid = data.get(position).getId();
-            dialog(itemid, data.get(position));
-
-
-            //selectedItem = position;
-            //String text = gridArray.get(position).getName();
-            //String category = gridArray.get(position).getCategoryName();
-            //int imageId = gridArray.get(position).getImageId();
-
-            //dialog(category,gridArray.get(position).imageResourceId, text);
+            dialog(itemid, position, data.get(position));
         }
     }
 
@@ -111,12 +105,13 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
                 choosenDate.set(yearInt, monthInt, d);
                 weekInt = choosenDate.get(Calendar.WEEK_OF_YEAR);
                 week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
+
+                Log.i("weekview datepicker", choosenDate.get(Calendar.YEAR)+"-"+choosenDate.get(Calendar.MONTH)+"-"+choosenDate.get(Calendar.DAY_OF_MONTH));
                 dialog.dismiss();
                 fillListview();
 
             }
         });
-
 
         cancelDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +132,8 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
             yearInt = Session.getYear();
             weekInt = Session.getWeek();
             monthInt = Session.getMonth();
+            Log.i("onResume() weekview", "-------------------");
+            Log.i("weekview", yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
             week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
             fillListview();
         }
@@ -152,15 +149,19 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
         Session.setWeek(weekInt);
         monthInt = c.get(Calendar.MONTH);
         Session.setMonth(monthInt);
+        Log.i("setYearandWEek() weekview", "-------------------");
+        Log.i("weekview", HelperFunctions.dateToString(yearInt, monthInt, c.get(Calendar.DAY_OF_MONTH)));
+        Log.i("weekview", yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
         week.setText(yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
-        Log.i("current year and week", yearInt+"<->"+weekInt);
         fillListview();
+
     }
 
 
-    public void dialog(int id, Searchresult searchitem){
+    public void dialog(int id,int position, Searchresult searchitem){
         final Dialog dialog = new Dialog(getActivity());
         final int idOnclick = id;
+        final int positioninListview = position;
         dialog.setContentView(R.layout.searchresultdialog);
         dialog.setTitle("text");
         dialog.setCancelable(true);
@@ -179,21 +180,21 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
         });
         removeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                /*APIManager.removeIngredientfromAccount(gridArray.get(selectedItem).getId());
-                Toast.makeText(getActivity(), "Sucessfully removed: " + gridArray.get(selectedItem).getName(), Toast.LENGTH_SHORT).show();
-                gridArray.remove(selectedItem);
+                ArrayList<String> arrayList = new ArrayList<String>();
+                arrayList.add(Integer.toString(idOnclick));
+                APIManager.deleteOrder(getActivity(), arrayList);
+                datatoList.remove(positioninListview);
                 adapter.notifyDataSetChanged();
                 dialog.dismiss();
-                startRefreshThread();*/
             }
         });
+
         cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-        String dialogTextStr = "Leveransdag: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments()+"\nSenast ändrad: "+searchitem.getDeliverydate()+" av "+searchitem.getUsername();
+        String dialogTextStr = "Leveransdag: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments()+"\nSenast ändrad: "+searchitem.getLastChange()+" av "+searchitem.getUsername();
         dialogText.setText(dialogTextStr);
 
         dialog.show();
@@ -214,6 +215,7 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
                 return true;
             case R.id.refreshweek:
                 fillListview();
+                return true;
             default:
                 break;
         }
@@ -227,22 +229,21 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
         Log.i("onclick","yeees");
         progress.show();
         try{
-            data.clear();
+            Log.i("weekview in fillistview()", yearInt+" "+HelperFunctions.getMonthForInt(monthInt)+" v"+weekInt);
             data = APIManager.getWeeklyOrders(yearInt, weekInt);
-            //adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.custom_list_item, datatoList);
+            datatoList.clear();
             if(!data.isEmpty()) {
-                data = APIManager.getWeeklyOrders(yearInt, weekInt);
-                adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
-                    adapter.clear();
-
-                for(Searchresult searchdata : data){
-                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
-
-                    adapter.add(stringToAdd);
-                }
+                adapter = new CustomWeekViewAdapter(getActivity(), R.layout.customsearch, datatoList);
+                adapter.addAll(data);
+                adapter.notifyDataSetChanged();
+                                /*for(Searchresult searchdata : data){
+                                    Log.i("weekview forloop",searchdata.getCustomerName());
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername(), searchdata.getLastChange());
+                                    adapter.add(stringToAdd);
+                                }*/
                 progress.dismiss();
+                weeklistview.setAdapter(adapter);
             } else {
-
                 startRefreshThread();
             }
         } catch (Exception e){
@@ -270,25 +271,30 @@ public class Weekview extends Fragment implements ListView.OnItemClickListener {
 
                             Log.i("retry...", "no =)");
                             data = APIManager.getWeeklyOrders(yearInt, weekInt);
+                            datatoList.clear();
                             if (!data.isEmpty()) {
-                                adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
-                                    adapter.clear();
-                                for(Searchresult searchdata : data){
-                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
-
+                                adapter = new CustomWeekViewAdapter(getActivity(), R.layout.customsearch, datatoList);
+                                adapter.addAll(data);
+                                //adapter.notifyDataSetChanged();
+                                /*for(Searchresult searchdata : data){
+                                    Log.i("weekview forloop",searchdata.getCustomerName());
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(),searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername(), searchdata.getLastChange());
                                     adapter.add(stringToAdd);
-                                }
+                                }*/
                                 weeklistview.setAdapter(adapter);
                                 progress.dismiss();
                             } else {
 
                                 Log.i("retry...", ""+retries);
+                                Log.i("count data", data.size()+"");
                                 retries++;
                                 if(retries < HelperFunctions.allowedRetries){
-
                                     try {
-                                        if(!adapter.isEmpty() && adapter != null){
-                                            adapter.clear();
+                                        if(adapter != null){
+                                            if(datatoList.isEmpty()){
+                                                Toast.makeText(getActivity(),"Det finns inga ordrar i den valda veckan", Toast.LENGTH_SHORT).show();
+                                                adapter.notifyDataSetChanged();
+                                            }
                                         }
                                     } catch (Exception e){
                                         e.printStackTrace();

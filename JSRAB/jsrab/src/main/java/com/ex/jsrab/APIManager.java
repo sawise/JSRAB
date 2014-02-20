@@ -7,7 +7,9 @@ import android.util.Log;
 import com.ex.jsrab.Search;
 import com.ex.jsrab.Searchresult;
 import com.ex.jsrab.async.CreateOrder;
+import com.ex.jsrab.async.DeleteOrder;
 import com.ex.jsrab.async.EditOrder;
+import com.ex.jsrab.async.JsonCustomer;
 import com.ex.jsrab.async.JsonSearch;
 import com.ex.jsrab.async.JsonTiresize;
 import com.ex.jsrab.async.JsonTirethread;
@@ -27,6 +29,7 @@ public class APIManager {
     public static ArrayList<Searchresult> weeklyorders = new ArrayList<Searchresult>();
     public static ArrayList<Tiresize> tiresizes = new ArrayList<Tiresize>();
     public static ArrayList<Tirethread> tirethreads = new ArrayList<Tirethread>();
+    public static ArrayList<Customer> customers = new ArrayList<Customer>();
     public static String URL = "http://jsretreading.se/admin";
 
     public static void updateEverything() {
@@ -39,6 +42,45 @@ public class APIManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static ArrayList<Customer> getCustomers() {
+        //if(!hazInternetz()) return new ArrayList<Cocktail>();
+        try {
+            updateCustomer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return customers;
+    }
+
+    public static void updateCustomer() throws IOException, JSONException {
+        JsonCustomer task = new JsonCustomer();
+        task.execute(URL+"/post_customer-json.php");
+    }
+
+
+
+    public static ArrayList<Customer> getCustomerfromJSON(String json) {
+        try {
+            JSONObject searchObject = new JSONObject(json);
+            JSONArray searchArray = searchObject.getJSONArray("rows");
+            Log.i("JSON arr", searchArray.toString());
+            ArrayList<Customer> listToReturn = new ArrayList<Customer>();
+            for (int i = 0; i < searchArray.length(); i++) {
+                JSONObject searchObj = searchArray.getJSONObject(i);
+                JSONObject searchObjinObj = searchObj.getJSONObject("cell");
+                Log.i("JSON objinobj", searchObjinObj+"");
+                int id = searchObjinObj.getInt("id");
+                String name = searchObjinObj.getString("name");
+                listToReturn.add(new Customer(id, name));
+            }
+            return listToReturn;
+
+        } catch (Exception e) {
+            Log.i("post fail", ""+e);
+        }
+        return null;
     }
 
     public static ArrayList<Tiresize> getTiresizes() {
@@ -156,7 +198,8 @@ public class APIManager {
                     String comments = searchObjinObj.getString("comments");
                     String username = searchObjinObj.getString("username");
                     int total = searchObjinObj.getInt("total");
-                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total, username));
+                    String lastchange = searchObjinObj.getString("lastchange");
+                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total, username, lastchange));
                 }
             }
 
@@ -209,9 +252,9 @@ public class APIManager {
                     String tiresizeName = searchObjinObj.getString("tiresize_name");
                     String username = searchObjinObj.getString("username");
                     String comments = searchObjinObj.getString("comments");
+                    String lastchange = searchObjinObj.getString("lastchange");
                     int total = searchObjinObj.getInt("total");
-                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total, username));
-
+                    listToReturn.add(new Searchresult(id, date, customerName, tirethreadName, tiresizeName,comments, total, username, lastchange));
                 }
             }
 
@@ -230,6 +273,10 @@ public class APIManager {
     public static void editOrder(Context context, ArrayList<String> ordervalue) {
         EditOrder editOrder = new EditOrder(context, ordervalue);
         editOrder.execute(URL+"/updateOrder.php");
+    }
+    public static void deleteOrder(Context context, ArrayList<String> ordervalue) {
+        DeleteOrder deleteOrder= new DeleteOrder(context, ordervalue);
+        deleteOrder.execute(URL+"/deleteorder.php");
     }
 
 

@@ -19,7 +19,7 @@
   $notes = $_POST['notes'];
   $userid = $_POST['user_id'];
   
-  $now = date('m/d/y');
+  $now = date('Y-m-d');
   foreach ($tireSizes as $tireSize) {
   	if($tireSize->name == $_POST['dimension']){
   		echo 'storlek finns';

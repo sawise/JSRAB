@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,8 +33,8 @@ import java.util.List;
 public class Search extends Fragment implements View.OnClickListener, ListView.OnItemClickListener {
     private ArrayAdapter<Searchresult> adapter;
     private List<Searchresult> data = new ArrayList<Searchresult>();
-    private List<Tiresize> dataTiresize = new ArrayList<Tiresize>();
-    private List<Tirethread> dataTirethread = new ArrayList<Tirethread>();
+    //private ArrayList<Tiresize> dataTiresize = new ArrayList<Tiresize>();
+    //private ArrayList<Tirethread> dataTirethread = new ArrayList<Tirethread>();
     private ArrayList<Searchresult> datatoList;
     private ListView searchresult;
     private EditText searchText;
@@ -46,13 +47,12 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
     private ArrayList<Tiresize> tiresizes;
     private ArrayList<Tirethread> tirethreads;
     private ProgressDialog progress;
-    private int allowedRetries = 10;
     private Spinner spinner1, spinner2;
     private int spinner1Pos = 0;
     private int spinner2Pos = 0;
     private CheckBox dimensionCheckbox, threadCheckbox, deliverydateCheckbox;
     private DatePicker datepickerStart, datepickerEnd;
-    private Button btnSubmit;
+    private Button btnSubmit, btnCancel;
     private MenuItem resetAdv;
 
     @Override
@@ -67,9 +67,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         datatoList = new ArrayList<Searchresult>();
 
         progress = new ProgressDialog(getActivity());
-        progress.setTitle("Laddar");
         progress.setMessage("Hämtar sökresultat...");
-
 
         searchresult.setOnItemClickListener(this);
         searchButton.setOnClickListener(this);
@@ -110,7 +108,15 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
     public void onClick(View v) {
         if(v == searchButton){
             Log.i("onclick","yeees");
-            getSearchresult();
+            searchString = searchText.getText().toString();
+
+            HelperFunctions.vibrate(getActivity());
+            if(!TextUtils.isEmpty(searchString)){
+                getSearchresult();
+            } else {
+                Toast.makeText(getActivity(), "Du måste skriva in något i sökrutan!", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
@@ -119,18 +125,18 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         progress.show();
         try{
             data.clear();
+            datatoList.clear();
             data = APIManager.getSearchresults(searchString, tireThread, tireSize, dateStart, dateEnd);
             if(!data.isEmpty()) {
                 adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
-                if(!adapter.isEmpty()){
-                    adapter.clear();
-                }
-                searchresult.setAdapter(adapter);
-                for(Searchresult searchdata : data){
-                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
-                    //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
+                adapter.addAll(data);
+                adapter.notifyDataSetChanged();
+                /*for(Searchresult searchdata : data){
+                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername(), searchdata.getLastChange());
+
                     adapter.add(stringToAdd);
-                }
+                }*/
+                searchresult.setAdapter(adapter);
                 progress.dismiss();
             } else {
                 startRefreshThread();
@@ -158,26 +164,30 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                         public void run() {
 
                             Log.i("retry...", "no =)");
-                            //, String tireThread, String tireSize, String dateStart, String dateEnd
+                            datatoList.clear();
                             data = APIManager.getSearchresults(searchString, tireThread, tireSize, dateStart, dateEnd);
-                            adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
                             if (!data.isEmpty()) {
-                                adapter.clear();
-                                for(Searchresult searchdata : data){
-                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
-                                    //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
+                                adapter = new CustomSearchAdapter(getActivity(), R.layout.customsearch, datatoList);
+                                adapter.addAll(data);
+                                adapter.notifyDataSetChanged();
+                                /*for(Searchresult searchdata : data){
+                                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDeliverydate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername(), searchdata.getLastChange());
                                     adapter.add(stringToAdd);
-                                }
+                                }*/
                                 searchresult.setAdapter(adapter);
                                 progress.dismiss();
                             } else {
                                 Log.i("retry...", "yes o.O");
                                 retries++;
-                                if(retries < allowedRetries){
+                                if(retries < HelperFunctions.allowedRetries){
                                     try {
-                                        if(!adapter.isEmpty() && adapter != null){
-                                            adapter.clear();
+                                        if(adapter != null){
+                                            if(datatoList.isEmpty()){
+                                                Toast.makeText(getActivity(),"Det finns inga ordrar med dessa sökkriterierna", Toast.LENGTH_SHORT).show();
+                                                adapter.notifyDataSetChanged();
+                                            }
                                         }
+
                                     } catch (Exception e){
                                         e.printStackTrace();
                                     }
@@ -197,13 +207,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(parent == searchresult){
             int itemid = data.get(position).getId();
-            dialog(itemid, data.get(position));
-            //selectedItem = position;
-            //String text = gridArray.get(position).getName();
-            //String category = gridArray.get(position).getCategoryName();
-            //int imageId = gridArray.get(position).getImageId();
-
-            //dialog(category,gridArray.get(position).imageResourceId, text);
+            dialog(itemid,position, data.get(position));
         }
     }
 
@@ -211,7 +215,7 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
     public void advSearchdialog(){
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.searchadvdialog);
-        dialog.setTitle("text");
+        dialog.setTitle("Avancerad sökning");
         dialog.setCancelable(true);
         spinner1 = (Spinner) dialog.findViewById(R.id.spinner1);
         spinner2 = (Spinner) dialog.findViewById(R.id.spinner2);
@@ -219,11 +223,13 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
         threadCheckbox = (CheckBox) dialog.findViewById(R.id.threadCheckbox);
         deliverydateCheckbox = (CheckBox) dialog.findViewById(R.id.deliverydateCheckbox);
         btnSubmit = (Button) dialog.findViewById(R.id.setAdvsearch);
+        btnCancel = (Button) dialog.findViewById(R.id.closeAdvsearch);
         datepickerStart = (DatePicker) dialog.findViewById(R.id.dateStart);
         datepickerEnd = (DatePicker) dialog.findViewById(R.id.dateEnd);
 
-        tiresizes = APIManager.getTiresizes();
+
         tirethreads = APIManager.getTirethreads();
+        tiresizes = APIManager.getTiresizes();
 
         if(spinner1Pos != 0){
             spinner1.setSelection(spinner1Pos);
@@ -233,11 +239,13 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
             spinner2.setSelection(spinner2Pos);
             dimensionCheckbox.setChecked(true);
         }
-        TirethreadAdvsearchAdapter tirethreadAdvsearchAdapter = new TirethreadAdvsearchAdapter(getActivity(), tirethreads);
-        spinner1.setAdapter(tirethreadAdvsearchAdapter);
 
         TiresizeAdvsearchAdapter tiresizeAdvsearchAdapter = new TiresizeAdvsearchAdapter(getActivity(), tiresizes);
         spinner2.setAdapter(tiresizeAdvsearchAdapter);
+        TirethreadAdvsearchAdapter tirethreadAdvsearchAdapter = new TirethreadAdvsearchAdapter(getActivity(), tirethreads);
+        spinner1.setAdapter(tirethreadAdvsearchAdapter);
+
+        //getTiresizes();
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
 
@@ -264,30 +272,35 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                     int enY = datepickerEnd.getYear();
                     int enM = datepickerEnd.getMonth();
                     int enD = datepickerEnd.getDayOfMonth();
-
-
-                    dateStart = HelperFunctions.dateToString(stY, stM, stD);
-                    dateEnd = HelperFunctions.dateToString(enY, enM, enD);;
+                    dateStart = HelperFunctions.dateToString(stY, stM+1, stD);
+                    dateEnd = HelperFunctions.dateToString(enY, enM+1, enD);
                 }
                 resetAdv.setVisible(true);
                 dialog.dismiss();
+            }
+        });
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
 
         dialog.show();
-
     }
 
 
 
 
 
-    public void dialog(int id, Searchresult searchitem){
+    public void dialog(int id,int position, Searchresult searchitem){
         final Dialog dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.searchresultdialog);
         final int idOnclick = id;
-        dialog.setTitle(searchitem.getDeliverydate());
+        final int positioninListview = position;
+        dialog.setContentView(R.layout.searchresultdialog);
+        dialog.setTitle("text");
         dialog.setCancelable(true);
 
         TextView dialogText = (TextView) dialog.findViewById(R.id.dialogText);
@@ -302,53 +315,171 @@ public class Search extends Fragment implements View.OnClickListener, ListView.O
                 dialog.dismiss();
             }
         });
-
         removeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                /*APIManager.removeIngredientfromAccount(gridArray.get(selectedItem).getId());
-                Toast.makeText(getActivity(), "Sucessfully removed: " + gridArray.get(selectedItem).getName(), Toast.LENGTH_SHORT).show();
-                gridArray.remove(selectedItem);
+                ArrayList<String> arrayList = new ArrayList<String>();
+                arrayList.add(Integer.toString(idOnclick));
+                APIManager.deleteOrder(getActivity(), arrayList);
+                datatoList.remove(positioninListview);
                 adapter.notifyDataSetChanged();
                 dialog.dismiss();
-                startRefreshThread();*/
             }
         });
+
         cancelButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 dialog.dismiss();
             }
         });
-        String dialogTextStr = "Leveransdatum: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments()+"\nSenast ändrad: "+searchitem.getDeliverydate()+" av "+searchitem.getUsername();
+        String dialogTextStr = "Leveransdag: "+searchitem.getDeliverydate()+"\n"+"Kund: "+searchitem.getCustomerName()+"\n"+"Mönster: "+searchitem.getTirethreadName()+"\n"+"Dimension: "+searchitem.getTiresizeName()+"\n"+"Totalt: "+searchitem.getTotal()+"\nKommentarer: "+searchitem.getComments()+"\nSenast ändrad: "+searchitem.getLastChange()+" av "+searchitem.getUsername();
         dialogText.setText(dialogTextStr);
 
         dialog.show();
 
     }
 
-    public void getTiresize(){
+    /*public void getTirethreads(){
+        Log.i("onclick", "yeees");
         try{
-            dataTiresize.clear();
-            dataTiresize = APIManager.getTiresizes();
-            //adapter = new ArrayAdapter<String>(this.getActivity(), R.layout.custom_list_item, datatoList);
-            if(!data.isEmpty()) {
-                adapter = new CustomSearchAdapter(this.getActivity(), R.layout.customsearch, datatoList);
-                if(!adapter.isEmpty()){
-                    adapter.clear();
+            tirethreads = APIManager.getTirethreads();
+            threadToList.clear();
+            if (!tirethreads.isEmpty()) {
+                threadAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, threadToList);
+                threadAdapter.notifyDataSetChanged();
+                for(Tirethread tirethread : tirethreads){
+                    threadAdapter.add(tirethread.getName());
                 }
-                searchresult.setAdapter(adapter);
-                //APIManager.updateSearch();
-                for(Searchresult searchdata : data){
-                    Searchresult stringToAdd = new Searchresult(searchdata.getId(),searchdata.getDate() ,searchdata.getCustomerName() ,searchdata.getTirethreadName(), searchdata.getTiresizeName(), searchdata.getComments(), searchdata.getTotal(), searchdata.getUsername());
-                    //String stringToAdd = "Leveransdatum: "+searchdata.getDate()+"\n"+"Kund: "+searchdata.getCustomerName()+"\n"+"Mönster: "+searchdata.getTirethreadName()+"\n"+"Dimension: "+searchdata.getTiresizeName()+"\n"+"Totalt: "+searchdata.getTotal();
-                    adapter.add(stringToAdd);
-                }
-                progress.dismiss();
+                thread.setAdapter(threadAdapter);
+                closeProgress();
             } else {
-                getTiresize();
+                startRefreshtireThread();
+            }
+        } catch (Exception e){
+            Log.i("Post", ""+e);
+        }
+    }*/
+
+    /*public void closeProgress(){
+        Log.i("dbcount",DBtablecountInt+"");
+        if(DBtablecountInt+1 < totalDBtable){
+            Log.i("dbcount+1",DBtablecountInt+"");
+            DBtablecountInt = DBtablecountInt+1;
+        } else if(DBtablecountInt+1 == totalDBtable){
+            DBtablecountInt = DBtablecountInt+1;
+            progressAdv.dismiss();
+            Log.i("dbcount == 3",DBtablecountInt+"");
+            DBtablecountInt = 0;
+        }
+    }
+
+    public void getTiresizes(){
+        Log.i("onclick","yeees");
+
+        try{
+            tiresizes = APIManager.getTiresizes();
+            dataTiresize.clear();
+            if (!tiresizes.isEmpty()) {
+                TiresizeAdvsearchAdapter tiresizeAdvsearchAdapter = new TiresizeAdvsearchAdapter(getActivity(), dataTiresize);
+
+                for(Tiresize tiresize : tiresizes){
+                    Tiresize tiresizetoSpinner = new Tiresize(tiresize.getId(), tiresize.getName());
+                    dataTiresize.add(tiresizetoSpinner);
+                }
+                spinner2.setAdapter(tiresizeAdvsearchAdapter);
+                closeProgress();
+            } else {
+                startRefreshtireSize();
             }
         } catch (Exception e){
             Log.i("Post", ""+e);
         }
     }
+
+    private void startRefreshtireSize(){
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            int retries = 0;
+            boolean stopRetrying = false;
+            public void run() {
+                do {
+                    try {
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.post(new Runnable() {
+                        public void run() {
+                            tiresizes = APIManager.getTiresizes();
+                            dataTiresize.clear();
+                            if(!tiresizes.isEmpty()){
+                                tiresizeAdvsearchAdapter = new TiresizeAdvsearchAdapter(getActivity(), dataTiresize);
+                                for(Tiresize tiresize : tiresizes){
+                                    Tiresize tiresizetoSpinner = new Tiresize(tiresize.getId(), tiresize.getName());
+                                    dataTiresize.add(tiresizetoSpinner);
+                                }
+                                spinner2.setAdapter(tiresizeAdvsearchAdapter);
+                                closeProgress();
+                            } else {
+                                retries++;
+                                if(retries < HelperFunctions.allowedRetries){
+                                    stopRetrying = true;
+                                }
+                            }
+                        }
+                    });
+                } while (tiresizes.isEmpty() && !stopRetrying);
+            }
+        };
+        new Thread(runnable).start();
+    }
+*/
+    /*private void startRefreshtireThread(){
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            int retries = 0;
+            boolean stopRetrying = false;
+
+            public void run() {
+                do {
+                    try {
+                        Thread.sleep(500);
+                    }
+                    catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.post(new Runnable() {
+                        public void run() {
+                            tirethreads = APIManager.getTirethreads();
+                            threadToList.clear();
+                            if (!tirethreads.isEmpty()) {
+                                threadAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, threadToList);
+                                threadAdapter.notifyDataSetChanged();
+                                for(Tirethread tirethread : tirethreads){
+                                    threadAdapter.add(tirethread.getName());
+                                }
+                                thread.setAdapter(threadAdapter);
+                                closeProgress();
+                            } else {
+                                retries++;
+                                if(retries < HelperFunctions.allowedRetries){
+                                    try {
+                                        if(threadAdapter != null){
+                                            if(threadToList.isEmpty()){
+                                                threadAdapter.notifyDataSetChanged();
+                                            }
+                                        }
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                    stopRetrying = true;
+                                }
+                            }
+                        }
+                    });
+                } while (tirethreads.isEmpty() && !stopRetrying);
+            }
+        };
+        new Thread(runnable).start();
+    }*/
 }

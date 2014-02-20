@@ -26,7 +26,7 @@ public class Searchresult {
 
     }
 
-    public Searchresult(int id, String deliverydate, String customerName, String tirethreadName, String tiresizeName, String comments, int total, String username){
+    public Searchresult(int id, String deliverydate, String customerName, String tirethreadName, String tiresizeName, String comments, int total, String username, String lastchange){
         this.id = id;
         this.deliverydate = deliverydate;
         this.customerName = customerName;
@@ -35,7 +35,10 @@ public class Searchresult {
         this.comments = comments;
         this.total = total;
         this.username = username;
+        this.lastChange = lastchange;
     }
+
+
     public String getUsername() {
         return username;
     }

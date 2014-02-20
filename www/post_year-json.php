@@ -27,7 +27,8 @@ $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
 					'tiresize_name'=>$searchitem->tiresize_name,
 					'total'=>$searchitem->total,
 					'comments'=>$searchitem->comments,
-					'username'=>$searchitem->username
+					'username'=>$searchitem->username,
+					'lastchange'=>$searchitem->lastChange
 				),
 			);
 			$jsonData['rows'][] = $entry;

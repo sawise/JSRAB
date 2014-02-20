@@ -24,6 +24,7 @@
 
 <ListView
 android:id="@+id/weeklistview"
+    android:fastScrollEnabled="true"
     android:background="@drawable/borderradius"
     android:paddingLeft="@dimen/createorderpadding"
     android:paddingTop="@dimen/createorderpadding"

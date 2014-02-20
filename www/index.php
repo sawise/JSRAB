@@ -22,7 +22,7 @@
 
 </div>
 
-  <img src="img/logo.png" class="logo">
+  <!--<img src="img/logo.png" class="logo">-->
   <div class="container centered mainDiv">
     <div class="row-fluid">
       <div class="span12">

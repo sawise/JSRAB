@@ -16,8 +16,10 @@ import java.nio.charset.Charset;
 
 //import com.group2.bottomapp.APIManager;
 
-
-public class JsonWeeklyOrder extends AsyncTask<String, Void, String> {
+/**
+ * Created by Hugo on 2013-12-11.
+ */
+public class JsonCustomer extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strings) {
@@ -32,8 +34,8 @@ public class JsonWeeklyOrder extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         try {
-            APIManager.weeklyorders.clear();
-            APIManager.weeklyorders.addAll(APIManager.getWeeklyOrderfromJSON(result));
+            APIManager.customers.clear();
+            APIManager.customers.addAll(APIManager.getCustomerfromJSON(result));
         } catch (Exception e) {}
     }
 
@@ -41,7 +43,6 @@ public class JsonWeeklyOrder extends AsyncTask<String, Void, String> {
         InputStream is = new URL(url).openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-
             String jsonText = readAll(rd);
             //Log.i("Post", jsonText);
             return jsonText;

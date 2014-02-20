@@ -1,10 +1,19 @@
-<ScrollView
+
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:orientation="vertical"
+android:gravity="center"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+    <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
+    android:layout_height="wrap_content"
+        android:layout_weight="8">
+        <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
@@ -13,64 +22,62 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
             <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Leveransdatum mellan"/>
             <CheckBox
-                android:id="@+id/deliverydateCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="2dip"
-                android:layout_height="wrap_content" />
+            android:id="@+id/deliverydateCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="2dip"
+            android:layout_height="wrap_content" />
         </LinearLayout>
 
-            <DatePicker
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:calendarViewShown="false"
-                android:spinnersShown="true"
-                android:id="@+id/dateStart" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="och"/>
         <DatePicker
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnersShown="true"
-            android:calendarViewShown="false"
-            android:id="@+id/dateEnd" />
-    android:layout_height="wrap_content">
-    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false"
+        android:spinnersShown="true"
+        android:id="@+id/dateStart" />
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="och"/>
+        <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnersShown="true"
+        android:calendarViewShown="false"
+        android:id="@+id/dateEnd" />
+        <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <Spinner
+            <Spinner
             android:id="@+id/spinner1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:prompt="@string/country_prompt"
             android:entries="@array/country_arrays" />
-        <CheckBox
+            <CheckBox
             android:id="@+id/threadCheckbox"
             android:layout_gravity="right"
             android:layout_width="wrap_content"
 
             android:layout_marginLeft="2dip"
             android:layout_height="wrap_content"/>
-
         </LinearLayout>
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-        <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+            <Spinner
             android:id="@+id/spinner2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -78,29 +85,32 @@
             android:prompt="@string/country_prompt"
             android:entries="@array/country_arrays" />
             <CheckBox
-                android:id="@+id/dimensionCheckbox"
-                android:layout_width="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="2dip"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-            <Button
-                android:id="@+id/setAdvsearch"
+            android:id="@+id/dimensionCheckbox"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-                android:layout_weight="1"
-            android:text="Välj"/>
-        <Button
-            android:id="@+id/closeDialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Avbryt"/>
+            android:layout_gravity="right"
+            android:layout_marginLeft="2dip"
+            android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+    <Button
+    android:id="@+id/setAdvsearch"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="Välj"/>
+    <Button
+    android:id="@+id/closeAdvsearch"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="Avbryt"/>
+        </LinearLayout>
+</LinearLayout>
+
 

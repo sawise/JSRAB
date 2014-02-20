@@ -98,11 +98,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 Toast.makeText(this, "Du loggades ut", Toast.LENGTH_LONG).show();
                 Intent i = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(i);
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            case R.id.shutdown:
+                /*getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putString("username", null).commit();
+                getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putString("password", null).commit();
+                getSharedPreferences(Session.getPrefsuser(), MODE_PRIVATE).edit().putInt("id", 0).commit();*/
+                finish();
             default:
                 break;
         }
         return false;
     }
+
+
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {

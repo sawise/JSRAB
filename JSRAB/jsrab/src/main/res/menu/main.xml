@@ -7,4 +7,8 @@
         android:icon="@drawable/logoff"
         android:orderInCategory="101"
         android:showAsAction="always" />
+    <item android:id="@+id/shutdown"
+        android:icon="@drawable/shutdownsmall"
+        android:orderInCategory="101"
+        android:showAsAction="always" />
 </menu>

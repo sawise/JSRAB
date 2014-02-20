@@ -1,10 +1,12 @@
   <?php 
   require_once('../../config.php');
-  require_once(ROOT_PATH.'/classes/authorization.php');
 
   $id = null;
   if (isset($_GET['orderid'])) {
     $id = $_GET['orderid'];
+  }
+  if (isset($_POST['orderid'])) {
+    $id = $_POST['orderid'];
   }
 
   $db = new Db();

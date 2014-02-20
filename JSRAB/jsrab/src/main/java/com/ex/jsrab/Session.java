@@ -27,6 +27,15 @@ public class Session {
     private Calendar startDate;
     private Calendar endDate;
     public static final String PREFSUSER = "PREFUSER";
+    private static int statusCode = 0;
+
+    public static int getStatusCode() {
+        return statusCode;
+    }
+
+    public static void setStatusCode(int statusCode) {
+        Session.statusCode = statusCode;
+    }
 
     public static String getUserIdStr() {
         return Integer.toString(userID);
