@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config.php');
+	require_once('../config.php');
 	$db = new Db();
   $id = $_GET['id'];
 	$deleteCustomer = $db->deleteCustomer($id);

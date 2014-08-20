@@ -1,5 +1,5 @@
 <?php
-require_once('../../config.php');
+require_once('../config.php');
 
 $page = isset($_POST['page']) ? $_POST['page'] : 1;
 $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;

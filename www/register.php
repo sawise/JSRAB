@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config.php');
+	require_once('../config.php');
 	$register = true;	
 if (isset($_POST) && isset($_POST['username'])) {
 	$db = new Db();

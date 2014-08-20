@@ -1,5 +1,5 @@
 <?php 
-	require_once('../../config.php');
+	require_once('../config.php');
 
 	if (isset($_POST['user']) && isset($_POST['pass'])) {
 		$username = $_POST['user'];

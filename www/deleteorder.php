@@ -1,5 +1,5 @@
   <?php 
-  require_once('../../config.php');
+  require_once('../config.php');
 
   $id = null;
   if (isset($_GET['orderid'])) {

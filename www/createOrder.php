@@ -1,6 +1,6 @@
 <?php
 
-  require_once('../../config.php');
+  require_once('../config.php');
 
   $db = new Db();
    $tireTreads = $db->getTiretreads();
@@ -12,11 +12,11 @@
   $customerID = '';
 
   $deliverydate = $_POST['datepicker'];
-  $customer = $_POST['customer'];
+  $customerpost = $_POST['customer'];
   $dimension = $_POST['dimension'];
   $tirethread = $_POST['tirethreads'];
   $total = $_POST['total'];
-  $notes = $_POST['notes'];
+  $notes = utf8_decode($_POST['notes']);
   $userid = $_POST['user_id'];
   
   $now = date('Y-m-d');
@@ -35,7 +35,7 @@
   	}
   }
   foreach ($customers as $customer) {
-  	if($customer->name == $_POST['customer']){
+  	if($customer->name == $customerpost  ){
   		echo 'kund finns';
   			$customerID = $customer->id;
   			break;
@@ -44,7 +44,7 @@
 
   if(strlen($customerID) == 0) {
   	echo 'new customer';
-  	$customerID = $db->createCustomer($_POST['customer'], 0000);
+  	$customerID = $db->createCustomer($customerpost, 0000);
   }
   if(strlen($tiresizeID) == 0) {
   	echo "tiresize nope";

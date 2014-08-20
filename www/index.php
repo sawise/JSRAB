@@ -3,7 +3,7 @@
 <?php
 
     //require_once('../../private/config.php');
-    require_once('../../config.php');
+    require_once('../config.php');
     
     require_once(ROOT_PATH.'/classes/authorization.php');
     $title = "Lägg till ny order";
@@ -12,10 +12,9 @@
     $editorderLink = "editOrder.php";
     if(isset($_GET['editOrder'])){
       $editorderLink .= "?orderId=".$_GET['editOrder'];
-    }
-
+    } 
 ?>
- <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+ <!--<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>-->
 <?php  require_once(ROOT_PATH.'/header.php');?>
 <body>
 

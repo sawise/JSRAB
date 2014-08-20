@@ -160,10 +160,20 @@ border-radius: 3em;
 .login-form {
 				display:inline-block;
 				border:2px solid red;
-				background-color: #000;
-				background: rgb(0, 0, 0);
-				background: rgba(0, 0, 0, 0.8);
-				padding:8px;
+				
+
+background: -moz-linear-gradient(top,  rgba(213,206,166,0.44) 0%, rgba(201,193,144,0.41) 40%, rgba(183,173,112,0.37) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(213,206,166,0.44)), color-stop(40%,rgba(201,193,144,0.41)), color-stop(100%,rgba(183,173,112,0.37))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(213,206,166,0.44) 0%,rgba(201,193,144,0.41) 40%,rgba(183,173,112,0.37) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(213,206,166,0.44) 0%,rgba(201,193,144,0.41) 40%,rgba(183,173,112,0.37) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(213,206,166,0.44) 0%,rgba(201,193,144,0.41) 40%,rgba(183,173,112,0.37) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(213,206,166,0.44) 0%,rgba(201,193,144,0.41) 40%,rgba(183,173,112,0.37) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#70d5cea6', endColorstr='#5eb7ad70',GradientType=0 ); /* IE6-9 */
+
+
+
+				padding:8px 5px 0px 5px;
+
 				border-radius:15px;
 				top:30%;
 			     left:40%;

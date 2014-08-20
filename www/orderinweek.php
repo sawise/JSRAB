@@ -1,5 +1,5 @@
 <?php 
-  require_once('../../config.php');
+  require_once('../config.php');
   $year = $_GET['year'];
   $week = $_GET['week'];
 ?>	
@@ -45,7 +45,7 @@ $(function () {
 		useRp: true,
 		rp: 10,
 		showTableToggleBtn: true,
-		width: 900,
+		width: 870,
 		height: 300
 	            });  
 </script>

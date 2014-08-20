@@ -203,6 +203,7 @@
 			}
 			return $objects;
 		}
+	
 
 		public function getOrder($id) {
 			$sql = $this->sql_search." WHERE orders.id = :id";

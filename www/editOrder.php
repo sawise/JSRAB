@@ -1,6 +1,6 @@
  <div class="alignleft paddingInTab">	
  <?php 
-require_once('../../config.php');
+require_once('../config.php');
 //require_once('../style.php');
 $db = new Db();
 $tireTreads = $db->getTiretreads();

@@ -1,5 +1,5 @@
 <?php
-require_once('../../config.php');
+require_once('../config.php');
 
 $searchresult = '';
 $page = isset($_POST['page']) ? $_POST['page'] : 1;
@@ -7,10 +7,16 @@ $rp = isset($_POST['rp']) ? $_POST['rp'] : 10;
 $sortname = isset($_POST['sortname']) ? $_POST['sortname'] : 'deliverydate';
 $sortorder = isset($_POST['sortorder']) ? $_POST['sortorder'] : 'desc';
 $total = 100;
-
+$searchstring = $_GET['search'];
  if (isset($_GET['search'])) {
  	$db = new Db();
-    $searchstring = $_GET['search'];
+ 	//$searchstring = $_GET['search'];
+ 	if(isset($_GET['mobile'])){
+ 		$searchstring = iconv("ISO-8859-1", "UTF-8", $_GET['search']);	
+ 	} else {
+ 		$searchstring = $_GET['search'];	
+ 	}
+ 	
     $total = $db->search_count($searchstring, $_GET['tiresize'], $_GET['tirethread'], $_GET['datestart'], $_GET['dateend']);
     if(isset($_GET['mobile'])){
     	$rp = 1000;
@@ -37,7 +43,8 @@ $total = 100;
 					'total'=>$searchitem->total,
 					'comments'=>$searchitem->comments,
 					'username'=>$searchitem->username,
-					'lastchange'=>$searchitem->lastChange
+					'lastchange'=>$searchitem->lastChange,
+					
 				),
 			);
 			$jsonData['rows'][] = $entry;

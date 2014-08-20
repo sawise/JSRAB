@@ -1,6 +1,6 @@
 <?php
 
-	require_once('../../config.php');
+	require_once('../config.php');
 	$db = new Db();
   $id = $_GET['id'];
 	$deleteTiretread = $db->deleteTiretread($id);

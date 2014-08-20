@@ -1,5 +1,5 @@
 <?php
-	require_once('../../config.php');
+	require_once('../config.php');
 	 $db = new Db();
 	$tirethreads = $db->getTiretreads();
    $tireSize = $db->getTiresize();
@@ -294,7 +294,7 @@ function setDefaultsize(defValue) {
 		useRp: true,
 		rp: 10,
 		showTableToggleBtn: true,
-		width: 900,
+		width: 880,
 		height: 300
 	            });      
 	        </script>

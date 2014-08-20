@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <?php
-    require_once('../../config.php');
+    require_once('../config.php');
     //require_once(ROOT_PATH.'/classes/authorization.php');
     $print = true;
   $db = new Db();
